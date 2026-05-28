@@ -24,6 +24,7 @@ docs/                    GitHub Pages site (index.html + data/)
     bvri_vacants.geojson           1,192 Vacants to Value properties (Baltimore City, from DHCD ArcGIS)
     bvri_investment_areas.geojson  7 DHCD Impact Investment Area polygons (Baltimore City)
     nmtc_maryland.geojson          587 NMTC-eligible tracts statewide (CDFI Fund)
+    oz_maryland.geojson            451 Opportunity Zones 2026 eligible tracts (MD Commerce / EIG)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
 ```
@@ -64,3 +65,4 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 - 1,192 BVRI Vacants to Value properties (Baltimore City only)
 - 7 DHCD Impact Investment Areas (Baltimore City only)
 - 587 NMTC-eligible tracts statewide (350 Severe Distress, 237 Distressed)
+- 451 Opportunity Zones 2026 eligible tracts statewide (383 Non-rural, 68 Rural)

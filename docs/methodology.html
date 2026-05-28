@@ -74,12 +74,13 @@
 <h2>Overview</h2>
 <p>This map overlays four geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The four layers, with their geographic coverage:</p>
+<p>The five layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>DHCD Impact Investment Areas (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>NMTC eligibility (US Treasury CDFI Fund)</strong> &mdash; statewide</li>
+    <li><strong>Opportunity Zones 2026 eligibility (MD Dept. of Commerce / EIG)</strong> &mdash; statewide</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
@@ -242,6 +243,54 @@
     <p>PolicyMap's NMTC layer ("New Markets Tax Credit (NMTC) Program Eligibility, Deep Distress Status, High Migration Rural County Status, Severe Distress Status, and Non-Metropolitan Status, for CY 2024, using 2016-2020 eligibility data") draws on this same underlying CDFI Fund data. Their additional categories ("High Migration Rural County" and "Non-Metropolitan Status") apply only outside metropolitan areas; in Maryland, those would surface in counties like Garrett, Allegany, and the Eastern Shore but not in the Baltimore-Washington metro corridor.</p>
 </div>
 
+<h2>Layer 5 &mdash; Opportunity Zones 2026 Eligibility</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#3182ce;"></span>
+        <span class="swatch" style="background:#90cdf4;"></span>
+        <span class="layer-label">Opportunity Zones 2026 Eligible</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default; non-rural &amp; rural</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The 451 Maryland census tracts that meet the Opportunity Zones 2.0 qualifying criteria for the upcoming 2026 designation cycle &mdash; 383 non-rural and 68 rural. These are tracts the State of Maryland is preliminarily flagging as eligible to be nominated as Opportunity Zones, pending federal guidance.</p>
+
+    <h3>Source</h3>
+    <p>Maryland Department of Commerce, via the State of Maryland's official ArcGIS Online portal. The source experience is published at:</p>
+    <pre><code>https://experience.arcgis.com/experience/db6e443584b746f1a005debc23e3aeeb</code></pre>
+
+    <p>The underlying authoritative feature service we read directly:</p>
+    <pre><code>https://services.arcgis.com/njFNhDsUCentVYJW/arcgis/rest/services/
+  Maryland_Official_Eligible_Opportunity_Zones_Census_Tracts_2026/
+  FeatureServer/0</code></pre>
+
+    <p>The state's eligibility analysis is built on data from the <a href="https://eig.org/opportunity-zones/">Economic Innovation Group (EIG)'s</a> interactive Opportunity Zones eligibility map.</p>
+
+    <div class="meta">
+        <strong>Vintage:</strong> Preliminary 2026 designation cycle (CY 2026)<br>
+        <strong>Underlying data:</strong> ACS 2020&ndash;2024 5-Year Estimates<br>
+        <strong>Tract geometries:</strong> 2020 Census Tracts<br>
+        <strong>Status:</strong> Preliminary &mdash; will be updated as federal guidance is issued<br>
+        <strong>Refresh cadence:</strong> Run <code>python3 scripts/fetch_oz.py</code> to pull the latest
+    </div>
+
+    <h3>Schema (relevant fields)</h3>
+    <table class="field-table">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>oz_elig</code></td><td>"OZ Eligible" or "OZ Ineligible" — we filter to only the eligible tracts</td></tr>
+            <tr><td><code>pov_rte</code></td><td>Tract poverty rate</td></tr>
+            <tr><td><code>mfi_rat</code></td><td>Tract median family income as a ratio of the metro / state benchmark (1.00 = at benchmark)</td></tr>
+            <tr><td><code>rural_g</code></td><td>"Rural" or "Non-rural" classification</td></tr>
+            <tr><td><code>msa</code></td><td>Metropolitan Statistical Area name</td></tr>
+            <tr><td><code>COUNTY_</code></td><td>County name</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Caveat</h3>
+    <p>This is the State of Maryland's preliminary read on the 2026 OZ eligibility framework. Final designations will require federal guidance from the US Treasury and CDFI Fund and may differ from what's shown here. The map should be treated as an early indicator, not a final list.</p>
+</div>
+
 <h2>Basemap</h2>
 <p>The map tile layer is <a href="https://github.com/CartoDB/basemap-styles">CartoDB Positron</a>, served from <code>basemaps.cartocdn.com</code>. Tiles are © OpenStreetMap contributors, © CARTO. No authentication required; CARTO's free tier permits non-commercial public use under the OpenStreetMap ODbL.</p>
 
@@ -252,6 +301,9 @@ python3 scripts/fetch_bvri.py
 
 # Refresh NMTC eligibility
 python3 scripts/fetch_nmtc.py
+
+# Refresh Opportunity Zones 2026 eligibility
+python3 scripts/fetch_oz.py
 
 # Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
 # See CLAUDE.md for the inline Python snippet
