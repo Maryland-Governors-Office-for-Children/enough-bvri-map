@@ -1,0 +1,119 @@
+{
+  "grantees": [
+    {
+      "name": "Park Heights Renaissance, Inc.",
+      "tract_count": 10,
+      "tracts": [
+        "24510150500",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280102"
+      ]
+    },
+    {
+      "name": "The Y in Central Maryland",
+      "tract_count": 7,
+      "tracts": [
+        "24510090100",
+        "24510090200",
+        "24510090300",
+        "24510090400",
+        "24510090600",
+        "24510090700",
+        "24510271001"
+      ]
+    },
+    {
+      "name": "Child First Authority",
+      "tract_count": 6,
+      "tracts": [
+        "24510130200",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510170200",
+        "24510170300"
+      ]
+    },
+    {
+      "name": "The Central Baltimore Partnership, Inc.",
+      "tract_count": 5,
+      "tracts": [
+        "24510090400",
+        "24510090800",
+        "24510120300",
+        "24510120400",
+        "24510120500"
+      ]
+    },
+    {
+      "name": "Greater Mondawmin Coordinating Council",
+      "tract_count": 5,
+      "tracts": [
+        "24510130400",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510150702"
+      ]
+    },
+    {
+      "name": "Elev8 Baltimore, Inc.",
+      "tract_count": 5,
+      "tracts": [
+        "24510130300",
+        "24510150100",
+        "24510160100",
+        "24510160200",
+        "24510160300"
+      ]
+    },
+    {
+      "name": "Tendea Family INC.",
+      "tract_count": 3,
+      "tracts": [
+        "24510070100",
+        "24510070200",
+        "24510070300"
+      ]
+    },
+    {
+      "name": "Cherry Hill Strong",
+      "tract_count": 3,
+      "tracts": [
+        "24510250203",
+        "24510250204",
+        "24510250207"
+      ]
+    },
+    {
+      "name": "South Baltimore Community Land Trust",
+      "tract_count": 2,
+      "tracts": [
+        "24510250402",
+        "24510250500"
+      ]
+    },
+    {
+      "name": "Urban Strategies Inc",
+      "tract_count": 2,
+      "tracts": [
+        "24510030100",
+        "24510280500"
+      ]
+    },
+    {
+      "name": "Leaders Breeders Inc.",
+      "tract_count": 1,
+      "tracts": [
+        "24510260301"
+      ]
+    }
+  ]
+}

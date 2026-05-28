@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BVRI × ENOUGH Grantees | Baltimore City</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -22,7 +23,7 @@
 
         .map-wrap { display: flex; flex: 1; min-height: 0; }
 
-        .sidebar { width: 280px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+        .sidebar { width: 300px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
         .sidebar h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; margin-bottom: 8px; }
 
         .layer-group { border-bottom: 1px solid #f0f4f8; padding-bottom: 14px; }
@@ -37,6 +38,17 @@
         .overlap-panel .big { font-size: 1.5rem; font-weight: 700; color: #2b6cb0; }
         .overlap-panel .sub { font-size: 0.75rem; color: #2c5282; margin-top: 2px; }
 
+        .grantee-list { display: flex; flex-direction: column; gap: 1px; }
+        .grantee-row { display: flex; align-items: center; gap: 8px; padding: 5px 6px; font-size: 0.78rem; cursor: pointer; border-radius: 3px; user-select: none; }
+        .grantee-row:hover { background: #f7fafc; }
+        .grantee-row.active { background: #ebf8ff; font-weight: 600; }
+        .grantee-row .grantee-swatch { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+        .grantee-row .grantee-name { flex: 1; line-height: 1.2; }
+        .grantee-row .grantee-count { color: #718096; font-size: 0.72rem; flex-shrink: 0; }
+        .grantee-reset { font-size: 0.72rem; color: #2b6cb0; cursor: pointer; padding: 4px 6px; border-radius: 3px; display: inline-block; }
+        .grantee-reset:hover { background: #ebf8ff; }
+        .grantee-reset.hidden { display: none; }
+
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; margin-bottom: 5px; }
 
         .map-panel { position: relative; flex: 1; }
@@ -49,7 +61,7 @@
 
         @media (max-width: 700px) {
             .map-wrap { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; max-height: 45vh; }
+            .sidebar { width: 100%; height: auto; max-height: 50vh; }
             .stat-bar { flex-wrap: wrap; }
         }
     </style>
@@ -62,7 +74,8 @@
 </header>
 
 <div class="stat-bar">
-    <div class="stat"><div class="stat-num" id="stat-grantee">—</div><div class="stat-label">ENOUGH Grantee Tracts</div></div>
+    <div class="stat"><div class="stat-num" id="stat-grantee-orgs">—</div><div class="stat-label">Grantee Organizations</div></div>
+    <div class="stat"><div class="stat-num" id="stat-grantee">—</div><div class="stat-label">Grantee Tracts</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Grantee Tracts</div></div>
 </div>
@@ -71,22 +84,26 @@
     <div class="sidebar">
         <div class="layer-group">
             <h3>Layers</h3>
-            <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked><span class="swatch" style="background:#805ad5;"></span> ENOUGH Grantee Tracts</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
             <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value</label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Investment Areas</label>
         </div>
 
         <div class="layer-group">
-            <h3>Overlap</h3>
+            <h3>ENOUGH Grantees <span id="grantee-reset" class="grantee-reset hidden">&larr; show all</span></h3>
+            <div class="grantee-list" id="grantee-list"></div>
+        </div>
+
+        <div class="layer-group">
+            <h3>BVRI Overlap</h3>
             <div class="overlap-panel">
                 <div class="big" id="overlap-num">—</div>
-                <div class="sub">BVRI properties within ENOUGH<br>grantee tract boundaries</div>
+                <div class="sub" id="overlap-sub">BVRI properties within ENOUGH<br>grantee tract boundaries</div>
             </div>
         </div>
 
         <div class="layer-group">
             <h3>Legend</h3>
-            <div class="legend-item"><span class="swatch" style="background:#805ad5"></span> ENOUGH Grantee Tract</div>
             <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacant Property</div>
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
         </div>
@@ -113,6 +130,13 @@
 (function () {
     document.getElementById('data-date').textContent = new Date().toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
 
+    // Categorical palette — distinct, colorblind-aware (Tableau 10 + extras)
+    const PALETTE = [
+        '#4e79a7', '#f28e2c', '#59a14f', '#b07aa1', '#e15759',
+        '#76b7b2', '#edc949', '#9c755f', '#bab0ab', '#ff9da7',
+        '#86bcb6'
+    ];
+
     const map = L.map('map').setView([39.30, -76.62], 12);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
@@ -122,6 +146,10 @@
     const lgGrantee = L.layerGroup().addTo(map);
     const lgVacants = L.layerGroup().addTo(map);
     const lgInvest  = L.layerGroup();
+
+    let granteeColors = {};        // grantee name -> color
+    let granteeTractLayers = [];   // [{ granteeName, layer, geoid, feature }]
+    let activeGrantee = null;      // null = show all
 
     function pointInPolygon(point, geom) {
         const x = point[0], y = point[1];
@@ -148,59 +176,154 @@
         });
     }
 
+    function styleForGrantee(granteeName, dimmed) {
+        const c = granteeColors[granteeName] || '#805ad5';
+        return {
+            color: c,
+            weight: dimmed ? 1 : 2.5,
+            fillColor: c,
+            fillOpacity: dimmed ? 0.05 : 0.35,
+            dashArray: dimmed ? null : '4,3',
+        };
+    }
+
+    function applyGranteeFilter() {
+        granteeTractLayers.forEach(function (rec) {
+            const dimmed = activeGrantee && rec.granteeName !== activeGrantee;
+            rec.layer.setStyle(styleForGrantee(rec.granteeName, dimmed));
+        });
+        // Highlight the row in the sidebar
+        document.querySelectorAll('.grantee-row').forEach(function (el) {
+            el.classList.toggle('active', el.dataset.grantee === activeGrantee);
+        });
+        const reset = document.getElementById('grantee-reset');
+        reset.classList.toggle('hidden', !activeGrantee);
+        updateOverlapDisplay();
+    }
+
+    let bvriTotalInGrantees = 0;
+    let bvriPerGrantee = {}; // grantee name -> count
+    function updateOverlapDisplay() {
+        if (activeGrantee) {
+            const n = bvriPerGrantee[activeGrantee] || 0;
+            document.getElementById('overlap-num').textContent = n.toLocaleString();
+            document.getElementById('overlap-sub').innerHTML =
+                'BVRI properties within<br><strong>' + activeGrantee + '</strong>';
+            document.getElementById('stat-bvri-overlap').textContent = n.toLocaleString();
+        } else {
+            document.getElementById('overlap-num').textContent = bvriTotalInGrantees.toLocaleString();
+            document.getElementById('overlap-sub').innerHTML =
+                'BVRI properties within ENOUGH<br>grantee tract boundaries';
+            document.getElementById('stat-bvri-overlap').textContent = bvriTotalInGrantees.toLocaleString();
+        }
+    }
+
+    function selectGrantee(name) {
+        if (activeGrantee === name) {
+            activeGrantee = null;
+        } else {
+            activeGrantee = name;
+        }
+        applyGranteeFilter();
+
+        // Zoom to grantee tracts if one is selected
+        if (activeGrantee) {
+            const bounds = L.latLngBounds([]);
+            granteeTractLayers.forEach(function (rec) {
+                if (rec.granteeName === activeGrantee) {
+                    bounds.extend(rec.layer.getBounds());
+                }
+            });
+            if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+        } else {
+            map.setView([39.30, -76.62], 12);
+        }
+    }
+
+    function buildGranteeSidebar(grantees) {
+        const list = document.getElementById('grantee-list');
+        list.innerHTML = '';
+        grantees.forEach(function (g) {
+            const row = document.createElement('div');
+            row.className = 'grantee-row';
+            row.dataset.grantee = g.name;
+            row.innerHTML =
+                '<span class="grantee-swatch" style="background:' + granteeColors[g.name] +
+                '33;border-color:' + granteeColors[g.name] + ';"></span>' +
+                '<span class="grantee-name">' + g.name + '</span>' +
+                '<span class="grantee-count">' + g.tract_count + '</span>';
+            row.addEventListener('click', function () { selectGrantee(g.name); });
+            list.appendChild(row);
+        });
+        document.getElementById('grantee-reset').addEventListener('click', function (e) {
+            e.stopPropagation();
+            activeGrantee = null;
+            applyGranteeFilter();
+            map.setView([39.30, -76.62], 12);
+        });
+    }
+
     Promise.all([
         fetchJSON('data/grantee_tracts.geojson'),
+        fetchJSON('data/baltimore_grantees.json'),
         fetchJSON('data/bvri_vacants.geojson'),
         fetchJSON('data/bvri_investment_areas.geojson'),
-    ]).then(function ([granteeTracts, vacants, investAreas]) {
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas]) {
 
+        // Assign colors to grantees by index (already sorted by tract count desc)
+        granteeMeta.grantees.forEach(function (g, i) {
+            granteeColors[g.name] = PALETTE[i % PALETTE.length];
+        });
+
+        document.getElementById('stat-grantee-orgs').textContent = granteeMeta.grantees.length;
         document.getElementById('stat-grantee').textContent = granteeTracts.features.length;
         document.getElementById('stat-bvri-total').textContent = vacants.features.length.toLocaleString();
 
-        // Render grantee tracts (purple, dashed border, light fill)
-        L.geoJSON(granteeTracts, {
-            style: {
-                color: '#805ad5',
-                weight: 2.5,
-                fillColor: '#805ad5',
-                fillOpacity: 0.12,
-                dashArray: '5,3',
-            },
-            onEachFeature: function (feat, lyr) {
-                const p = feat.properties;
-                const pov = p.F2024_Child_Poverty_Rate__2026_ != null
-                    ? parseFloat(p.F2024_Child_Poverty_Rate__2026_).toFixed(1) + '%' : 'N/A';
-                const moe = p.F2024_Child_Poverty_Rate_Margin_Of_Error != null
-                    ? '±' + parseFloat(p.F2024_Child_Poverty_Rate_Margin_Of_Error).toFixed(1) + '%' : '';
-                const schools = p.SCHOOL_BND_INT_CPG_TOTAL || 0;
-                lyr.bindPopup(`
-                    <div style="min-width:200px;">
-                        <strong style="font-size:1em;color:#805ad5;">ENOUGH Grantee Tract</strong>
-                        <div style="font-size:0.85em;color:#666;margin-top:2px;">${p.GEOID20}</div>
-                        <hr style="margin:5px 0;border:none;border-top:1px solid #eee;">
-                        <table style="font-size:0.83em;width:100%;">
-                            <tr><td>Child Poverty 2024:</td><td><strong>${pov}</strong> ${moe}</td></tr>
-                            <tr><td>Qualifying Schools:</td><td>${schools}</td></tr>
-                        </table>
-                    </div>
-                `);
-            }
-        }).addTo(lgGrantee);
+        buildGranteeSidebar(granteeMeta.grantees);
 
-        // Compute overlap: BVRI points inside grantee tract polygons
-        let inGrantee = 0;
+        // Render each grantee tract individually so we can restyle on filter
+        granteeTracts.features.forEach(function (feat) {
+            const granteeName = feat.properties.grantee_name || '(unknown)';
+            const lyr = L.geoJSON(feat, { style: styleForGrantee(granteeName, false) });
+            const p = feat.properties;
+            const pov = p.F2024_Child_Poverty_Rate__2026_ != null
+                ? parseFloat(p.F2024_Child_Poverty_Rate__2026_).toFixed(1) + '%' : 'N/A';
+            const moe = p.F2024_Child_Poverty_Rate_Margin_Of_Error != null
+                ? '±' + parseFloat(p.F2024_Child_Poverty_Rate_Margin_Of_Error).toFixed(1) + '%' : '';
+            const schools = p.SCHOOL_BND_INT_CPG_TOTAL || 0;
+            lyr.bindPopup(
+                '<div style="min-width:220px;">' +
+                  '<strong style="font-size:1em;color:' + granteeColors[granteeName] + ';">' + granteeName + '</strong>' +
+                  '<div style="font-size:0.78em;color:#666;margin-top:2px;">Tract ' + p.GEOID20 + '</div>' +
+                  '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                  '<table style="font-size:0.83em;width:100%;">' +
+                    '<tr><td>Child Poverty 2024:</td><td><strong>' + pov + '</strong> ' + moe + '</td></tr>' +
+                    '<tr><td>Qualifying Schools:</td><td>' + schools + '</td></tr>' +
+                  '</table>' +
+                '</div>'
+            );
+            lyr.on('click', function () {
+                // Single-click pops the popup; rely on the sidebar for selection
+            });
+            granteeTractLayers.push({ granteeName: granteeName, layer: lyr, geoid: p.GEOID20, feature: feat });
+            lgGrantee.addLayer(lyr);
+        });
+
+        // Compute BVRI overlap, broken down per grantee
+        bvriPerGrantee = {};
+        bvriTotalInGrantees = 0;
         vacants.features.forEach(function (vf) {
             if (!vf.geometry || vf.geometry.type !== 'Point') return;
             const coords = vf.geometry.coordinates;
-            for (const tf of granteeTracts.features) {
-                if (pointInPolygon(coords, tf.geometry)) {
-                    inGrantee++;
+            for (const rec of granteeTractLayers) {
+                if (pointInPolygon(coords, rec.feature.geometry)) {
+                    bvriPerGrantee[rec.granteeName] = (bvriPerGrantee[rec.granteeName] || 0) + 1;
+                    bvriTotalInGrantees++;
                     break;
                 }
             }
         });
-        document.getElementById('overlap-num').textContent = inGrantee.toLocaleString();
-        document.getElementById('stat-bvri-overlap').textContent = inGrantee.toLocaleString();
+        updateOverlapDisplay();
 
         // BVRI vacant properties
         L.geoJSON(vacants, {
@@ -215,32 +338,26 @@
             },
             onEachFeature: function (feature, layer) {
                 const p = feature.properties;
-                layer.bindPopup(`
-                    <div style="min-width:180px;">
-                        <strong>BVRI Vacant Property</strong>
-                        <hr style="margin:5px 0;border:none;border-top:1px solid #eee;">
-                        <div style="font-size:0.85em;">
-                            <div><strong>${p.Address || '—'}</strong></div>
-                            <div style="color:#555;margin-top:3px;">${p.Neighborhood || ''}</div>
-                            <div style="margin-top:4px;">Status: <strong>${p.Status || '—'}</strong></div>
-                            <div>Block/Lot: ${p.BlockLot || '—'}</div>
-                        </div>
-                    </div>
-                `);
+                layer.bindPopup(
+                    '<div style="min-width:180px;">' +
+                      '<strong>BVRI Vacant Property</strong>' +
+                      '<hr style="margin:5px 0;border:none;border-top:1px solid #eee;">' +
+                      '<div style="font-size:0.85em;">' +
+                        '<div><strong>' + (p.Address || '—') + '</strong></div>' +
+                        '<div style="color:#555;margin-top:3px;">' + (p.Neighborhood || '') + '</div>' +
+                        '<div style="margin-top:4px;">Status: <strong>' + (p.Status || '—') + '</strong></div>' +
+                        '<div>Block/Lot: ' + (p.BlockLot || '—') + '</div>' +
+                      '</div>' +
+                    '</div>'
+                );
             }
         }).addTo(lgVacants);
 
         // DHCD Impact Investment Areas (off by default)
         L.geoJSON(investAreas, {
-            style: {
-                color: '#b7791f',
-                weight: 2,
-                fillColor: '#f6e05e',
-                fillOpacity: 0.18,
-                dashArray: '6,3',
-            },
+            style: { color: '#b7791f', weight: 2, fillColor: '#f6e05e', fillOpacity: 0.18, dashArray: '6,3' },
             onEachFeature: function (feature, layer) {
-                layer.bindPopup(`<strong>DHCD Impact Investment Area</strong><br>${feature.properties.Name || ''}`);
+                layer.bindPopup('<strong>DHCD Impact Investment Area</strong><br>' + (feature.properties.Name || ''));
                 layer.bindTooltip(feature.properties.Name || '', { sticky: true });
             }
         }).addTo(lgInvest);
