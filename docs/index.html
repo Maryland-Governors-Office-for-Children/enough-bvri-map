@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BVRI × ENOUGH Communities | Baltimore City</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7fafc; color: #1a202c; height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: #1a365d; color: #fff; padding: 14px 20px 12px; flex-shrink: 0; }
+        header h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+        header p { font-size: 0.8rem; opacity: 0.75; margin-top: 2px; }
+
+        .stat-bar { background: #2c5282; color: #fff; display: flex; gap: 0; flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.12); }
+        .stat { flex: 1; padding: 8px 16px; border-right: 1px solid rgba(255,255,255,0.12); }
+        .stat:last-child { border-right: none; }
+        .stat-num { font-size: 1.3rem; font-weight: 700; line-height: 1; }
+        .stat-label { font-size: 0.7rem; opacity: 0.75; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+        .map-wrap { display: flex; flex: 1; min-height: 0; }
+
+        .sidebar { width: 280px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e8f0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+        .sidebar h3 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; margin-bottom: 8px; }
+
+        .layer-group { border-bottom: 1px solid #f0f4f8; padding-bottom: 14px; }
+        .layer-group:last-child { border-bottom: none; }
+
+        .layer-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; padding: 4px 0; user-select: none; }
+        .layer-toggle input { margin: 0; cursor: pointer; }
+        .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+        .swatch.circle { border-radius: 50%; }
+
+        .filter-group label { display: block; font-size: 0.72rem; color: #718096; margin-bottom: 3px; }
+        .filter-group select { width: 100%; padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.82rem; background: #fff; color: #1a202c; }
+
+        .overlap-panel { background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 6px; padding: 12px; font-size: 0.82rem; }
+        .overlap-panel .big { font-size: 1.5rem; font-weight: 700; color: #2b6cb0; }
+        .overlap-panel .sub { font-size: 0.75rem; color: #2c5282; margin-top: 2px; }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; margin-bottom: 5px; }
+
+        #map { flex: 1; }
+
+        .loading-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; font-size: 0.95rem; font-weight: 600; color: #2d3748; }
+        .loading-overlay.hidden { display: none; }
+        .map-panel { position: relative; flex: 1; }
+
+        footer { background: #e2e8f0; color: #718096; font-size: 0.72rem; padding: 6px 16px; flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; }
+        footer a { color: #4a5568; }
+
+        @media (max-width: 700px) {
+            .map-wrap { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; max-height: 45vh; }
+            .stat-bar { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>BVRI &times; ENOUGH Communities</h1>
+    <p>Baltimore Vacants Reinvestment Initiative properties within ENOUGH Act eligible census tracts &mdash; Baltimore City</p>
+</header>
+
+<div class="stat-bar">
+    <div class="stat"><div class="stat-num" id="stat-eligible">85</div><div class="stat-label">ENOUGH Eligible Tracts</div></div>
+    <div class="stat"><div class="stat-num" id="stat-grantee">43</div><div class="stat-label">Active Grantee Tracts</div></div>
+    <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties</div></div>
+    <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Eligible Tracts</div></div>
+</div>
+
+<div class="map-wrap">
+    <div class="sidebar">
+        <div class="layer-group">
+            <h3>ENOUGH Tracts</h3>
+            <label class="layer-toggle"><input type="checkbox" id="layer-eligible" checked><span class="swatch" style="background:#38a169"></span> Fully Eligible (both tests)</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-moe" checked><span class="swatch" style="background:#ed8936"></span> MOE Provision only</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-tractonly" checked><span class="swatch" style="background:#3182ce"></span> Tract Qualified, No School</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked><span class="swatch" style="background:#805ad5;border-radius:2px;"></span> Active ENOUGH Grantee (outline)</label>
+        </div>
+
+        <div class="layer-group">
+            <h3>BVRI Layers</h3>
+            <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> Vacants to Value Properties</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Investment Areas</label>
+        </div>
+
+        <div class="filter-group layer-group">
+            <h3>Filter</h3>
+            <label>Show Tracts</label>
+            <select id="tract-filter">
+                <option value="all">All Baltimore City Tracts</option>
+                <option value="eligible">ENOUGH Eligible Only</option>
+                <option value="grantee">Active Grantee Tracts Only</option>
+            </select>
+        </div>
+
+        <div class="layer-group">
+            <h3>Overlap</h3>
+            <div class="overlap-panel">
+                <div class="big" id="overlap-num">—</div>
+                <div class="sub">BVRI properties within ENOUGH<br>eligible tracts</div>
+            </div>
+            <div style="margin-top:10px;font-size:0.78rem;color:#4a5568;" id="overlap-detail"></div>
+        </div>
+
+        <div class="layer-group">
+            <h3>Legend</h3>
+            <div class="legend-item"><span class="swatch" style="background:#38a169"></span> ENOUGH Eligible</div>
+            <div class="legend-item"><span class="swatch" style="background:#ed8936"></span> MOE Provision</div>
+            <div class="legend-item"><span class="swatch" style="background:#3182ce"></span> Tract Qualified</div>
+            <div class="legend-item"><span class="swatch" style="background:#d1d5db;border:1px solid #a0aec0"></span> Not Qualified</div>
+            <div class="legend-item"><span class="swatch" style="background:#805ad5"></span> ENOUGH Grantee (border)</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacant Property</div>
+            <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
+        </div>
+
+        <div style="font-size:0.72rem;color:#a0aec0;margin-top:auto;padding-top:8px;">
+            BVRI data: Baltimore City DHCD via Open Baltimore ArcGIS.<br>
+            ENOUGH data: Maryland ACS 2024 5-Year Estimates.<br>
+            Last refreshed: <span id="data-date"></span>
+        </div>
+    </div>
+
+    <div class="map-panel">
+        <div class="loading-overlay" id="loading">Loading map data&hellip;</div>
+        <div id="map"></div>
+    </div>
+</div>
+
+<footer>
+    <span>Maryland Governor's Office for Children &mdash; ENOUGH Act | Baltimore Vacants Reinvestment Initiative</span>
+    <span>Data: Baltimore City DHCD &amp; Maryland ACS 2024</span>
+</footer>
+
+<script>
+(function () {
+    // Set data date
+    document.getElementById('data-date').textContent = new Date().toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+
+    const map = L.map('map').setView([39.30, -76.62], 12);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Layer groups
+    const lgEligible   = L.layerGroup().addTo(map);
+    const lgMoe        = L.layerGroup().addTo(map);
+    const lgTractOnly  = L.layerGroup().addTo(map);
+    const lgIneligible = L.layerGroup(); // off by default via filter
+    const lgGrantee    = L.layerGroup().addTo(map);
+    const lgVacants    = L.layerGroup().addTo(map);
+    const lgInvest     = L.layerGroup(); // off by default
+
+    const tractLayerMap = { eligible: lgEligible, moe: lgMoe, tractonly: lgTractOnly, ineligible: lgIneligible };
+
+    let granteeGeoids = new Set();
+    let tractFeatures = [];
+    let tractLayers   = []; // {geoid, status, isGrantee, layer}
+    let bvriFeatures  = [];
+    let currentFilter = 'all';
+
+    function getTractStatus(p) {
+        if (p.Eligibility_Status === 'Eligible') return 'eligible';
+        if (p.Qualifying_Criteria2_CPR_30MOE === 'Yes') return 'moe';
+        if (p.Qualifying_Criteria1_CPR_30 === 'Yes') return 'tractonly';
+        return 'ineligible';
+    }
+
+    const STATUS_COLOR = {
+        eligible:  '#38a169',
+        moe:       '#ed8936',
+        tractonly: '#3182ce',
+        ineligible:'#d1d5db',
+    };
+
+    function buildTractLayer(feature, status, isGrantee) {
+        return L.geoJSON(feature, {
+            style: {
+                color:       isGrantee ? '#805ad5' : '#fff',
+                weight:      isGrantee ? 2.5 : 0.5,
+                fillColor:   STATUS_COLOR[status],
+                fillOpacity: status === 'ineligible' ? 0.15 : 0.55,
+                dashArray:   isGrantee ? '5,3' : null,
+            },
+            onEachFeature: function (feat, lyr) {
+                const p = feat.properties;
+                const pov = p.F2024_Child_Poverty_Rate__2026_ != null
+                    ? parseFloat(p.F2024_Child_Poverty_Rate__2026_).toFixed(1) + '%' : 'N/A';
+                const moe = p.F2024_Child_Poverty_Rate_Margin_Of_Error != null
+                    ? '±' + parseFloat(p.F2024_Child_Poverty_Rate_Margin_Of_Error).toFixed(1) + '%' : '';
+                const schools = p.SCHOOL_BND_INT_CPG_TOTAL || 0;
+                const statusLabels = {
+                    eligible:   'ENOUGH Eligible',
+                    moe:        'MOE Provision Qualified',
+                    tractonly:  'Tract Qualified (No School)',
+                    ineligible: 'Not Qualified',
+                };
+                lyr.bindPopup(`
+                    <div style="min-width:210px;">
+                        <strong style="font-size:1em;">${p.GEOID20}</strong>
+                        <hr style="margin:5px 0;border:none;border-top:1px solid #eee;">
+                        <table style="font-size:0.83em;width:100%;">
+                            <tr><td>Child Poverty 2024:</td><td><strong>${pov}</strong> ${moe}</td></tr>
+                            <tr><td>Qualifying Schools:</td><td>${schools}</td></tr>
+                        </table>
+                        ${p.SCHOOL_NAME ? '<div style="font-size:0.77em;color:#555;margin-top:4px;">'+p.SCHOOL_NAME+'</div>' : ''}
+                        <hr style="margin:5px 0;border:none;border-top:1px solid #eee;">
+                        <strong style="color:${STATUS_COLOR[status]}">${statusLabels[status]}</strong>
+                        ${isGrantee ? '<div style="color:#805ad5;font-size:0.82em;margin-top:3px;">&#9670; Active ENOUGH Grantee</div>' : ''}
+                    </div>
+                `);
+            }
+        });
+    }
+
+    function showVisibleTractGeoids() {
+        const show = new Set();
+        tractLayers.forEach(function (t) {
+            const inFilter =
+                currentFilter === 'all' ||
+                (currentFilter === 'eligible' && (t.status === 'eligible' || t.status === 'moe' || t.status === 'tractonly')) ||
+                (currentFilter === 'grantee' && t.isGrantee);
+            if (inFilter) show.add(t.geoid);
+        });
+        return show;
+    }
+
+    function applyFilter() {
+        const visibleGeoids = showVisibleTractGeoids();
+        Object.values(tractLayerMap).forEach(lg => lg.clearLayers());
+        lgGrantee.clearLayers();
+
+        tractLayers.forEach(function (t) {
+            if (!visibleGeoids.has(t.geoid)) return;
+            tractLayerMap[t.status].addLayer(t.layer);
+            if (t.isGrantee) lgGrantee.addLayer(t.layer);
+        });
+
+        updateOverlap(visibleGeoids);
+    }
+
+    function updateOverlap(visibleGeoids) {
+        // Count BVRI points inside visible (eligible/filtered) tracts
+        // We use a pre-computed set from the data load
+        if (!bvriInTractMap.size) return;
+        let inEligible = 0, inGrantee = 0;
+        tractLayers.forEach(function (t) {
+            if (!visibleGeoids.has(t.geoid)) return;
+            const count = bvriInTractMap.get(t.geoid) || 0;
+            inEligible += count;
+            if (t.isGrantee) inGrantee += count;
+        });
+        document.getElementById('overlap-num').textContent = inEligible.toLocaleString();
+        document.getElementById('overlap-detail').textContent =
+            inGrantee + ' within active grantee tracts';
+        document.getElementById('stat-bvri-overlap').textContent = inEligible.toLocaleString();
+    }
+
+    // Map of geoid -> count of BVRI points inside that tract
+    const bvriInTractMap = new Map();
+
+    // Point-in-polygon using ray casting
+    function pointInPolygon(point, polygon) {
+        const x = point[0], y = point[1];
+        let inside = false;
+        const rings = polygon.type === 'Polygon' ? polygon.coordinates : polygon.coordinates[0];
+        const ring = rings[0];
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+            const xi = ring[i][0], yi = ring[i][1];
+            const xj = ring[j][0], yj = ring[j][1];
+            if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    function computeOverlap(tractFeats, bvriFeats) {
+        bvriInTractMap.clear();
+        bvriFeats.forEach(function (bf) {
+            if (!bf.geometry || bf.geometry.type !== 'Point') return;
+            const coords = bf.geometry.coordinates; // [lon, lat]
+            for (let i = 0; i < tractFeats.length; i++) {
+                const tf = tractFeats[i];
+                const geoid = tf.properties.GEOID20;
+                if (pointInPolygon(coords, tf.geometry)) {
+                    bvriInTractMap.set(geoid, (bvriInTractMap.get(geoid) || 0) + 1);
+                    break;
+                }
+            }
+        });
+    }
+
+    // Load all data
+    Promise.all([
+        fetch('data/grantee_geoids.json').then(r => r.json()),
+        fetch('data/tracts_baltimore.geojson').then(r => r.json()),
+        fetch('data/bvri_vacants.geojson').then(r => r.json()),
+        fetch('data/bvri_investment_areas.geojson').then(r => r.json()),
+    ]).then(function ([geoids, tractsGJ, vacants, investAreas]) {
+        granteeGeoids = new Set(geoids);
+        tractFeatures = tractsGJ.features;
+        bvriFeatures  = vacants.features;
+
+        document.getElementById('stat-bvri-total').textContent = bvriFeatures.length.toLocaleString();
+
+        // Build tract layers
+        tractFeatures.forEach(function (feature) {
+            const p = feature.properties;
+            const status = getTractStatus(p);
+            const isGrantee = granteeGeoids.has(p.GEOID20);
+            const lyr = buildTractLayer(feature, status, isGrantee);
+            tractLayers.push({ geoid: p.GEOID20, status: status, isGrantee: isGrantee, layer: lyr });
+        });
+
+        // Compute BVRI overlap
+        const eligibleFeats = tractFeatures.filter(f => {
+            const s = getTractStatus(f.properties);
+            return s === 'eligible' || s === 'moe' || s === 'tractonly';
+        });
+        computeOverlap(eligibleFeats, bvriFeatures);
+
+        // Initial render
+        applyFilter();
+
+        // BVRI vacant points
+        L.geoJSON(vacants, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: 4,
+                    fillColor: '#e53e3e',
+                    color: '#9b2c2c',
+                    weight: 0.8,
+                    fillOpacity: 0.75,
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                layer.bindPopup(`
+                    <div style="min-width:180px;">
+                        <strong>BVRI Vacant Property</strong>
+                        <hr style="margin:5px 0;border:none;border-top:1px solid #eee;">
+                        <div style="font-size:0.85em;">
+                            <div><strong>${p.Address || '—'}</strong></div>
+                            <div style="color:#555;margin-top:3px;">${p.Neighborhood || ''}</div>
+                            <div style="margin-top:4px;">Status: <strong>${p.Status || '—'}</strong></div>
+                            <div>Block/Lot: ${p.BlockLot || '—'}</div>
+                            ${p.HousingMarketTypology2017 ? '<div style="margin-top:3px;color:#666;font-size:0.9em;">'+p.HousingMarketTypology2017+'</div>' : ''}
+                        </div>
+                    </div>
+                `);
+            }
+        }).addTo(lgVacants);
+
+        // Impact Investment Areas polygons
+        L.geoJSON(investAreas, {
+            style: {
+                color: '#b7791f',
+                weight: 2,
+                fillColor: '#f6e05e',
+                fillOpacity: 0.18,
+                dashArray: '6,3',
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(`<strong>DHCD Impact Investment Area</strong><br>${feature.properties.Name || ''}`);
+                layer.bindTooltip(feature.properties.Name || '', { permanent: false, sticky: true });
+            }
+        }).addTo(lgInvest);
+
+        document.getElementById('loading').classList.add('hidden');
+        updateOverlapStats();
+
+    }).catch(function (err) {
+        document.getElementById('loading').innerHTML = '<div style="color:red;padding:20px;">Failed to load data: ' + err.message + '</div>';
+    });
+
+    function updateOverlapStats() {
+        const eligible = tractLayers.filter(t => t.status === 'eligible' || t.status === 'moe' || t.status === 'tractonly').length;
+        const grantee  = tractLayers.filter(t => t.isGrantee).length;
+        document.getElementById('stat-eligible').textContent = eligible;
+        document.getElementById('stat-grantee').textContent = grantee;
+
+        // Total overlap across all eligible tracts
+        let total = 0;
+        tractLayers.forEach(t => {
+            if (t.status !== 'ineligible') total += (bvriInTractMap.get(t.geoid) || 0);
+        });
+        document.getElementById('overlap-num').textContent = total.toLocaleString();
+        document.getElementById('stat-bvri-overlap').textContent = total.toLocaleString();
+
+        const inGrantee = tractLayers
+            .filter(t => t.isGrantee)
+            .reduce((sum, t) => sum + (bvriInTractMap.get(t.geoid) || 0), 0);
+        document.getElementById('overlap-detail').textContent = inGrantee + ' within active grantee tracts';
+    }
+
+    // Layer toggles
+    [
+        ['layer-eligible',  lgEligible],
+        ['layer-moe',       lgMoe],
+        ['layer-tractonly', lgTractOnly],
+        ['layer-grantee',   lgGrantee],
+        ['layer-vacants',   lgVacants],
+        ['layer-invest',    lgInvest],
+    ].forEach(function ([id, lg]) {
+        document.getElementById(id).addEventListener('change', function () {
+            this.checked ? map.addLayer(lg) : map.removeLayer(lg);
+        });
+    });
+
+    // Tract filter
+    document.getElementById('tract-filter').addEventListener('change', function () {
+        currentFilter = this.value;
+        applyFilter();
+    });
+
+})();
+</script>
+
+</body>
+</html>
