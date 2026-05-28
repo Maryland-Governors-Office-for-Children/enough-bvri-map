@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodology | BVRI × ENOUGH Grantees</title>
+    <link rel="icon" href="data:,">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7fafc; color: #1a202c; line-height: 1.55; }
+
+        header { background: #1a365d; color: #fff; padding: 18px 20px; }
+        header h1 { font-size: 1.3rem; font-weight: 700; }
+        header p { font-size: 0.85rem; opacity: 0.8; margin-top: 3px; }
+        header a { color: #bee3f8; text-decoration: none; font-size: 0.82rem; }
+        header a:hover { text-decoration: underline; }
+
+        nav { background: #2c5282; color: #fff; padding: 8px 20px; font-size: 0.82rem; }
+        nav a { color: #fff; text-decoration: none; margin-right: 20px; opacity: 0.8; }
+        nav a:hover, nav a.active { opacity: 1; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
+
+        .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; }
+
+        h2 { font-size: 1.4rem; margin: 36px 0 14px; color: #1a365d; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; }
+        h2:first-of-type { margin-top: 0; }
+        h3 { font-size: 1.05rem; margin: 24px 0 8px; color: #2c5282; }
+
+        p { margin-bottom: 12px; }
+        p, li { font-size: 0.94rem; }
+
+        ul { margin: 8px 0 14px 22px; }
+        li { margin-bottom: 6px; }
+
+        code { background: #edf2f7; padding: 1px 6px; border-radius: 3px; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.84em; color: #2d3748; }
+
+        pre { background: #1a202c; color: #e2e8f0; padding: 14px 16px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; margin: 10px 0 16px; line-height: 1.5; }
+        pre code { background: none; padding: 0; color: inherit; }
+
+        a { color: #2b6cb0; }
+        a:hover { color: #1a365d; }
+
+        .source-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin: 14px 0; }
+        .source-card h3 { margin-top: 0; }
+        .source-card .swatch-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #f0f4f8; }
+        .source-card .swatch { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+        .source-card .swatch.circle { border-radius: 50%; }
+        .source-card .layer-label { font-weight: 600; color: #2d3748; }
+
+        .meta { background: #f7fafc; border-left: 3px solid #4299e1; padding: 10px 14px; margin: 12px 0; font-size: 0.86rem; }
+        .meta strong { color: #2c5282; }
+
+        .field-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.86rem; }
+        .field-table th, .field-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
+        .field-table th { background: #f7fafc; font-weight: 600; color: #4a5568; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+        .field-table code { font-size: 0.85em; }
+
+        footer { background: #e2e8f0; color: #718096; font-size: 0.78rem; padding: 14px 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Methodology &amp; Data Sources</h1>
+    <p>How each layer of the BVRI &times; ENOUGH Grantees map is built &mdash; <a href="index.html">&larr; back to map</a></p>
+</header>
+
+<nav>
+    <a href="index.html">Map</a>
+    <a href="methodology.html" class="active">Methodology</a>
+</nav>
+
+<div class="container">
+
+<h2>Overview</h2>
+<p>This map overlays four geographic data layers for Baltimore City to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
+
+<p>The four layers are:</p>
+<ul>
+    <li>ENOUGH grantee tracts (Maryland GOC)</li>
+    <li>BVRI Vacants to Value properties (Baltimore City DHCD)</li>
+    <li>DHCD Impact Investment Areas (Baltimore City DHCD)</li>
+    <li>NMTC eligibility (US Treasury CDFI Fund)</li>
+</ul>
+
+<p>The full source code, including data-fetch scripts, lives at <a href="https://github.com/Maryland-Governors-Office-for-Children/enough-bvri-map">github.com/Maryland-Governors-Office-for-Children/enough-bvri-map</a>.</p>
+
+<h2>Layer 1 — ENOUGH Grantee Tracts</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#4e79a7;"></span>
+        <span class="layer-label">ENOUGH Grantee Tracts</span>
+        <span style="color:#718096;font-size:0.85rem;">— colored by grantee organization</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The 40 census tracts in Baltimore City currently served by 11 active ENOUGH Act grantees, colored by grantee organization.</p>
+
+    <h3>Source</h3>
+    <p>Internal GOC data, derived from the master ENOUGH grantee list maintained by the Governor's Office for Children. The grantee &rarr; tract assignments come from the FY26 ENOUGH grantee tract roster used in the <a href="https://github.com/Maryland-Governors-Office-for-Children/enough-eligibility-changes">enough-eligibility-changes</a> repo.</p>
+
+    <div class="meta">
+        <strong>Vintage:</strong> FY26 active grantees (current as of May 2026)<br>
+        <strong>Geometry:</strong> 2020 Census Tracts (TIGER/Line via Maryland Department of Planning ArcGIS)<br>
+        <strong>Refresh cadence:</strong> When new grantees are awarded or geographic scope changes
+    </div>
+
+    <h3>How it's built</h3>
+    <p>Two source files are combined:</p>
+    <ul>
+        <li><code>grantee_geoids.json</code> &mdash; flat list of all ENOUGH grantee tract GEOIDs statewide (108 total)</li>
+        <li><code>map_filters.json</code> from the eligibility repo &mdash; provides the grantee organization name for each tract</li>
+    </ul>
+    <p>The build step filters both to Baltimore City tracts (<code>STCOFIPS=24510</code>), joins them, and writes <code>docs/data/grantee_tracts.geojson</code> with a <code>grantee_name</code> property on each tract feature.</p>
+
+    <h3>Eligibility note</h3>
+    <p>"Eligible" tracts (i.e. those meeting the ENOUGH Act poverty threshold) and "grantee" tracts are different. A tract is eligible if it meets the ACS child-poverty threshold; a tract is a grantee tract only if a current grantee organization is operating in that geography. Of Baltimore City's 199 tracts, 85 are ENOUGH-eligible and 40 of those are actively served by grantees.</p>
+</div>
+
+<h2>Layer 2 — BVRI Vacants to Value Properties</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch circle" style="background:#e53e3e;"></span>
+        <span class="layer-label">BVRI Vacant Properties</span>
+        <span style="color:#718096;font-size:0.85rem;">— red dots</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The 1,192 properties currently on Baltimore City's Vacants to Value open bid list &mdash; vacant buildings being marketed for rehab and reinvestment.</p>
+
+    <h3>Source</h3>
+    <p>Baltimore City Department of Housing &amp; Community Development (DHCD), via the City's public ArcGIS REST service:</p>
+    <pre><code>https://egisdata.baltimorecity.gov/egis/rest/services/
+  Housing/DHCD_Open_Baltimore_Datasets/FeatureServer/7</code></pre>
+
+    <p>This is <strong>Layer 7</strong> of the DHCD Open Baltimore Datasets feature server &mdash; "Open Bid List - Vacants to Value." It's the same backing dataset used by Baltimore City's public Power BI dashboards on demolition, vacant building notices, and rehab activity.</p>
+
+    <div class="meta">
+        <strong>Vintage:</strong> Live (refreshed daily by DHCD as properties are added/removed)<br>
+        <strong>Geometry:</strong> Point per property<br>
+        <strong>Coverage:</strong> Baltimore City only<br>
+        <strong>Refresh cadence:</strong> Run <code>python3 scripts/fetch_bvri.py</code> to pull the latest list
+    </div>
+
+    <h3>Schema (relevant fields)</h3>
+    <table class="field-table">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>Address</code></td><td>Property street address</td></tr>
+            <tr><td><code>BlockLot</code></td><td>Block and lot identifier (Baltimore parcel system)</td></tr>
+            <tr><td><code>Status</code></td><td>Current bid-list status (typically "Available")</td></tr>
+            <tr><td><code>Neighborhood</code></td><td>Neighborhood name</td></tr>
+            <tr><td><code>HousingMarketTypology2017</code></td><td>DHCD housing market classification</td></tr>
+        </tbody>
+    </table>
+
+    <h3>BVRI overlap calculation</h3>
+    <p>The "BVRI in Grantee Tracts" stat (currently <strong>387</strong>) is computed in the browser via point-in-polygon ray casting: each BVRI property point is tested against each grantee tract polygon; a property is counted as overlapping if it falls within any grantee tract. When a single grantee is selected from the sidebar, the count switches to that grantee's tracts only.</p>
+</div>
+
+<h2>Layer 3 — DHCD Impact Investment Areas</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span>
+        <span class="layer-label">DHCD Impact Investment Areas</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default</span>
+    </div>
+
+    <p><strong>What it shows:</strong> 7 neighborhood-scale areas designated by Baltimore DHCD as priority targets for reinvestment: Park Heights, Southwest Partnership, Broadway East, Coldstream Homestead Montebello, East Baltimore Midway, Johnston Square, and West.</p>
+
+    <h3>Source</h3>
+    <p>Same Baltimore City DHCD ArcGIS feature server, <strong>Layer 10</strong>:</p>
+    <pre><code>https://egisdata.baltimorecity.gov/egis/rest/services/
+  Housing/DHCD_Open_Baltimore_Datasets/FeatureServer/10</code></pre>
+
+    <div class="meta">
+        <strong>Vintage:</strong> Designated areas (updated when DHCD revises priorities)<br>
+        <strong>Geometry:</strong> Neighborhood polygons<br>
+        <strong>Refresh cadence:</strong> Same fetch script (<code>scripts/fetch_bvri.py</code>) pulls both layers
+    </div>
+</div>
+
+<h2>Layer 4 — NMTC Eligibility (CDFI Fund)</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#1c4532;"></span>
+        <span class="swatch" style="background:#48bb78;"></span>
+        <span class="layer-label">NMTC Eligibility</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default; two distress tiers</span>
+    </div>
+
+    <p><strong>What it shows:</strong> Census tracts that qualify for the New Markets Tax Credit (NMTC) Program, classified by distress severity. Of Baltimore City's tracts, 115 are in <strong>Severe Distress</strong> and 28 are <strong>Distressed</strong>; the rest are not present in the source dataset (= not NMTC-eligible).</p>
+
+    <h3>Source</h3>
+    <p>US Treasury CDFI Fund's authoritative public ArcGIS feature service, distributed via Esri's federal layer manager:</p>
+    <pre><code>https://services6.arcgis.com/BAJNi3EgCdtQ1BCG/arcgis/
+  rest/services/NMTC_Qualified_Tracts_2020/FeatureServer/3</code></pre>
+
+    <p>This is the same dataset that PolicyMap and CDFI's own CIMS mapping tool surface. We use it directly to avoid the PolicyMap subscription requirement and to integrate visually with the rest of the map.</p>
+
+    <div class="meta">
+        <strong>Underlying data:</strong> 2016&ndash;2020 ACS 5-Year Estimates<br>
+        <strong>Tract geometries:</strong> 2020 Census Tracts<br>
+        <strong>Eligibility year:</strong> CY 2024<br>
+        <strong>Refresh cadence:</strong> CDFI Fund updates this dataset when new ACS vintages are released. Run <code>python3 scripts/fetch_nmtc.py</code> to pull the latest.
+    </div>
+
+    <h3>Distress classification</h3>
+    <p>The CDFI Fund's source service does <em>not</em> store the distress tier as a single field. Instead, the classification is computed from three underlying metrics. We replicate that logic in <code>scripts/fetch_nmtc.py</code>:</p>
+
+    <table class="field-table">
+        <thead><tr><th>Tier</th><th>Criteria (any of)</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><span style="display:inline-block;width:10px;height:10px;background:#1c4532;margin-right:6px;border-radius:2px;vertical-align:middle;"></span><strong>Severe Distress</strong></td>
+                <td>Income &le; 60% of benchmark, <strong>or</strong> poverty rate &ge; 30%, <strong>or</strong> unemployment ratio &ge; 1.5&times; national</td>
+            </tr>
+            <tr>
+                <td><span style="display:inline-block;width:10px;height:10px;background:#48bb78;margin-right:6px;border-radius:2px;vertical-align:middle;"></span><strong>Distressed</strong></td>
+                <td>Income &le; 80% of benchmark, <strong>or</strong> poverty rate &ge; 20%</td>
+            </tr>
+            <tr>
+                <td><strong>Eligible</strong></td>
+                <td>Qualifies as a Low-Income Community but not in either tier above</td>
+            </tr>
+            <tr>
+                <td><strong>Insufficient Data</strong></td>
+                <td>All three metrics missing</td>
+            </tr>
+            <tr>
+                <td><strong>Not Eligible</strong></td>
+                <td>Does not qualify (excluded from the dataset, not shown on map)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The benchmark for the income test is the higher of the statewide median family income or the metropolitan-area median family income (whichever applies based on OMB Metro/Non-metro designation).</p>
+
+    <h3>Note on PolicyMap</h3>
+    <p>PolicyMap's NMTC layer ("New Markets Tax Credit (NMTC) Program Eligibility, Deep Distress Status, High Migration Rural County Status, Severe Distress Status, and Non-Metropolitan Status, for CY 2024, using 2016-2020 eligibility data") draws on this same underlying CDFI Fund data. Their additional categories ("High Migration Rural County" and "Non-Metropolitan Status") apply only outside metropolitan areas, so they don't appear in Baltimore City &mdash; the city is fully metro per OMB.</p>
+</div>
+
+<h2>Basemap</h2>
+<p>The map tile layer is <a href="https://github.com/CartoDB/basemap-styles">CartoDB Positron</a>, served from <code>basemaps.cartocdn.com</code>. Tiles are © OpenStreetMap contributors, © CARTO. No authentication required; CARTO's free tier permits non-commercial public use under the OpenStreetMap ODbL.</p>
+
+<h2>How to refresh data</h2>
+<p>From the project root:</p>
+<pre><code># Refresh BVRI data (Vacants to Value + Investment Areas)
+python3 scripts/fetch_bvri.py
+
+# Refresh NMTC eligibility
+python3 scripts/fetch_nmtc.py
+
+# Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
+# See CLAUDE.md for the inline Python snippet
+
+# Then commit and push
+git add docs/data/
+git commit -m "Refresh data"
+git push</code></pre>
+
+<p>GitHub Pages auto-deploys from <code>main</code> branch <code>docs/</code> within ~60 seconds.</p>
+
+<h2>Caveats and limits</h2>
+<ul>
+    <li><strong>Tract vintages:</strong> All four layers use 2020 Census Tracts. ENOUGH eligibility uses 2024 ACS 5-Year (the latest available); NMTC uses 2016&ndash;2020 ACS (CDFI Fund's current eligibility cycle). The two ACS vintages don't align perfectly, but tract-level geographic boundaries are the same.</li>
+    <li><strong>Point-in-polygon accuracy:</strong> The BVRI overlap counts use simple ray-casting on tract polygons. Properties exactly on tract boundaries can occasionally be misclassified; in practice this affects &lt;1% of points.</li>
+    <li><strong>BVRI dataset scope:</strong> The "Vacants to Value" open bid list (~1,192 properties) is one of several Baltimore vacant-property datasets. It does not include vacant building notices, demolitions completed, or properties already in receivership. Those are separate layers in the same DHCD feature server (Layers 0, 1, 2, 4, 5) if needed.</li>
+    <li><strong>NMTC tier coverage:</strong> The CDFI Fund's authoritative service excludes ineligible tracts entirely (rather than including them with a "Not Eligible" classification). So a tract with no NMTC-layer fill is simply not in the dataset; we don't render the "Not Eligible" or "Insufficient Data" tiers because they're empty for Baltimore City.</li>
+</ul>
+
+</div>
+
+<footer>
+    Maryland Governor's Office for Children &mdash; ENOUGH Act &times; Baltimore Vacants Reinvestment Initiative
+</footer>
+
+</body>
+</html>
