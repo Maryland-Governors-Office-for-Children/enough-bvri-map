@@ -18,10 +18,12 @@ docs/                    GitHub Pages site (index.html + data/)
   index.html             Single-page Leaflet map
   .nojekyll
   data/
-    grantee_tracts.geojson         40 active ENOUGH grantee tracts in Baltimore City
-    grantee_geoids.json            ENOUGH grantee tract GEOIDs (statewide, used to build grantee_tracts.geojson)
-    bvri_vacants.geojson           1,192 Vacants to Value properties (from DHCD ArcGIS)
-    bvri_investment_areas.geojson  7 DHCD Impact Investment Area polygons
+    grantee_tracts.geojson         111 active ENOUGH grantee tracts statewide
+    grantees.json                  28 grantee organizations with tract counts
+    grantee_geoids.json            ENOUGH grantee tract GEOIDs (statewide, legacy, kept for backwards-compat)
+    bvri_vacants.geojson           1,192 Vacants to Value properties (Baltimore City, from DHCD ArcGIS)
+    bvri_investment_areas.geojson  7 DHCD Impact Investment Area polygons (Baltimore City)
+    nmtc_maryland.geojson          587 NMTC-eligible tracts statewide (CDFI Fund)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
 ```
@@ -58,6 +60,7 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 
 ## Key Numbers (as of May 2026)
 
-- 40 active ENOUGH grantee tracts in Baltimore City
-- 1,192 BVRI Vacants to Value properties
-- 7 DHCD Impact Investment Areas
+- 28 active ENOUGH grantees, 111 grantee tracts statewide (40 in Baltimore City)
+- 1,192 BVRI Vacants to Value properties (Baltimore City only)
+- 7 DHCD Impact Investment Areas (Baltimore City only)
+- 587 NMTC-eligible tracts statewide (350 Severe Distress, 237 Distressed)

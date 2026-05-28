@@ -72,15 +72,16 @@
 <div class="container">
 
 <h2>Overview</h2>
-<p>This map overlays four geographic data layers for Baltimore City to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
+<p>This map overlays four geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The four layers are:</p>
+<p>The four layers, with their geographic coverage:</p>
 <ul>
-    <li>ENOUGH grantee tracts (Maryland GOC)</li>
-    <li>BVRI Vacants to Value properties (Baltimore City DHCD)</li>
-    <li>DHCD Impact Investment Areas (Baltimore City DHCD)</li>
-    <li>NMTC eligibility (US Treasury CDFI Fund)</li>
+    <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
+    <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
+    <li><strong>DHCD Impact Investment Areas (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
+    <li><strong>NMTC eligibility (US Treasury CDFI Fund)</strong> &mdash; statewide</li>
 </ul>
+<p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
 <p>The full source code, including data-fetch scripts, lives at <a href="https://github.com/Maryland-Governors-Office-for-Children/enough-bvri-map">github.com/Maryland-Governors-Office-for-Children/enough-bvri-map</a>.</p>
 
@@ -93,7 +94,7 @@
         <span style="color:#718096;font-size:0.85rem;">— colored by grantee organization</span>
     </div>
 
-    <p><strong>What it shows:</strong> The 40 census tracts in Baltimore City currently served by 11 active ENOUGH Act grantees, colored by grantee organization.</p>
+    <p><strong>What it shows:</strong> All 111 census tracts statewide currently served by 28 active ENOUGH Act grantees, colored by grantee organization.</p>
 
     <h3>Source</h3>
     <p>Internal GOC data, derived from the master ENOUGH grantee list maintained by the Governor's Office for Children. The grantee &rarr; tract assignments come from the FY26 ENOUGH grantee tract roster used in the <a href="https://github.com/Maryland-Governors-Office-for-Children/enough-eligibility-changes">enough-eligibility-changes</a> repo.</p>
@@ -105,15 +106,15 @@
     </div>
 
     <h3>How it's built</h3>
-    <p>Two source files are combined:</p>
+    <p>Two source files from the <a href="https://github.com/Maryland-Governors-Office-for-Children/enough-eligibility-changes">enough-eligibility-changes</a> repo are combined:</p>
     <ul>
-        <li><code>grantee_geoids.json</code> &mdash; flat list of all ENOUGH grantee tract GEOIDs statewide (108 total)</li>
-        <li><code>map_filters.json</code> from the eligibility repo &mdash; provides the grantee organization name for each tract</li>
+        <li><code>tracts_2026.geojson</code> &mdash; statewide tract polygons with poverty / school / eligibility metadata</li>
+        <li><code>map_filters.json</code> &mdash; grantee &rarr; tract list, providing the grantee organization name for each tract</li>
     </ul>
-    <p>The build step filters both to Baltimore City tracts (<code>STCOFIPS=24510</code>), joins them, and writes <code>docs/data/grantee_tracts.geojson</code> with a <code>grantee_name</code> property on each tract feature.</p>
+    <p>The build step joins them and writes <code>docs/data/grantee_tracts.geojson</code> with a <code>grantee_name</code> property on each tract feature, plus <code>docs/data/grantees.json</code> with the master grantee list.</p>
 
     <h3>Eligibility note</h3>
-    <p>"Eligible" tracts (i.e. those meeting the ENOUGH Act poverty threshold) and "grantee" tracts are different. A tract is eligible if it meets the ACS child-poverty threshold; a tract is a grantee tract only if a current grantee organization is operating in that geography. Of Baltimore City's 199 tracts, 85 are ENOUGH-eligible and 40 of those are actively served by grantees.</p>
+    <p>"Eligible" tracts (i.e. those meeting the ENOUGH Act poverty threshold) and "grantee" tracts are different. A tract is eligible if it meets the ACS child-poverty threshold; a tract is a grantee tract only if a current grantee organization is operating in that geography. Statewide, several hundred tracts are ENOUGH-eligible but only 111 are actively served by current grantees.</p>
 </div>
 
 <h2>Layer 2 — BVRI Vacants to Value Properties</h2>
@@ -190,7 +191,7 @@
         <span style="color:#718096;font-size:0.85rem;">— off by default; two distress tiers</span>
     </div>
 
-    <p><strong>What it shows:</strong> Census tracts that qualify for the New Markets Tax Credit (NMTC) Program, classified by distress severity. Of Baltimore City's tracts, 115 are in <strong>Severe Distress</strong> and 28 are <strong>Distressed</strong>; the rest are not present in the source dataset (= not NMTC-eligible).</p>
+    <p><strong>What it shows:</strong> Census tracts statewide that qualify for the New Markets Tax Credit (NMTC) Program, classified by distress severity. Of Maryland's 587 NMTC-eligible tracts, 350 are in <strong>Severe Distress</strong> and 237 are <strong>Distressed</strong>; tracts not in the source dataset are not NMTC-eligible.</p>
 
     <h3>Source</h3>
     <p>US Treasury CDFI Fund's authoritative public ArcGIS feature service, distributed via Esri's federal layer manager:</p>
@@ -238,7 +239,7 @@
     <p>The benchmark for the income test is the higher of the statewide median family income or the metropolitan-area median family income (whichever applies based on OMB Metro/Non-metro designation).</p>
 
     <h3>Note on PolicyMap</h3>
-    <p>PolicyMap's NMTC layer ("New Markets Tax Credit (NMTC) Program Eligibility, Deep Distress Status, High Migration Rural County Status, Severe Distress Status, and Non-Metropolitan Status, for CY 2024, using 2016-2020 eligibility data") draws on this same underlying CDFI Fund data. Their additional categories ("High Migration Rural County" and "Non-Metropolitan Status") apply only outside metropolitan areas, so they don't appear in Baltimore City &mdash; the city is fully metro per OMB.</p>
+    <p>PolicyMap's NMTC layer ("New Markets Tax Credit (NMTC) Program Eligibility, Deep Distress Status, High Migration Rural County Status, Severe Distress Status, and Non-Metropolitan Status, for CY 2024, using 2016-2020 eligibility data") draws on this same underlying CDFI Fund data. Their additional categories ("High Migration Rural County" and "Non-Metropolitan Status") apply only outside metropolitan areas; in Maryland, those would surface in counties like Garrett, Allegany, and the Eastern Shore but not in the Baltimore-Washington metro corridor.</p>
 </div>
 
 <h2>Basemap</h2>

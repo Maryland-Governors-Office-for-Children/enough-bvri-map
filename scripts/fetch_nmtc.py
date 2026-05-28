@@ -22,7 +22,7 @@ import urllib.request
 import urllib.parse
 from pathlib import Path
 
-OUT = Path(__file__).parent.parent / "docs" / "data" / "nmtc_baltimore.geojson"
+OUT = Path(__file__).parent.parent / "docs" / "data" / "nmtc_maryland.geojson"
 
 BASE = ("https://services6.arcgis.com/BAJNi3EgCdtQ1BCG/arcgis/rest/services/"
         "NMTC_Qualified_Tracts_2020/FeatureServer/3/query")
@@ -78,13 +78,13 @@ def classify(props):
     return "Not Eligible"
 
 
-def fetch_baltimore():
+def fetch_maryland():
     all_features = []
     offset = 0
     page_size = 1000
     while True:
         params = urllib.parse.urlencode({
-            "where": "STCOFIPS='24510'",
+            "where": "STATE_FIPS='24'",
             "outFields": ",".join(FIELDS),
             "returnGeometry": "true",
             "outSR": "4326",
@@ -105,8 +105,8 @@ def fetch_baltimore():
 
 
 def main():
-    print("Fetching NMTC tracts for Baltimore City (STCOFIPS=24510)...")
-    features = fetch_baltimore()
+    print("Fetching NMTC tracts for Maryland (STATE_FIPS=24)...")
+    features = fetch_maryland()
     print(f"  Got {len(features)} tracts")
 
     # Slim and classify

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BVRI × ENOUGH Grantees | Baltimore City</title>
+    <title>BVRI × ENOUGH Grantees | Maryland</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -54,6 +54,10 @@
         .map-panel { position: relative; flex: 1; }
         #map { position: absolute; inset: 0; }
 
+        .zoom-controls { position: absolute; top: 12px; right: 12px; z-index: 500; display: flex; flex-direction: column; gap: 6px; }
+        .zoom-controls button { background: #fff; color: #2c5282; border: 1px solid #cbd5e0; border-radius: 4px; padding: 7px 12px; font-size: 0.78rem; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.12); white-space: nowrap; font-family: inherit; }
+        .zoom-controls button:hover { background: #ebf8ff; border-color: #2b6cb0; }
+
         .loading-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; font-size: 0.95rem; font-weight: 600; color: #2d3748; }
         .loading-overlay.hidden { display: none; }
 
@@ -71,7 +75,7 @@
 <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;">
     <div>
         <h1>BVRI &times; ENOUGH Grantees</h1>
-        <p>Baltimore Vacants Reinvestment Initiative properties overlaid with active ENOUGH grantee tracts &mdash; Baltimore City</p>
+        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide NMTC eligibility</p>
     </div>
     <a href="methodology.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;flex-shrink:0;">Methodology &amp; sources &rarr;</a>
 </header>
@@ -79,7 +83,7 @@
 <div class="stat-bar">
     <div class="stat"><div class="stat-num" id="stat-grantee-orgs">—</div><div class="stat-label">Grantee Organizations</div></div>
     <div class="stat"><div class="stat-num" id="stat-grantee">—</div><div class="stat-label">Grantee Tracts</div></div>
-    <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties</div></div>
+    <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties (Baltimore)</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Grantee Tracts</div></div>
 </div>
 
@@ -88,9 +92,9 @@
         <div class="layer-group">
             <h3>Layers</h3>
             <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value</label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Investment Areas</label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility (CDFI Fund)</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
         </div>
 
         <div class="layer-group">
@@ -102,7 +106,7 @@
             <h3>BVRI Overlap</h3>
             <div class="overlap-panel">
                 <div class="big" id="overlap-num">—</div>
-                <div class="sub" id="overlap-sub">BVRI properties within ENOUGH<br>grantee tract boundaries</div>
+                <div class="sub" id="overlap-sub">Baltimore BVRI properties within<br>ENOUGH grantee tract boundaries</div>
             </div>
         </div>
 
@@ -124,6 +128,10 @@
     <div class="map-panel">
         <div class="loading-overlay" id="loading">Loading map data&hellip;</div>
         <div id="map"></div>
+        <div class="zoom-controls">
+            <button id="zoom-baltimore" type="button">Zoom to Baltimore City</button>
+            <button id="zoom-maryland" type="button">Show all Maryland</button>
+        </div>
     </div>
 </div>
 
@@ -136,14 +144,24 @@
 (function () {
     document.getElementById('data-date').textContent = new Date().toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
 
-    // Categorical palette — distinct, colorblind-aware (Tableau 10 + extras)
+    // Categorical palette — Tableau 20 (extended to 28). Colors recycle past 20
+    // but with enough visual variation that adjacent grantees on the map remain
+    // distinguishable.
     const PALETTE = [
         '#4e79a7', '#f28e2c', '#59a14f', '#b07aa1', '#e15759',
         '#76b7b2', '#edc949', '#9c755f', '#bab0ab', '#ff9da7',
-        '#86bcb6'
+        '#86bcb6', '#a0cbe8', '#ffbe7d', '#8cd17d', '#b6992d',
+        '#499894', '#fabfd2', '#79706e', '#d4a6c8', '#d37295',
+        '#1f77b4', '#d62728', '#9467bd', '#8c564b', '#17becf',
+        '#bcbd22', '#7f7f7f', '#aec7e8'
     ];
 
-    const map = L.map('map').setView([39.30, -76.62], 12);
+    // Bounding boxes for the two zoom presets
+    const MD_BOUNDS = L.latLngBounds([37.85, -79.55], [39.75, -75.0]);
+    const BACI_BOUNDS = L.latLngBounds([39.20, -76.72], [39.38, -76.52]);
+
+    const map = L.map('map');
+    map.fitBounds(MD_BOUNDS, { padding: [10, 10] });
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
         maxZoom: 19
@@ -249,9 +267,9 @@
                     bounds.extend(rec.layer.getBounds());
                 }
             });
-            if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+            if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
         } else {
-            map.setView([39.30, -76.62], 12);
+            map.fitBounds(MD_BOUNDS, { padding: [10, 10] });
         }
     }
 
@@ -274,16 +292,16 @@
             e.stopPropagation();
             activeGrantee = null;
             applyGranteeFilter();
-            map.setView([39.30, -76.62], 12);
+            map.fitBounds(MD_BOUNDS, { padding: [10, 10] });
         });
     }
 
     Promise.all([
         fetchJSON('data/grantee_tracts.geojson'),
-        fetchJSON('data/baltimore_grantees.json'),
+        fetchJSON('data/grantees.json'),
         fetchJSON('data/bvri_vacants.geojson'),
         fetchJSON('data/bvri_investment_areas.geojson'),
-        fetchJSON('data/nmtc_baltimore.geojson'),
+        fetchJSON('data/nmtc_maryland.geojson'),
     ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
@@ -428,6 +446,14 @@
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);
         });
+    });
+
+    // Zoom presets
+    document.getElementById('zoom-baltimore').addEventListener('click', function () {
+        map.fitBounds(BACI_BOUNDS, { padding: [10, 10] });
+    });
+    document.getElementById('zoom-maryland').addEventListener('click', function () {
+        map.fitBounds(MD_BOUNDS, { padding: [10, 10] });
     });
 
 })();

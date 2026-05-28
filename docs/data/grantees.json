@@ -1,0 +1,286 @@
+{
+  "grantees": [
+    {
+      "name": "Park Heights Renaissance, Inc.",
+      "tract_count": 10,
+      "tracts": [
+        "24510150500",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280102"
+      ]
+    },
+    {
+      "name": "The Y in Central Maryland",
+      "tract_count": 7,
+      "tracts": [
+        "24510090100",
+        "24510090200",
+        "24510090300",
+        "24510090400",
+        "24510090600",
+        "24510090700",
+        "24510271001"
+      ]
+    },
+    {
+      "name": "Identity, Inc.",
+      "tract_count": 6,
+      "tracts": [
+        "24031700713",
+        "24031700724",
+        "24031700725",
+        "24031700726",
+        "24031700727",
+        "24031700731"
+      ]
+    },
+    {
+      "name": "Good Intentions Foundation Inc.",
+      "tract_count": 6,
+      "tracts": [
+        "24033803200",
+        "24033803403",
+        "24033803508",
+        "24033803509",
+        "24033803602",
+        "24033803606"
+      ]
+    },
+    {
+      "name": "Child First Authority",
+      "tract_count": 6,
+      "tracts": [
+        "24510130200",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510170200",
+        "24510170300"
+      ]
+    },
+    {
+      "name": "Local Management Board Frederick County",
+      "tract_count": 5,
+      "tracts": [
+        "24021750504",
+        "24021750505",
+        "24021750506",
+        "24021750507",
+        "24021750508"
+      ]
+    },
+    {
+      "name": "Boys & Girls Clubs of Harford and Cecil Counties",
+      "tract_count": 5,
+      "tracts": [
+        "24025301301",
+        "24025301302",
+        "24025301401",
+        "24025301402",
+        "24025301601"
+      ]
+    },
+    {
+      "name": "San Mar Family & Community Services: Bester Community of Hope",
+      "tract_count": 5,
+      "tracts": [
+        "24043000500",
+        "24043000601",
+        "24043000700",
+        "24043000800",
+        "24043000900"
+      ]
+    },
+    {
+      "name": "The Central Baltimore Partnership, Inc.",
+      "tract_count": 5,
+      "tracts": [
+        "24510090400",
+        "24510090800",
+        "24510120300",
+        "24510120400",
+        "24510120500"
+      ]
+    },
+    {
+      "name": "Greater Mondawmin Coordinating Council",
+      "tract_count": 5,
+      "tracts": [
+        "24510130400",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510150702"
+      ]
+    },
+    {
+      "name": "Elev8 Baltimore, Inc.",
+      "tract_count": 5,
+      "tracts": [
+        "24510130300",
+        "24510150100",
+        "24510160100",
+        "24510160200",
+        "24510160300"
+      ]
+    },
+    {
+      "name": "One Annapolis, Inc",
+      "tract_count": 4,
+      "tracts": [
+        "24003702500",
+        "24003706303",
+        "24003706403",
+        "24003706404"
+      ]
+    },
+    {
+      "name": "Anne Arundel County Partnership for Children, Youth, and Families",
+      "tract_count": 4,
+      "tracts": [
+        "24003750101",
+        "24003750102",
+        "24003750201",
+        "24003750204"
+      ]
+    },
+    {
+      "name": "CHEER (Community Health and Empowerment through Education and Research)",
+      "tract_count": 4,
+      "tracts": [
+        "24031701702",
+        "24031701900",
+        "24031702000",
+        "24031702301"
+      ]
+    },
+    {
+      "name": "Prince George's County Department of Social Services",
+      "tract_count": 4,
+      "tracts": [
+        "24033801801",
+        "24033801802",
+        "24033801808",
+        "24033801809"
+      ]
+    },
+    {
+      "name": "CASA, Inc.",
+      "tract_count": 4,
+      "tracts": [
+        "24033805500",
+        "24033805601",
+        "24033805602",
+        "24033805700"
+      ]
+    },
+    {
+      "name": "United Communities Against Poverty",
+      "tract_count": 4,
+      "tracts": [
+        "24033802301",
+        "24033802404",
+        "24033802406",
+        "24033802407"
+      ]
+    },
+    {
+      "name": "Latin American Youth Center",
+      "tract_count": 4,
+      "tracts": [
+        "24033806602",
+        "24033807301",
+        "24033807305",
+        "24033807410"
+      ]
+    },
+    {
+      "name": "Community Assistance Network, Inc.",
+      "tract_count": 3,
+      "tracts": [
+        "24005450501",
+        "24005450503",
+        "24005450504"
+      ]
+    },
+    {
+      "name": "Moving Dorchester Forward, INC",
+      "tract_count": 3,
+      "tracts": [
+        "24019970500",
+        "24019970600",
+        "24019970804"
+      ]
+    },
+    {
+      "name": "Tendea Family INC.",
+      "tract_count": 3,
+      "tracts": [
+        "24510070100",
+        "24510070200",
+        "24510070300"
+      ]
+    },
+    {
+      "name": "Cherry Hill Strong",
+      "tract_count": 3,
+      "tracts": [
+        "24510250203",
+        "24510250204",
+        "24510250207"
+      ]
+    },
+    {
+      "name": "City of Cumberland",
+      "tract_count": 2,
+      "tracts": [
+        "24001000700",
+        "24001000800"
+      ]
+    },
+    {
+      "name": "South Baltimore Community Land Trust",
+      "tract_count": 2,
+      "tracts": [
+        "24510250402",
+        "24510250500"
+      ]
+    },
+    {
+      "name": "Urban Strategies Inc",
+      "tract_count": 2,
+      "tracts": [
+        "24510030100",
+        "24510280500"
+      ]
+    },
+    {
+      "name": "Caroline Human Services Council, Inc.",
+      "tract_count": 1,
+      "tracts": [
+        "24011955600"
+      ]
+    },
+    {
+      "name": "LifeStyles of Maryland Foundation, Inc.",
+      "tract_count": 1,
+      "tracts": [
+        "24017850901"
+      ]
+    },
+    {
+      "name": "Leaders Breeders Inc.",
+      "tract_count": 1,
+      "tracts": [
+        "24510260301"
+      ]
+    }
+  ]
+}
