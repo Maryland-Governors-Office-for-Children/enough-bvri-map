@@ -87,6 +87,7 @@
             <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
             <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value</label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Investment Areas</label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility (CDFI Fund)</label>
         </div>
 
         <div class="layer-group">
@@ -106,6 +107,8 @@
             <h3>Legend</h3>
             <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacant Property</div>
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
+            <div class="legend-item"><span class="swatch" style="background:#1c4532;"></span> NMTC Severe Distress</div>
+            <div class="legend-item"><span class="swatch" style="background:#48bb78;"></span> NMTC Distressed</div>
         </div>
 
         <div style="font-size:0.72rem;color:#a0aec0;margin-top:auto;padding-top:8px;">
@@ -146,6 +149,15 @@
     const lgGrantee = L.layerGroup().addTo(map);
     const lgVacants = L.layerGroup().addTo(map);
     const lgInvest  = L.layerGroup();
+    const lgNmtc    = L.layerGroup();
+
+    const NMTC_COLORS = {
+        'Severe Distress':   { fill: '#1c4532', stroke: '#0f2417' },
+        'Distressed':        { fill: '#48bb78', stroke: '#22543d' },
+        'Eligible':          { fill: '#9ae6b4', stroke: '#22543d' },
+        'Insufficient Data': { fill: '#cbd5e0', stroke: '#4a5568' },
+        'Not Eligible':      { fill: '#f7fafc', stroke: '#a0aec0' },
+    };
 
     let granteeColors = {};        // grantee name -> color
     let granteeTractLayers = [];   // [{ granteeName, layer, geoid, feature }]
@@ -268,7 +280,8 @@
         fetchJSON('data/baltimore_grantees.json'),
         fetchJSON('data/bvri_vacants.geojson'),
         fetchJSON('data/bvri_investment_areas.geojson'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas]) {
+        fetchJSON('data/nmtc_baltimore.geojson'),
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -362,6 +375,39 @@
             }
         }).addTo(lgInvest);
 
+        // NMTC eligibility (off by default — adds beneath grantee tracts)
+        L.geoJSON(nmtc, {
+            style: function (feature) {
+                const c = NMTC_COLORS[feature.properties.nmtc_class] || NMTC_COLORS['Not Eligible'];
+                return { color: c.stroke, weight: 0.8, fillColor: c.fill, fillOpacity: 0.45 };
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const pov = p.poverty_pct != null ? p.poverty_pct.toFixed(1) + '%' : 'N/A';
+                const inc = p.income_pct_benchmark != null
+                    ? (p.income_pct_benchmark <= 1.5
+                        ? (p.income_pct_benchmark * 100).toFixed(1)
+                        : p.income_pct_benchmark.toFixed(1)) + '%'
+                    : 'N/A';
+                const unemp = p.unemployment_ratio != null ? p.unemployment_ratio.toFixed(2) + '×' : 'N/A';
+                const c = NMTC_COLORS[p.nmtc_class] || NMTC_COLORS['Not Eligible'];
+                layer.bindPopup(
+                    '<div style="min-width:220px;">' +
+                      '<strong style="color:' + c.stroke + ';">NMTC: ' + p.nmtc_class + '</strong>' +
+                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">Tract ' + p.FIPS + '</div>' +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>Poverty Rate:</td><td><strong>' + pov + '</strong></td></tr>' +
+                        '<tr><td>Income vs. Benchmark:</td><td>' + inc + '</td></tr>' +
+                        '<tr><td>Unemployment Ratio:</td><td>' + unemp + ' national</td></tr>' +
+                        '<tr><td>OMB:</td><td>' + (p.metro || '—') + '</td></tr>' +
+                      '</table>' +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: CDFI Fund (2016-2020 ACS, 2020 tracts)</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgNmtc);
+
         document.getElementById('loading').classList.add('hidden');
 
     }).catch(function (err) {
@@ -374,6 +420,7 @@
         ['layer-grantee', lgGrantee],
         ['layer-vacants', lgVacants],
         ['layer-invest',  lgInvest],
+        ['layer-nmtc',    lgNmtc],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);
