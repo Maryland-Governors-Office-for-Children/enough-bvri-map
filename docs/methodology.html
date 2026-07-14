@@ -72,15 +72,16 @@
 <div class="container">
 
 <h2>Overview</h2>
-<p>This map overlays four geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
+<p>This map overlays six geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The five layers, with their geographic coverage:</p>
+<p>The six layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>DHCD Impact Investment Areas (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>NMTC eligibility (US Treasury CDFI Fund)</strong> &mdash; statewide</li>
     <li><strong>Opportunity Zones 2026 eligibility (MD Dept. of Commerce / EIG)</strong> &mdash; statewide</li>
+    <li><strong>Maryland Enterprise Zones (MD Dept. of Commerce)</strong> &mdash; statewide</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
@@ -291,6 +292,49 @@
     <p>This is the State of Maryland's preliminary read on the 2026 OZ eligibility framework. Final designations will require federal guidance from the US Treasury and CDFI Fund and may differ from what's shown here. The map should be treated as an early indicator, not a final list.</p>
 </div>
 
+<h2>Layer 6 &mdash; Maryland Enterprise Zones</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#dd6b20;"></span>
+        <span class="swatch" style="background:#c05621;"></span>
+        <span class="layer-label">Maryland Enterprise Zones</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default; zones &amp; focus areas</span>
+    </div>
+
+    <p><strong>What it shows:</strong> Maryland's 32 designated Enterprise Zones statewide, plus 2 Enterprise Zone <em>Focus Areas</em> (sub-areas that carry enhanced credits). Enterprise Zones are a Maryland Department of Commerce economic-development program: businesses that locate or expand within a zone may qualify for state real-property and income tax credits. Zones are locally administered (typically by a county or municipal economic-development office) and carry an expiration date.</p>
+
+    <h3>Source</h3>
+    <p>Maryland Department of Commerce data, published on Maryland's statewide GIS platform (iMap) as the <code>MD_IncentiveZones</code> feature service. The same service backs the state's public <a href="https://maryland.maps.arcgis.com/apps/instant/lookup/index.html?appid=7d28e49c55b74945bf79c8fd576acd3c">Enterprise Zone lookup app</a>.</p>
+    <pre><code>https://mdgeodata.md.gov/imap/rest/services/BusinessEconomy/
+  MD_IncentiveZones/FeatureServer/4   (Enterprise Zones)
+  MD_IncentiveZones/FeatureServer/5   (Enterprise Zone Focus Areas)</code></pre>
+
+    <div class="meta">
+        <strong>Vintage:</strong> Current designated zones (source item dated 2026-01-22)<br>
+        <strong>Geometry:</strong> Zone / focus-area polygons (not census tracts)<br>
+        <strong>Coverage:</strong> Statewide<br>
+        <strong>Refresh cadence:</strong> Run <code>python3 scripts/fetch_ez.py</code> to pull the latest zones and focus areas
+    </div>
+
+    <h3>Schema (relevant fields)</h3>
+    <table class="field-table">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>sitename</code></td><td>Zone / focus-area name</td></tr>
+            <tr><td><code>orgname</code></td><td>Administering organization (local econ-development office)</td></tr>
+            <tr><td><code>county</code></td><td>County</td></tr>
+            <tr><td><code>extent</code></td><td>Zone size (acreage; zones only)</td></tr>
+            <tr><td><code>Expiration</code></td><td>Zone designation expiration date (epoch ms; zones only)</td></tr>
+            <tr><td><code>website</code></td><td>Program / administering-org website</td></tr>
+            <tr><td><code>focus_area</code></td><td>Local flag added by the fetch script: <code>true</code> for a Focus Area, <code>false</code> for a full Enterprise Zone</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Grantee-tract overlap</h3>
+    <p>The "Grantee Tracts in Enterprise Zones" stat counts how many of the 111 ENOUGH grantee tracts geographically intersect an Enterprise Zone (Focus Areas are excluded from the count, since they nest inside zones). Because Enterprise Zones are irregular polygons rather than tracts, the overlap is computed in the browser with a bounding-box prefilter and a polygon-vertex containment test &mdash; an approximation that can miss the rare case of two polygons whose edges cross without either containing a vertex of the other. Selecting a single grantee in the sidebar recomputes the count for that grantee's tracts only.</p>
+</div>
+
 <h2>Basemap</h2>
 <p>The map tile layer is <a href="https://github.com/CartoDB/basemap-styles">CartoDB Positron</a>, served from <code>basemaps.cartocdn.com</code>. Tiles are © OpenStreetMap contributors, © CARTO. No authentication required; CARTO's free tier permits non-commercial public use under the OpenStreetMap ODbL.</p>
 
@@ -304,6 +348,9 @@ python3 scripts/fetch_nmtc.py
 
 # Refresh Opportunity Zones 2026 eligibility
 python3 scripts/fetch_oz.py
+
+# Refresh Maryland Enterprise Zones
+python3 scripts/fetch_ez.py
 
 # Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
 # See CLAUDE.md for the inline Python snippet

@@ -75,7 +75,7 @@
 <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;">
     <div>
         <h1>BVRI &times; ENOUGH Grantees</h1>
-        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide NMTC eligibility</p>
+        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide tax-incentive eligibility (NMTC, Opportunity Zones, Enterprise Zones)</p>
     </div>
     <a href="methodology.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;flex-shrink:0;">Methodology &amp; sources &rarr;</a>
 </header>
@@ -85,6 +85,7 @@
     <div class="stat"><div class="stat-num" id="stat-grantee">—</div><div class="stat-label">Grantee Tracts</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties (Baltimore)</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Grantee Tracts</div></div>
+    <div class="stat"><div class="stat-num" id="stat-ez-overlap">—</div><div class="stat-label">Grantee Tracts in Enterprise Zones</div></div>
 </div>
 
 <div class="map-wrap">
@@ -96,6 +97,7 @@
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-oz"><span class="swatch" style="background:#3182ce;border:1px solid #2a4365;"></span> Opportunity Zones 2026 <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-ez"><span class="swatch" style="background:#dd6b20;border:1px solid #9c4221;"></span> Enterprise Zones <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
         </div>
 
         <div class="layer-group">
@@ -119,6 +121,8 @@
             <div class="legend-item"><span class="swatch" style="background:#48bb78;"></span> NMTC Distressed</div>
             <div class="legend-item"><span class="swatch" style="background:#3182ce;"></span> OZ 2026 Eligible (Non-rural)</div>
             <div class="legend-item"><span class="swatch" style="background:#90cdf4;"></span> OZ 2026 Eligible (Rural)</div>
+            <div class="legend-item"><span class="swatch" style="background:#dd6b20;"></span> Enterprise Zone</div>
+            <div class="legend-item"><span class="swatch" style="background:#c05621;"></span> Enterprise Zone Focus Area</div>
         </div>
 
         <div style="font-size:0.72rem;color:#a0aec0;margin-top:auto;padding-top:8px;">
@@ -175,6 +179,10 @@
     const lgInvest  = L.layerGroup();
     const lgNmtc    = L.layerGroup();
     const lgOz      = L.layerGroup();
+    const lgEz      = L.layerGroup();
+
+    const EZ_COLOR       = { fill: '#dd6b20', stroke: '#9c4221' };  // Enterprise Zone
+    const EZ_FOCUS_COLOR = { fill: '#c05621', stroke: '#7b341e' };  // Focus Area (enhanced credits)
 
     const NMTC_COLORS = {
         'Severe Distress':   { fill: '#1c4532', stroke: '#0f2417' },
@@ -202,6 +210,39 @@
                 }
             }
             if (inside) return true;
+        }
+        return false;
+    }
+
+    // Approximate "do these two polygon features intersect": true if any vertex of
+    // one falls inside the other. Good enough for tract-in-zone flagging (both are
+    // areal); misses only the rare case of crossing edges with no contained vertex.
+    function outerRings(geom) {
+        const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
+        return polys.map(function (poly) { return poly[0]; });
+    }
+    function bbox(geom) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        outerRings(geom).forEach(function (ring) {
+            ring.forEach(function (pt) {
+                if (pt[0] < minX) minX = pt[0];
+                if (pt[0] > maxX) maxX = pt[0];
+                if (pt[1] < minY) minY = pt[1];
+                if (pt[1] > maxY) maxY = pt[1];
+            });
+        });
+        return [minX, minY, maxX, maxY];
+    }
+    function bboxOverlap(a, b) {
+        return a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
+    }
+    function polygonsIntersect(geomA, bbA, geomB, bbB) {
+        if (!bboxOverlap(bbA, bbB)) return false;
+        for (const ring of outerRings(geomA)) {
+            for (const pt of ring) { if (pointInPolygon(pt, geomB)) return true; }
+        }
+        for (const ring of outerRings(geomB)) {
+            for (const pt of ring) { if (pointInPolygon(pt, geomA)) return true; }
         }
         return false;
     }
@@ -240,6 +281,8 @@
 
     let bvriTotalInGrantees = 0;
     let bvriPerGrantee = {}; // grantee name -> count
+    let ezTractsTotal = 0;
+    let ezTractsPerGrantee = {}; // grantee name -> count of that grantee's tracts in an Enterprise Zone
     function updateOverlapDisplay() {
         if (activeGrantee) {
             const n = bvriPerGrantee[activeGrantee] || 0;
@@ -247,11 +290,13 @@
             document.getElementById('overlap-sub').innerHTML =
                 'BVRI properties within<br><strong>' + activeGrantee + '</strong>';
             document.getElementById('stat-bvri-overlap').textContent = n.toLocaleString();
+            document.getElementById('stat-ez-overlap').textContent = (ezTractsPerGrantee[activeGrantee] || 0).toLocaleString();
         } else {
             document.getElementById('overlap-num').textContent = bvriTotalInGrantees.toLocaleString();
             document.getElementById('overlap-sub').innerHTML =
                 'BVRI properties within ENOUGH<br>grantee tract boundaries';
             document.getElementById('stat-bvri-overlap').textContent = bvriTotalInGrantees.toLocaleString();
+            document.getElementById('stat-ez-overlap').textContent = ezTractsTotal.toLocaleString();
         }
     }
 
@@ -307,7 +352,8 @@
         fetchJSON('data/bvri_investment_areas.geojson'),
         fetchJSON('data/nmtc_maryland.geojson'),
         fetchJSON('data/oz_maryland.geojson'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz]) {
+        fetchJSON('data/ez_maryland.geojson'),
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, ez]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -360,6 +406,24 @@
                     bvriTotalInGrantees++;
                     break;
                 }
+            }
+        });
+        // Compute grantee-tract × Enterprise-Zone overlap, broken down per grantee.
+        // Only actual zones count (skip focus areas — they nest inside zones).
+        const ezZoneGeoms = ez.features
+            .filter(function (f) { return f.geometry && !f.properties.focus_area; })
+            .map(function (f) { return { geom: f.geometry, bb: bbox(f.geometry) }; });
+        ezTractsPerGrantee = {};
+        ezTractsTotal = 0;
+        granteeTractLayers.forEach(function (rec) {
+            if (!rec.feature.geometry) return;
+            const tbb = bbox(rec.feature.geometry);
+            const hit = ezZoneGeoms.some(function (z) {
+                return polygonsIntersect(rec.feature.geometry, tbb, z.geom, z.bb);
+            });
+            if (hit) {
+                ezTractsPerGrantee[rec.granteeName] = (ezTractsPerGrantee[rec.granteeName] || 0) + 1;
+                ezTractsTotal++;
             }
         });
         updateOverlapDisplay();
@@ -434,6 +498,41 @@
             }
         }).addTo(lgOz);
 
+        // Maryland Enterprise Zones (off by default)
+        L.geoJSON(ez, {
+            style: function (feature) {
+                const c = feature.properties.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
+                return { color: c.stroke, weight: 1.2, fillColor: c.fill, fillOpacity: feature.properties.focus_area ? 0.5 : 0.3 };
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const c = p.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
+                const label = p.focus_area ? 'Enterprise Zone Focus Area' : 'Enterprise Zone';
+                let expYear = '';
+                if (p.expiration != null) {
+                    const d = new Date(p.expiration);
+                    if (!isNaN(d)) expYear = String(d.getUTCFullYear());
+                }
+                const site = p.sitename || 'Enterprise Zone';
+                layer.bindTooltip(site, { sticky: true });
+                layer.bindPopup(
+                    '<div style="min-width:220px;">' +
+                      '<strong style="color:' + c.stroke + ';">' + label + '</strong>' +
+                      '<div style="font-size:0.92em;font-weight:600;margin-top:2px;">' + site + '</div>' +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>Administered by:</td><td>' + (p.orgname || '—') + '</td></tr>' +
+                        '<tr><td>County:</td><td>' + (p.county || '—') + '</td></tr>' +
+                        (p.extent ? '<tr><td>Extent:</td><td>' + p.extent + '</td></tr>' : '') +
+                        (expYear ? '<tr><td>Expires:</td><td>' + expYear + '</td></tr>' : '') +
+                      '</table>' +
+                      (p.website ? '<div style="margin-top:6px;"><a href="' + p.website + '" target="_blank" rel="noopener">Program website &rarr;</a></div>' : '') +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: MD Dept. of Commerce via Maryland iMap</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgEz);
+
         // NMTC eligibility (off by default — adds beneath grantee tracts)
         L.geoJSON(nmtc, {
             style: function (feature) {
@@ -481,6 +580,7 @@
         ['layer-invest',  lgInvest],
         ['layer-nmtc',    lgNmtc],
         ['layer-oz',      lgOz],
+        ['layer-ez',      lgEz],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);

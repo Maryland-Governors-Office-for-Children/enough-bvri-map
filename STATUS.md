@@ -1,0 +1,90 @@
+# ENOUGH × BVRI Map — Status & Open Steps
+
+_Last reviewed: 2026-07-14._ Living index of what's done, what's open, and what needs a decision.
+See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
+
+This is a single-page Leaflet map (deployed via GitHub Pages from `docs/`) showing where active
+ENOUGH grantee tracts overlap Baltimore Vacants Reinvestment Initiative (BVRI) activity, plus two
+federal/state eligibility layers. Requested by Mihir Parikh; intentionally simple.
+**Live:** https://maryland-governors-office-for-children.github.io/enough-bvri-map/
+
+## Workstream A — Map build & layers
+
+**Done**
+- Initial build: BVRI × ENOUGH overlay map for Baltimore City (`8d68452`).
+- Simplified to a grantee-only tract layer + fixed a blank-map render bug (`d3687bb`).
+- Grantee tracts grouped by organization with distinct per-grantee colors (`1862bbb`).
+- Added **NMTC eligibility** layer from CDFI Fund (`07ed842`).
+- Added a **methodology page** (`docs/methodology.html`) documenting all four data sources (`c562a3b`).
+- Expanded from Baltimore-only to a **statewide** default view with a "Zoom to Baltimore City" button (`c997448`).
+- Added **Opportunity Zones 2026** eligibility layer (MD Commerce / EIG) (`8aff097`).
+- Added **Maryland Enterprise Zones** layer (MD Commerce via iMap `MD_IncentiveZones`): 32 zones +
+  2 Focus Areas (folded into one geojson with a `focus_area` flag), off by default, orange fill.
+  Added a 5th stat-bar metric "Grantee Tracts in Enterprise Zones" (86 statewide), computed
+  client-side via a new polygon-vs-polygon overlap helper (bbox prefilter + vertex containment);
+  recomputes per-grantee on sidebar selection. Requested via the state EZ lookup app.
+- All map layers wired in `docs/index.html`: grantee tracts (colored by org, on by default),
+  BVRI vacants (red points), DHCD Impact Investment Areas (off), NMTC (two distress tiers, off),
+  OZ 2026 (rural/non-rural, off), Enterprise Zones (zones + focus areas, off).
+- BVRI-in-grantee-tracts overlap (565 as of the latest data) computed client-side via
+  point-in-polygon ray casting; recomputes per-grantee when one is selected in the sidebar.
+
+**Open (build — can be done in-repo)**
+- [ ] Decide whether to ship the additional DHCD layers (vacant building notices, demolitions,
+  receivership — Layers 0/1/2/4/5 of the same feature server) noted as available in methodology, or
+  keep the map to just the open-bid Vacants to Value list.
+- [ ] Optional: a standing DQ/freshness note on the map for the layers with differing ACS vintages
+  (ENOUGH = 2024 ACS; NMTC = 2016–2020 ACS) — currently only documented in `methodology.html`.
+
+## Workstream B — Data fetch scripts
+
+**Done**
+- `scripts/fetch_bvri.py` (70 lines) — pulls Layer 7 (Vacants to Value, 1,192 properties) and Layer 10
+  (7 Impact Investment Areas) from Baltimore City DHCD ArcGIS into `docs/data/`.
+- `scripts/fetch_nmtc.py` (145 lines) — pulls the CDFI Fund NMTC service and **recomputes the distress
+  tier** locally (the source service has no single tier field): 587 eligible tracts statewide
+  (350 Severe Distress, 237 Distressed).
+- `scripts/fetch_oz.py` (114 lines) — pulls MD Commerce's official 2026 OZ-eligible tracts service,
+  filtered to `oz_elig='OZ Eligible'`: 451 tracts (383 non-rural, 68 rural).
+- `scripts/fetch_ez.py` — pulls iMap `MD_IncentiveZones` Layer 4 (Enterprise Zones, 32) + Layer 5
+  (Focus Areas, 2) into `ez_maryland.geojson` with a `focus_area` flag. Note: Layer 5 lacks the
+  `extent`/`Expiration` fields, so the script requests `outFields=*` rather than a fixed field list.
+
+**Open (build — can be done in-repo)**
+- [ ] **No saved grantee-tract build script.** The `grantee_tracts.geojson` build is only an inline
+  Python snippet in `CLAUDE.md`. Worth saving as `scripts/build_grantee_tracts.py` so the rebuild is
+  reproducible like the other three fetchers.
+- [ ] **Reconcile the grantee-tract build source.** `CLAUDE.md`'s prose and `methodology.html` say the
+  tracts are built from `enough-eligibility-changes` (`tracts_2026.geojson` + `map_filters.json`), but
+  the inline snippet reads `../enough-eligibility-analysis/docs/data/tracts_2026.geojson` and joins on
+  `grantee_geoids.json` (no `grantee_name` join shown). Confirm the canonical source repo/filename and
+  which path actually produced the committed `grantee_tracts.geojson` before relying on the snippet.
+- [ ] `fetch_nmtc.py`'s header docstring still says it writes `nmtc_baltimore.geojson`; the code writes
+  `nmtc_maryland.geojson`. Cosmetic, but worth fixing to avoid confusion.
+
+## Workstream C — Data freshness
+
+**Done**
+- All data committed under `docs/data/` (geojson + json) so the site is self-contained and offline-buildable.
+
+**Open (operational — Nick)**
+- [ ] BVRI is a **live, daily-refreshed** DHCD dataset; the committed `bvri_vacants.geojson` is a snapshot
+  from the 2026-05-28 build. Re-run `python3 scripts/fetch_bvri.py` and commit before any external share
+  if currency matters.
+- [ ] OZ 2026 layer is **preliminary** (pending federal guidance) — re-pull when MD Commerce updates.
+
+## Cross-cutting decisions still open
+1. **Scope creep vs. simplicity** — the original ask (Mihir) was deliberately minimal (one grantee
+   layer, one BVRI layer). It has since grown to **six** layers (grantee, BVRI, DHCD areas, NMTC,
+   OZ 2026, Enterprise Zones) + statewide view + a methodology page + two overlap stats.
+   Confirm with Mihir that the expanded version is what he wants, or keep a trimmed "as-requested" view.
+2. Whether to add the other DHCD vacant-property datasets (see Workstream A) — depends on the use case.
+
+## Repo hygiene
+- Git on `main`, clean working tree (`git status --short` empty as of 2026-06-16). 8 commits, all
+  dated 2026-05-28 (single build session).
+- **Pushed to a PRIVATE GitHub repo:** `Maryland-Governors-Office-for-Children/enough-bvri-map`
+  (remote `origin` set). Deployed via **GitHub Pages from `docs/`**.
+- **No `.gitignore`** — all data files (`docs/data/*.geojson`, `*.json`) are intentionally committed,
+  since every layer is built from public, non-sensitive sources (no PII; ENOUGH tract roster is public).
+  If a `.claude/settings.local.json` is ever added, gitignore it.
