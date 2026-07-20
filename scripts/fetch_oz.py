@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """
-Fetch Maryland's official 2026 Opportunity Zones eligibility from the
-Maryland Department of Commerce / state portal ArcGIS service.
+Fetch Maryland's DESIGNATED Opportunity Zones from the Maryland iMap
+MD_IncentiveZones ArcGIS service (MD DHCD / MD Dept. of Commerce data).
 
 Source service:
-  https://services.arcgis.com/njFNhDsUCentVYJW/arcgis/rest/services/
-    Maryland_Official_Eligible_Opportunity_Zones_Census_Tracts_2026/FeatureServer/0
+  https://mdgeodata.md.gov/imap/rest/services/BusinessEconomy/MD_IncentiveZones/FeatureServer/14
+    Layer 14 — Opportunity Zones (149 designated census tracts statewide)
 
-Owned by: BRAD.WOLTERS@maryland.gov_maryland (Maryland portal)
-Backing data: EIG (Economic Innovation Group) eligibility map, ACS 2020-2024
-Vintage: CY 2026 (preliminary, pending federal guidance)
+These are the Opportunity Zones designated under the 2017 Tax Cuts and Jobs Act
+(IRS Notice 2018-48): Maryland nominated 149 low-income 2010 census tracts, which
+the U.S. Treasury approved. The designation runs for a decade (in effect through
+2028). This is distinct from the preliminary OZ 2.0 *eligible* tracts — this layer
+is the officially designated zones only.
 
-Filters to oz_elig='OZ Eligible' to keep the file tight (~451 tracts).
+Backing tract boundaries: 2010 U.S. Census tracts.
+
+Writes docs/data/oz_designated_maryland.geojson.
 """
 
 import json
@@ -19,24 +23,21 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-OUT = Path(__file__).parent.parent / "docs" / "data" / "oz_maryland.geojson"
+OUT = Path(__file__).parent.parent / "docs" / "data" / "oz_designated_maryland.geojson"
 
-BASE = ("https://services.arcgis.com/njFNhDsUCentVYJW/arcgis/rest/services/"
-        "Maryland_Official_Eligible_Opportunity_Zones_Census_Tracts_2026/FeatureServer/0/query")
+BASE = ("https://mdgeodata.md.gov/imap/rest/services/BusinessEconomy/"
+        "MD_IncentiveZones/FeatureServer/14/query")
 
-FIELDS = [
-    "GEOID", "NAME", "oz_elig", "pov_rte", "mfi_rat",
-    "rural_g", "rrl_trs", "STATE_N", "COUNTY_", "msa",
-]
+FIELDS = ["CT_2010", "COUNTY_N", "Selected_T", "MHI"]
 
 
-def fetch_eligible():
+def fetch_designated():
     all_features = []
     offset = 0
-    page_size = 1000
+    page_size = 500
     while True:
         params = urllib.parse.urlencode({
-            "where": "oz_elig='OZ Eligible'",
+            "where": "1=1",
             "outFields": ",".join(FIELDS),
             "returnGeometry": "true",
             "outSR": "4326",
@@ -59,43 +60,28 @@ def fetch_eligible():
 def to_float(v):
     if v is None:
         return None
-    s = str(v).strip().rstrip("%")
     try:
-        return float(s)
+        return float(str(v).strip())
     except ValueError:
         return None
 
 
 def main():
-    print("Fetching Opportunity Zones eligible tracts for Maryland...")
-    features = fetch_eligible()
-    print(f"  Got {len(features)} OZ-eligible tracts")
+    print("Fetching DESIGNATED Opportunity Zones for Maryland...")
+    features = fetch_designated()
+    print(f"  Got {len(features)} designated OZ tracts")
 
     out_features = []
-    rural_counts = {"Rural": 0, "Non-rural": 0, "Other": 0}
     for f in features:
         p = f.get("properties", {})
-        rural = (p.get("rural_g") or "").strip()
-        if rural == "Rural":
-            rural_counts["Rural"] += 1
-        elif rural == "Non-rural":
-            rural_counts["Non-rural"] += 1
-        else:
-            rural_counts["Other"] += 1
         out_features.append({
             "type": "Feature",
             "geometry": f.get("geometry"),
             "properties": {
-                "GEOID": p.get("GEOID"),
-                "NAME": p.get("NAME"),
-                "county": p.get("COUNTY_"),
-                "state": p.get("STATE_N"),
-                "msa": p.get("msa"),
-                "oz_elig": p.get("oz_elig"),
-                "rural": rural or None,
-                "rural_targeted": p.get("rrl_trs"),
-                "poverty_rate": to_float(p.get("pov_rte")),
-                "mfi_ratio": to_float(p.get("mfi_rat")),
+                "GEOID": p.get("CT_2010"),
+                "county": p.get("COUNTY_N"),
+                "designated": p.get("Selected_T"),
+                "mhi": to_float(p.get("MHI")),
             },
         })
 
@@ -105,9 +91,7 @@ def main():
         json.dump(out, fh)
 
     print(f"\nWrote {OUT}")
-    print(f"  Total: {len(out_features)} OZ-eligible tracts")
-    for k, n in rural_counts.items():
-        print(f"  {k}: {n}")
+    print(f"  Total: {len(out_features)} designated Opportunity Zones")
 
 
 if __name__ == "__main__":

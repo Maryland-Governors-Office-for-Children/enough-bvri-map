@@ -1,6 +1,6 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-07-14._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-07-20._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 This is a single-page Leaflet map (deployed via GitHub Pages from `docs/`) showing where active
@@ -17,7 +17,8 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
 - Added **NMTC eligibility** layer from CDFI Fund (`07ed842`).
 - Added a **methodology page** (`docs/methodology.html`) documenting all four data sources (`c562a3b`).
 - Expanded from Baltimore-only to a **statewide** default view with a "Zoom to Baltimore City" button (`c997448`).
-- Added **Opportunity Zones 2026** eligibility layer (MD Commerce / EIG) (`8aff097`).
+- Added Opportunity Zones layer; switched from **eligible (OZ 2.0)** to **designated (2018 TCJA)** zones
+  from iMap `MD_IncentiveZones` Layer 14 — 149 tracts, no rural split (`8aff097` + follow-up).
 - Added **Maryland Enterprise Zones** layer (MD Commerce via iMap `MD_IncentiveZones`): 32 zones +
   2 Focus Areas (folded into one geojson with a `focus_area` flag), off by default, orange fill.
   Added a 5th stat-bar metric "Grantee Tracts in Enterprise Zones" (86 statewide), computed
@@ -25,7 +26,7 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
   recomputes per-grantee on sidebar selection. Requested via the state EZ lookup app.
 - All map layers wired in `docs/index.html`: grantee tracts (colored by org, on by default),
   BVRI vacants (red points), DHCD Impact Investment Areas (off), NMTC (two distress tiers, off),
-  OZ 2026 (rural/non-rural, off), Enterprise Zones (zones + focus areas, off).
+  Opportunity Zones (designated, off), Enterprise Zones (zones + focus areas, off).
 - BVRI-in-grantee-tracts overlap (565 as of the latest data) computed client-side via
   point-in-polygon ray casting; recomputes per-grantee when one is selected in the sidebar.
 
@@ -44,8 +45,8 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
 - `scripts/fetch_nmtc.py` (145 lines) — pulls the CDFI Fund NMTC service and **recomputes the distress
   tier** locally (the source service has no single tier field): 587 eligible tracts statewide
   (350 Severe Distress, 237 Distressed).
-- `scripts/fetch_oz.py` (114 lines) — pulls MD Commerce's official 2026 OZ-eligible tracts service,
-  filtered to `oz_elig='OZ Eligible'`: 451 tracts (383 non-rural, 68 rural).
+- `scripts/fetch_oz.py` — pulls MD iMap `MD_IncentiveZones` Layer 14 (designated Opportunity Zones):
+  149 tracts statewide (2018 TCJA designation, in effect through 2028). No rural/non-rural split.
 - `scripts/fetch_ez.py` — pulls iMap `MD_IncentiveZones` Layer 4 (Enterprise Zones, 32) + Layer 5
   (Focus Areas, 2) into `ez_maryland.geojson` with a `focus_area` flag. Note: Layer 5 lacks the
   `extent`/`Expiration` fields, so the script requests `outFields=*` rather than a fixed field list.
@@ -71,12 +72,13 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
 - [ ] BVRI is a **live, daily-refreshed** DHCD dataset; the committed `bvri_vacants.geojson` is a snapshot
   from the 2026-05-28 build. Re-run `python3 scripts/fetch_bvri.py` and commit before any external share
   if currency matters.
-- [ ] OZ 2026 layer is **preliminary** (pending federal guidance) — re-pull when MD Commerce updates.
+- [ ] Designated OZ layer (2018 TCJA) is stable through 2028. A future OZ 2.0 designation cycle will
+  replace it — re-pull `fetch_oz.py` when MD publishes the new designated list.
 
 ## Cross-cutting decisions still open
 1. **Scope creep vs. simplicity** — the original ask (Mihir) was deliberately minimal (one grantee
    layer, one BVRI layer). It has since grown to **six** layers (grantee, BVRI, DHCD areas, NMTC,
-   OZ 2026, Enterprise Zones) + statewide view + a methodology page + two overlap stats.
+   Opportunity Zones, Enterprise Zones) + statewide view + a methodology page + two overlap stats.
    Confirm with Mihir that the expanded version is what he wants, or keep a trimmed "as-requested" view.
 2. Whether to add the other DHCD vacant-property datasets (see Workstream A) — depends on the use case.
 

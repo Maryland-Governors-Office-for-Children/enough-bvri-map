@@ -75,7 +75,7 @@
 <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;">
     <div>
         <h1>BVRI &times; ENOUGH Grantees</h1>
-        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide tax-incentive eligibility (NMTC, Opportunity Zones, Enterprise Zones)</p>
+        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide tax-incentive layers (NMTC eligibility, designated Opportunity Zones, Enterprise Zones)</p>
     </div>
     <a href="methodology.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;flex-shrink:0;">Methodology &amp; sources &rarr;</a>
 </header>
@@ -96,7 +96,7 @@
             <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-oz"><span class="swatch" style="background:#3182ce;border:1px solid #2a4365;"></span> Opportunity Zones 2026 <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-oz"><span class="swatch" style="background:#3182ce;border:1px solid #2a4365;"></span> Opportunity Zones <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-ez"><span class="swatch" style="background:#dd6b20;border:1px solid #9c4221;"></span> Enterprise Zones <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
         </div>
 
@@ -119,8 +119,7 @@
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
             <div class="legend-item"><span class="swatch" style="background:#1c4532;"></span> NMTC Severe Distress</div>
             <div class="legend-item"><span class="swatch" style="background:#48bb78;"></span> NMTC Distressed</div>
-            <div class="legend-item"><span class="swatch" style="background:#3182ce;"></span> OZ 2026 Eligible (Non-rural)</div>
-            <div class="legend-item"><span class="swatch" style="background:#90cdf4;"></span> OZ 2026 Eligible (Rural)</div>
+            <div class="legend-item"><span class="swatch" style="background:#3182ce;"></span> Opportunity Zone (designated)</div>
             <div class="legend-item"><span class="swatch" style="background:#dd6b20;"></span> Enterprise Zone</div>
             <div class="legend-item"><span class="swatch" style="background:#c05621;"></span> Enterprise Zone Focus Area</div>
         </div>
@@ -351,7 +350,7 @@
         fetchJSON('data/bvri_vacants.geojson'),
         fetchJSON('data/bvri_investment_areas.geojson'),
         fetchJSON('data/nmtc_maryland.geojson'),
-        fetchJSON('data/oz_maryland.geojson'),
+        fetchJSON('data/oz_designated_maryland.geojson'),
         fetchJSON('data/ez_maryland.geojson'),
     ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, ez]) {
 
@@ -465,34 +464,27 @@
             }
         }).addTo(lgInvest);
 
-        // Opportunity Zones 2026 eligibility (off by default)
+        // Designated Opportunity Zones (2018 TCJA, off by default)
         L.geoJSON(oz, {
-            style: function (feature) {
-                const isRural = feature.properties.rural === 'Rural';
-                return {
-                    color: isRural ? '#2c5282' : '#2a4365',
-                    weight: 0.8,
-                    fillColor: isRural ? '#90cdf4' : '#3182ce',
-                    fillOpacity: 0.45,
-                };
+            style: {
+                color: '#2a4365',
+                weight: 0.8,
+                fillColor: '#3182ce',
+                fillOpacity: 0.45,
             },
             onEachFeature: function (feature, layer) {
                 const p = feature.properties;
-                const pov = p.poverty_rate != null ? p.poverty_rate.toFixed(1) + '%' : 'N/A';
-                const mfi = p.mfi_ratio != null ? p.mfi_ratio.toFixed(2) + '×' : 'N/A';
+                const mhi = p.mhi != null ? '$' + Math.round(p.mhi).toLocaleString() : 'N/A';
                 layer.bindPopup(
                     '<div style="min-width:220px;">' +
-                      '<strong style="color:#2a4365;">OZ Eligible 2026</strong>' +
-                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">' + (p.NAME || 'Tract ' + p.GEOID) + '</div>' +
-                      '<div style="font-size:0.78em;color:#666;">' + (p.county || '') + (p.county && p.state ? ', ' : '') + (p.state || '') + '</div>' +
+                      '<strong style="color:#2a4365;">Designated Opportunity Zone</strong>' +
+                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">Tract ' + (p.GEOID || '') + '</div>' +
+                      '<div style="font-size:0.78em;color:#666;">' + (p.county ? p.county + ' County' : '') + '</div>' +
                       '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
                       '<table style="font-size:0.83em;width:100%;">' +
-                        '<tr><td>Poverty Rate:</td><td><strong>' + pov + '</strong></td></tr>' +
-                        '<tr><td>MFI Ratio:</td><td>' + mfi + ' of benchmark</td></tr>' +
-                        '<tr><td>Rural Status:</td><td>' + (p.rural || '—') + '</td></tr>' +
-                        '<tr><td>MSA:</td><td style="font-size:0.92em;">' + (p.msa || '—') + '</td></tr>' +
+                        '<tr><td>Median Household Income:</td><td><strong>' + mhi + '</strong></td></tr>' +
                       '</table>' +
-                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: MD Dept. of Commerce / EIG (ACS 2020-2024)</div>' +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: MD DHCD / Commerce via iMap (2018 TCJA designation)</div>' +
                     '</div>'
                 );
             }
