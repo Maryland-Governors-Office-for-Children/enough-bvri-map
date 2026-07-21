@@ -1,6 +1,6 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-07-20 (added ENOUGH Crosswalk page + LLM-council iteration)._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-07-21 (ENOUGH Crosswalk page + LLM-council iteration + EZ headline set to any-overlap; pushed)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -22,9 +22,10 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
   from iMap `MD_IncentiveZones` Layer 14 — 149 tracts, no rural split (`8aff097` + follow-up).
 - Added **Maryland Enterprise Zones** layer (MD Commerce via iMap `MD_IncentiveZones`): 32 zones +
   2 Focus Areas (folded into one geojson with a `focus_area` flag), off by default, orange fill.
-  Added a 5th stat-bar metric "Grantee Tracts in Enterprise Zones" (86 statewide), computed
-  client-side via a new polygon-vs-polygon overlap helper (bbox prefilter + vertex containment);
-  recomputes per-grantee on sidebar selection. Requested via the state EZ lookup app.
+  Added a 5th stat-bar metric "Grantee Tracts in Enterprise Zones" (86 statewide). Originally computed
+  client-side via a polygon-vs-polygon vertex-containment helper; **as of 2026-07-21 this now reads the
+  server-side `crosswalk.json` value** (see below) and the client-side helper was removed. Requested via
+  the state EZ lookup app.
 - All map layers wired in `docs/index.html`: grantee tracts (colored by org, on by default),
   BVRI vacants (red points), DHCD Impact Investment Areas (off), NMTC (two distress tiers, off),
   Opportunity Zones (designated, off), Enterprise Zones (zones + focus areas, off).
@@ -105,14 +106,20 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 
 ## Cross-cutting decisions still open
 1. **Scope creep vs. simplicity** — the original ask (Mihir) was deliberately minimal (one grantee
-   layer, one BVRI layer). It has since grown to **six** layers (grantee, BVRI, DHCD areas, NMTC,
-   Opportunity Zones, Enterprise Zones) + statewide view + a methodology page + two overlap stats.
-   Confirm with Mihir that the expanded version is what he wants, or keep a trimmed "as-requested" view.
+   layer, one BVRI layer). It has since grown to **six** map layers (grantee, BVRI, DHCD areas, NMTC,
+   Opportunity Zones, Enterprise Zones) + statewide view + a methodology page + a full **ENOUGH Crosswalk
+   page** + overlap stats. Confirm with Mihir that the expanded version is what he wants, or keep a
+   trimmed "as-requested" view. **Mihir has not yet seen the crosswalk page** — surface it to him.
 2. Whether to add the other DHCD vacant-property datasets (see Workstream A) — depends on the use case.
 
 ## Repo hygiene
-- Git on `main`, clean working tree (`git status --short` empty as of 2026-06-16). 8 commits, all
-  dated 2026-05-28 (single build session).
+- Git on `main`, clean working tree. Latest commit `0b7ea67` (2026-07-21) — "Add ENOUGH Crosswalk page
+  + server-side overlap crosswalk" — pushed to `origin/main`; GitHub Pages auto-deployed.
+- **New this session:** `docs/crosswalk.html`, `docs/data/crosswalk.json`, `scripts/build_crosswalk.py`,
+  `scripts/requirements-crosswalk.txt`; edits to `index.html`, `methodology.html`, `CLAUDE.md`, `STATUS.md`.
+- To resume the crosswalk build: `python3 -m venv .venv-geo && .venv-geo/bin/pip install -r
+  scripts/requirements-crosswalk.txt`, then `.venv-geo/bin/python scripts/build_crosswalk.py [--check]`.
+  (This session used a throwaway `/tmp/geoenv` venv — a repo-local `.venv-geo` is the durable path.)
 - **Pushed to a PRIVATE GitHub repo:** `Maryland-Governors-Office-for-Children/enough-bvri-map`
   (remote `origin` set). Deployed via **GitHub Pages from `docs/`**.
 - **No `.gitignore`** — all data files (`docs/data/*.geojson`, `*.json`) are intentionally committed,
