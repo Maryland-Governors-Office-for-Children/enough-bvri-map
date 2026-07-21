@@ -77,7 +77,10 @@
         <h1>BVRI &times; ENOUGH Grantees</h1>
         <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide tax-incentive layers (NMTC eligibility, designated Opportunity Zones, Enterprise Zones)</p>
     </div>
-    <a href="methodology.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;flex-shrink:0;">Methodology &amp; sources &rarr;</a>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+        <a href="crosswalk.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;">ENOUGH Crosswalk &rarr;</a>
+        <a href="methodology.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;">Methodology &amp; sources &rarr;</a>
+    </div>
 </header>
 
 <div class="stat-bar">
@@ -213,39 +216,6 @@
         return false;
     }
 
-    // Approximate "do these two polygon features intersect": true if any vertex of
-    // one falls inside the other. Good enough for tract-in-zone flagging (both are
-    // areal); misses only the rare case of crossing edges with no contained vertex.
-    function outerRings(geom) {
-        const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
-        return polys.map(function (poly) { return poly[0]; });
-    }
-    function bbox(geom) {
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        outerRings(geom).forEach(function (ring) {
-            ring.forEach(function (pt) {
-                if (pt[0] < minX) minX = pt[0];
-                if (pt[0] > maxX) maxX = pt[0];
-                if (pt[1] < minY) minY = pt[1];
-                if (pt[1] > maxY) maxY = pt[1];
-            });
-        });
-        return [minX, minY, maxX, maxY];
-    }
-    function bboxOverlap(a, b) {
-        return a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
-    }
-    function polygonsIntersect(geomA, bbA, geomB, bbB) {
-        if (!bboxOverlap(bbA, bbB)) return false;
-        for (const ring of outerRings(geomA)) {
-            for (const pt of ring) { if (pointInPolygon(pt, geomB)) return true; }
-        }
-        for (const ring of outerRings(geomB)) {
-            for (const pt of ring) { if (pointInPolygon(pt, geomA)) return true; }
-        }
-        return false;
-    }
-
     function fetchJSON(url) {
         return fetch(url).then(r => {
             if (!r.ok) throw new Error(`HTTP ${r.status} loading ${url}`);
@@ -352,7 +322,8 @@
         fetchJSON('data/nmtc_maryland.geojson'),
         fetchJSON('data/oz_designated_maryland.geojson'),
         fetchJSON('data/ez_maryland.geojson'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, ez]) {
+        fetchJSON('data/crosswalk.json'),
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, ez, crosswalk]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -407,24 +378,19 @@
                 }
             }
         });
-        // Compute grantee-tract × Enterprise-Zone overlap, broken down per grantee.
-        // Only actual zones count (skip focus areas — they nest inside zones).
-        const ezZoneGeoms = ez.features
-            .filter(function (f) { return f.geometry && !f.properties.focus_area; })
-            .map(function (f) { return { geom: f.geometry, bb: bbox(f.geometry) }; });
+        // Grantee-tract × Enterprise-Zone overlap comes from the precomputed
+        // crosswalk (scripts/build_crosswalk.py), which uses exact geometry with
+        // a 5% area-overlap threshold — the same numbers shown on the ENOUGH
+        // Crosswalk page, so the whole site stays consistent.
         ezTractsPerGrantee = {};
         ezTractsTotal = 0;
-        granteeTractLayers.forEach(function (rec) {
-            if (!rec.feature.geometry) return;
-            const tbb = bbox(rec.feature.geometry);
-            const hit = ezZoneGeoms.some(function (z) {
-                return polygonsIntersect(rec.feature.geometry, tbb, z.geom, z.bb);
+        if (crosswalk && crosswalk.layers && crosswalk.layers.ez) {
+            const ezLayer = crosswalk.layers.ez;
+            ezTractsTotal = ezLayer.tracts_overlapping;
+            (ezLayer.breakdown || []).forEach(function (row) {
+                ezTractsPerGrantee[row.grantee] = row.tracts;
             });
-            if (hit) {
-                ezTractsPerGrantee[rec.granteeName] = (ezTractsPerGrantee[rec.granteeName] || 0) + 1;
-                ezTractsTotal++;
-            }
-        });
+        }
         updateOverlapDisplay();
 
         // BVRI vacant properties

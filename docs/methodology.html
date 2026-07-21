@@ -66,6 +66,7 @@
 
 <nav>
     <a href="index.html">Map</a>
+    <a href="crosswalk.html">ENOUGH Crosswalk</a>
     <a href="methodology.html" class="active">Methodology</a>
 </nav>
 
@@ -157,7 +158,7 @@
     </table>
 
     <h3>BVRI overlap calculation</h3>
-    <p>The "BVRI in Grantee Tracts" stat (currently <strong>387</strong>) is computed in the browser via point-in-polygon ray casting: each BVRI property point is tested against each grantee tract polygon; a property is counted as overlapping if it falls within any grantee tract. When a single grantee is selected from the sidebar, the count switches to that grantee's tracts only.</p>
+    <p>The "BVRI in Grantee Tracts" stat (currently <strong>565</strong>) is computed in the browser via point-in-polygon ray casting: each BVRI property point is tested against each grantee tract polygon; a property is counted as overlapping if it falls within any grantee tract. When a single grantee is selected from the sidebar, the count switches to that grantee's tracts only. The <a href="crosswalk.html">ENOUGH Crosswalk</a> page reports the same figure alongside the per-community breakdown.</p>
 </div>
 
 <h2>Layer 3 — DHCD Impact Investment Areas</h2>
@@ -322,8 +323,36 @@
     </table>
 
     <h3>Grantee-tract overlap</h3>
-    <p>The "Grantee Tracts in Enterprise Zones" stat counts how many of the 111 ENOUGH grantee tracts geographically intersect an Enterprise Zone (Focus Areas are excluded from the count, since they nest inside zones). Because Enterprise Zones are irregular polygons rather than tracts, the overlap is computed in the browser with a bounding-box prefilter and a polygon-vertex containment test &mdash; an approximation that can miss the rare case of two polygons whose edges cross without either containing a vertex of the other. Selecting a single grantee in the sidebar recomputes the count for that grantee's tracts only.</p>
+    <p>The "Grantee Tracts in Enterprise Zones" stat counts how many of the 111 ENOUGH grantee tracts geographically intersect an Enterprise Zone (Focus Areas are excluded from the count, since they nest inside zones). This overlap &mdash; and every figure on the <a href="crosswalk.html">ENOUGH Crosswalk</a> page &mdash; is precomputed at build time by <code>scripts/build_crosswalk.py</code> using exact polygon geometry (Shapely). The headline count uses an <strong>any-overlap</strong> test: a tract is counted if it touches an Enterprise Zone at all, matching the "is any part of this neighborhood in a zone?" framing of the state's Enterprise Zone lookup. The map reads this precomputed figure from <code>docs/data/crosswalk.json</code> so the headline stat, the per-grantee sidebar count, and the crosswalk page always agree. (Current count: <strong>86</strong> grantee tracts touch an Enterprise Zone, across 21 communities.)</p>
+
+    <div class="meta"><strong>A stricter alternative:</strong> under a test requiring at least 5% of a tract's area to fall inside a zone, <strong>71</strong> grantee tracts count. The 15-tract difference is entirely boundary slivers &mdash; tracts that only clip a zone's edge (all under 5% of tract area; the smallest is 0.5%). The crosswalk page footnotes this 71 figure alongside the 86 headline. Note that Opportunity Zones and the DHCD areas still use the 5%-area test, because for Opportunity Zones the 5% threshold is validated against an exact-GEOID join (both reproduce 38 tracts); Enterprise Zones have no tract-based ground truth to validate against, so the more inclusive any-overlap count is used as the headline.</div>
 </div>
+
+<h2>The ENOUGH Crosswalk page</h2>
+<p>The <a href="crosswalk.html">ENOUGH Crosswalk</a> page answers, for each non-grantee layer, how many ENOUGH communities and grantee tracts overlap it &mdash; plus a "stacking" view of how many statewide incentive programs coincide in each tract. All of its figures are precomputed at build time by <code>scripts/build_crosswalk.py</code> (Python + <a href="https://shapely.readthedocs.io/">Shapely</a>) and written to <code>docs/data/crosswalk.json</code>, which both the crosswalk page and the map read. Computing overlaps once, server-side, keeps every page consistent and avoids re-deriving geometry in the browser.</p>
+
+<h3>Join method per layer</h3>
+<table class="field-table">
+    <thead><tr><th>Layer</th><th>How a grantee tract is matched</th><th>Why</th></tr></thead>
+    <tbody>
+        <tr><td>NMTC eligibility</td><td><strong>Exact GEOID match</strong></td><td>NMTC tracts and ENOUGH grantee tracts are both 2020-vintage census tracts, so a tract either <em>is</em> or <em>is not</em> on the NMTC-eligible list &mdash; no geometry needed.</td></tr>
+        <tr><td>Opportunity Zones</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>OZ polygons are 2010-vintage tracts, which don't line up 1:1 with 2020 tracts, so overlap is measured geometrically.</td></tr>
+        <tr><td>Enterprise Zones</td><td><strong>Any geometric overlap</strong> (tract touches a zone); ≥5%-area count footnoted</td><td>Zones are irregular economic-development polygons, not tracts. Headline uses any-overlap to match the state's "is this neighborhood in a zone?" framing.</td></tr>
+        <tr><td>DHCD Impact Areas</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>Neighborhood polygons (Baltimore City only).</td></tr>
+        <tr><td>BVRI Vacants to Value</td><td><strong>Point-in-polygon</strong></td><td>BVRI properties are points; a tract is counted if it contains any (Baltimore City only).</td></tr>
+    </tbody>
+</table>
+
+<p>Because NMTC uses an exact-GEOID join while the polygon layers use a 5% area threshold, the two methods aren't identical &mdash; but they agree where they can be compared. Applying the 5% geometric method to Opportunity Zones yields <strong>38</strong> grantee tracts, exactly matching the OZ exact-GEOID join (38). That agreement is what justifies the 5% cutoff: it's low enough to catch real overlaps and high enough to drop boundary slivers, and it reproduces an independent count rather than being tuned to a desired answer.</p>
+
+<h3>Reading the community vs. tract numbers</h3>
+<p>A community is counted as overlapping a layer if <strong>any one</strong> of its tracts does. This is a deliberately generous "is this tool available anywhere in this community?" measure &mdash; useful, but it can make coverage look higher than the on-the-ground footprint (a 10-tract grantee with one tract in a zone counts the same as one fully inside it). That's why the page always shows the <strong>grantee-tract share</strong> alongside the community share: the tract number is the stricter measure of how much of a community a program actually reaches. Three tracts are served by two grantees each, so per-community counts in the breakdown tables can sum to slightly more than a layer's tract total; the layer's headline tract count is de-duplicated.</p>
+
+<h3>Stacking and gaps</h3>
+<p>The crosswalk page's final section counts, for each grantee tract, how many of the three <em>statewide</em> incentive programs (NMTC, Opportunity Zones, Enterprise Zones) overlap it. The Baltimore-only layers are excluded from this count so a rural grantee tract isn't penalized for lacking a Baltimore vacant-property program. Tracts in <strong>zero</strong> statewide program are surfaced explicitly &mdash; these are the places where ENOUGH is currently the only place-based tool and the clearest candidates for new investment or advocacy.</p>
+
+<h3>Keeping the data fresh</h3>
+<p><code>crosswalk.json</code> is a committed artifact, so it can drift from its source layers if one is refreshed without rebuilding. To guard against that, the build script stamps a <code>source_hash</code> (a SHA-256 of all input files) into the output, and <code>python scripts/build_crosswalk.py --check</code> recomputes that hash and exits with an error if the committed JSON is stale. Run the check before sharing the site externally; if it reports "STALE," rerun the build and commit the refreshed <code>crosswalk.json</code>.</p>
 
 <h2>Basemap</h2>
 <p>The map tile layer is <a href="https://github.com/CartoDB/basemap-styles">CartoDB Positron</a>, served from <code>basemaps.cartocdn.com</code>. Tiles are © OpenStreetMap contributors, © CARTO. No authentication required; CARTO's free tier permits non-commercial public use under the OpenStreetMap ODbL.</p>
@@ -344,6 +373,13 @@ python3 scripts/fetch_ez.py
 
 # Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
 # See CLAUDE.md for the inline Python snippet
+
+# Rebuild the ENOUGH Crosswalk data (needs shapely — see requirements-crosswalk.txt)
+python3 -m venv .venv-geo
+.venv-geo/bin/pip install -r scripts/requirements-crosswalk.txt
+.venv-geo/bin/python scripts/build_crosswalk.py
+# Verify it's in sync before sharing:
+.venv-geo/bin/python scripts/build_crosswalk.py --check
 
 # Then commit and push
 git add docs/data/

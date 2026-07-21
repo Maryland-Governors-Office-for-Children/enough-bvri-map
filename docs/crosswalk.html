@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENOUGH Crosswalk | BVRI × ENOUGH Grantees</title>
+    <link rel="icon" href="data:,">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7fafc; color: #1a202c; line-height: 1.55; }
+
+        header { background: #1a365d; color: #fff; padding: 18px 20px; }
+        header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; }
+        header p { font-size: 0.9rem; opacity: 0.85; margin-top: 4px; max-width: 820px; }
+
+        nav { background: #2c5282; color: #fff; padding: 8px 20px; font-size: 0.82rem; }
+        nav a { color: #fff; text-decoration: none; margin-right: 20px; opacity: 0.82; }
+        nav a:hover, nav a.active { opacity: 1; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
+
+        .container { max-width: 940px; margin: 0 auto; padding: 28px 24px 64px; }
+
+        /* --- plain-language explainer --- */
+        .explainer { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 22px; margin-bottom: 22px; }
+        .explainer h2 { font-size: 0.95rem; color: #1a365d; margin-bottom: 8px; }
+        .explainer p { font-size: 0.92rem; color: #2d3748; margin-bottom: 10px; }
+        .explainer dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 0.88rem; margin-top: 6px; }
+        .explainer dt { font-weight: 700; color: #2c5282; }
+        .explainer dd { color: #3a4658; }
+
+        /* --- hero takeaway --- */
+        .hero { background: linear-gradient(135deg, #1a365d, #2c5282); color: #fff; border-radius: 10px; padding: 22px 24px; margin-bottom: 26px; }
+        .hero .kicker { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin-bottom: 6px; }
+        .hero .big-stat { font-size: 2.4rem; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+        .hero .big-stat span { color: #90cdf4; }
+        .hero p { font-size: 0.92rem; opacity: 0.9; margin-top: 8px; max-width: 760px; }
+
+        .section-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #718096; margin: 4px 0 12px; }
+
+        .universe { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; margin: 0 0 24px; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+        .universe .u-num { font-size: 1.9rem; font-weight: 700; color: #1a365d; line-height: 1; }
+        .universe .u-label { font-size: 0.72rem; color: #5a6678; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px; }
+        .universe .u-note { font-size: 0.84rem; color: #5a6678; flex: 1; min-width: 220px; }
+
+        .layer-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; margin: 0 0 22px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .layer-head { display: flex; align-items: flex-start; gap: 14px; padding: 18px 22px 14px; border-bottom: 1px solid #f0f4f8; }
+        .layer-head .swatch { width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0; margin-top: 2px; }
+        .layer-head .swatch.circle { border-radius: 50%; }
+        .layer-head .lh-text { flex: 1; }
+        .layer-head h2 { font-size: 1.12rem; color: #1a365d; font-weight: 700; }
+        .layer-head .blurb { font-size: 0.85rem; color: #4a5568; margin-top: 3px; }
+        .layer-head .coverage-tag { font-size: 0.7rem; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 5px; display: inline-block; background: #edf2f7; padding: 2px 8px; border-radius: 10px; }
+
+        .answer { padding: 16px 22px 4px; }
+        .answer .headline { font-size: 1.05rem; color: #2d3748; }
+        .answer .headline b { color: #2b6cb0; font-weight: 700; }
+        .answer .means { font-size: 0.86rem; color: #4a5568; margin-top: 6px; background: #f7fafc; border-left: 3px solid #90cdf4; padding: 8px 12px; border-radius: 0 4px 4px 0; }
+        .answer .means b { color: #2c5282; }
+
+        .bars { display: flex; gap: 26px; flex-wrap: wrap; padding: 14px 22px 18px; }
+        .bar-block { flex: 1; min-width: 240px; }
+        .bar-block .bar-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .bar-block .bar-metric { font-size: 0.78rem; color: #5a6678; text-transform: uppercase; letter-spacing: 0.04em; }
+        .bar-block .bar-val { font-size: 0.9rem; color: #2d3748; font-weight: 600; }
+        .bar-block .bar-val b { color: #1a365d; font-size: 1.05rem; }
+        .track { height: 12px; background: #e6edf3; border-radius: 6px; overflow: hidden; }
+        .track .fill { height: 100%; border-radius: 6px; transition: width .6s ease; }
+        .bar-block .pct { font-size: 0.76rem; color: #718096; margin-top: 4px; }
+
+        .extra-stat { padding: 0 22px 14px; font-size: 0.86rem; color: #4a5568; }
+        .extra-stat b { color: #2d3748; }
+
+        .tiers { padding: 0 22px 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .tier-chip { font-size: 0.78rem; padding: 4px 10px; border-radius: 20px; background: #f0fff4; border: 1px solid #c6f6d5; color: #22543d; }
+        .tier-chip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+
+        details.breakdown { border-top: 1px solid #f0f4f8; }
+        details.breakdown summary { padding: 12px 22px; font-size: 0.85rem; font-weight: 600; color: #2b6cb0; cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center; gap: 8px; }
+        details.breakdown summary::-webkit-details-marker { display: none; }
+        details.breakdown summary .chev { transition: transform .2s; font-size: 0.7rem; color: #718096; }
+        details.breakdown[open] summary .chev { transform: rotate(90deg); }
+        details.breakdown summary:hover { background: #f7fafc; }
+
+        .bk-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+        .bk-table th { text-align: left; padding: 8px 22px; background: #f7fafc; color: #5a6678; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
+        .bk-table th.num, .bk-table td.num { text-align: right; }
+        .bk-table td { padding: 7px 22px; border-bottom: 1px solid #f4f7fa; }
+        .bk-table tr:last-child td { border-bottom: none; }
+        .bk-table .g-name { color: #2d3748; }
+        .bk-table .frac { color: #5a6678; font-size: 0.8rem; }
+        .bk-table .minibar { display: inline-block; width: 60px; height: 7px; background: #e6edf3; border-radius: 4px; overflow: hidden; vertical-align: middle; margin-left: 8px; }
+        .bk-table .minibar span { display: block; height: 100%; }
+
+        .method-note { font-size: 0.8rem; color: #5a6678; padding: 10px 22px 16px; border-top: 1px solid #f0f4f8; }
+        .method-note a { color: #2b6cb0; }
+        .method-note code { background: #edf2f7; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }
+
+        /* --- stacking / gap section --- */
+        .stack-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 22px; margin: 26px 0 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .stack-card h2 { font-size: 1.12rem; color: #1a365d; }
+        .stack-card > p { font-size: 0.88rem; color: #4a5568; margin-top: 6px; }
+        .stack-hist { display: flex; gap: 10px; margin: 18px 0 6px; align-items: flex-end; }
+        .stack-col { flex: 1; text-align: center; }
+        .stack-col .col-bar { background: #e6edf3; border-radius: 6px 6px 0 0; display: flex; align-items: flex-start; justify-content: center; position: relative; }
+        .stack-col .col-fill { width: 100%; border-radius: 6px 6px 0 0; transition: height .6s ease; }
+        .stack-col .col-num { font-size: 1.15rem; font-weight: 700; color: #1a365d; padding-top: 4px; }
+        .stack-col .col-label { font-size: 0.74rem; color: #5a6678; margin-top: 6px; }
+        .gap-callout { margin-top: 16px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px; padding: 14px 16px; font-size: 0.9rem; color: #744210; }
+        .gap-callout b { color: #7b341e; }
+        .gap-callout ul { margin: 6px 0 0 18px; font-size: 0.86rem; }
+
+        .loading, .error { text-align: center; padding: 60px 20px; color: #5a6678; }
+        .error { color: #c53030; }
+
+        footer { background: #e2e8f0; color: #5a6678; font-size: 0.78rem; padding: 14px 20px; text-align: center; }
+
+        @media (max-width: 640px) {
+            .bars { flex-direction: column; gap: 14px; }
+            .explainer dl { grid-template-columns: 1fr; gap: 2px; }
+            .explainer dt { margin-top: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENOUGH Crosswalk</h1>
+    <p>A crosswalk &mdash; a side-by-side comparison &mdash; of where Maryland's ENOUGH grantee communities sit inside other public investment programs. It answers, program by program: <strong>how many ENOUGH communities could also tap this funding tool?</strong></p>
+</header>
+
+<nav>
+    <a href="index.html">Map</a>
+    <a href="crosswalk.html" class="active">ENOUGH Crosswalk</a>
+    <a href="methodology.html">Methodology</a>
+</nav>
+
+<div class="container">
+
+    <div class="explainer">
+        <h2>What this page shows &mdash; in plain language</h2>
+        <p>The <strong>ENOUGH Act</strong> is a Maryland grant program that funds local organizations to serve neighborhoods with high child poverty. Several <em>other</em> federal and state programs also steer investment into distressed places &mdash; through tax credits and reinvestment dollars. This page checks how much those programs and ENOUGH's grantee communities cover the same ground, so grantees and the state can see where funding tools can be <strong>braided together</strong>.</p>
+        <dl>
+            <dt>ENOUGH community</dt><dd>One active ENOUGH grantee organization and the set of neighborhoods it serves.</dd>
+            <dt>Grantee tract</dt><dd>A census tract (a small, official neighborhood-sized geography) that a grantee serves. The 28 communities serve 111 tracts.</dd>
+            <dt>&ldquo;Overlaps&rdquo;</dt><dd>A community overlaps a program if <em>any</em> of its tracts fall inside that program's geography. We also show the tract-level share, which is the stricter, more honest measure of reach.</dd>
+        </dl>
+    </div>
+
+    <div id="hero" class="hero"></div>
+
+    <div id="universe" class="universe"></div>
+
+    <div class="section-label">Program by program</div>
+    <div id="cards"></div>
+
+    <div id="stacking"></div>
+
+    <p style="font-size:0.82rem;color:#5a6678;margin-top:8px;">
+        Overlap is computed at build time with exact geometry (<a href="https://github.com/Maryland-Governors-Office-for-Children/enough-bvri-map/blob/main/scripts/build_crosswalk.py">scripts/build_crosswalk.py</a>, using Shapely). Each layer's data source and join method are documented on the <a href="methodology.html">methodology page</a>.
+    </p>
+</div>
+
+<footer>
+    Maryland Governor's Office for Children &mdash; ENOUGH Act &times; Baltimore Vacants Reinvestment Initiative
+</footer>
+
+<script>
+(function () {
+    // Layer display config keyed to the crosswalk.json layer keys.
+    const LAYERS = [
+        { key: 'nmtc', color: '#1c4532', shape: 'square', coverage: 'Statewide',
+          blurb: 'Federal New Markets Tax Credit &mdash; a tax incentive that channels private investment into low-income census tracts.',
+          means: function (L) { return 'Every ENOUGH community sits in NMTC-eligible territory &mdash; investors backing projects there can claim federal credits.'; } },
+        { key: 'oz', color: '#3182ce', shape: 'square', coverage: 'Statewide',
+          blurb: 'Federal Opportunity Zones (2017 Tax Cuts and Jobs Act) &mdash; investors who put capital gains into these tracts get federal tax breaks, in effect through 2028.',
+          means: function (L) { return 'Projects in these tracts can attract Opportunity Fund capital alongside ENOUGH programming.'; } },
+        { key: 'ez', color: '#dd6b20', shape: 'square', coverage: 'Statewide',
+          blurb: 'Maryland Enterprise Zones &mdash; a state program giving businesses that locate or expand in a zone real-property and income tax credits.',
+          means: function (L) { return 'Businesses and employers inside these tracts qualify for state tax credits &mdash; a workforce and economic-development lever for ENOUGH neighborhoods.'; } },
+        { key: 'bvri', color: '#e53e3e', shape: 'circle', coverage: 'Baltimore City only',
+          blurb: 'Baltimore City DHCD "Vacants to Value" &mdash; vacant properties on the open-bid list, being marketed for rehab and reinvestment.',
+          means: function (L) { return 'These are concrete, parcel-level rehab opportunities inside ENOUGH neighborhoods &mdash; where housing revitalization and ENOUGH services can reinforce each other.'; } },
+        { key: 'dhcd', color: '#b7791f', shape: 'square', fill: '#f6e05e', coverage: 'Baltimore City only',
+          blurb: 'Baltimore DHCD Impact Investment Areas &mdash; neighborhoods the City has prioritized for concentrated reinvestment.',
+          means: function (L) { return 'Where an ENOUGH community shares ground with a City reinvestment priority, the two efforts can be aligned.'; } },
+    ];
+
+    const NMTC_TIER_COLORS = { 'Severe Distress': '#1c4532', 'Distressed': '#48bb78', 'Eligible': '#9ae6b4' };
+    const STACK_COLORS = ['#cbd5e0', '#90cdf4', '#4299e1', '#2b6cb0'];
+
+    function pct(n, d) { return d ? Math.round((n / d) * 100) : 0; }
+    function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
+
+    fetch('data/crosswalk.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (data) {
+            const T = data.totals;
+            const S = data.stacking;
+            const stackedTracts = T.tracts - (S.histogram['0'] || 0);
+
+            // --- hero takeaway ---
+            document.getElementById('hero').innerHTML =
+                '<div class="kicker">The headline</div>' +
+                '<div class="big-stat">All <span>' + T.communities + '</span> ENOUGH communities sit in at least one other investment program.</div>' +
+                '<p>' + stackedTracts + ' of ' + T.tracts + ' grantee tracts (' + pct(stackedTracts, T.tracts) +
+                '%) fall inside at least one statewide tax-incentive program (NMTC, Opportunity Zone, or Enterprise Zone) &mdash; ' +
+                'and every community is NMTC-eligible. The programs that other agencies use to define "distressed" independently point at the same neighborhoods ENOUGH targets, which means ENOUGH grantees are well positioned to braid additional capital into their work.</p>';
+
+            // --- universe ---
+            document.getElementById('universe').innerHTML =
+                '<div><div class="u-num">' + T.communities + '</div><div class="u-label">ENOUGH Communities</div></div>' +
+                '<div><div class="u-num">' + T.tracts + '</div><div class="u-label">Grantee Tracts</div></div>' +
+                '<div class="u-note">The universe for every comparison below. Percentages are always out of these totals.' +
+                (T.shared_tracts ? ' Note: ' + T.shared_tracts + ' tracts are served by two grantees, so per-community counts in the breakdown tables can sum to slightly more than a layer’s tract total.' : '') +
+                '</div>';
+
+            // --- program cards ---
+            const cards = document.getElementById('cards');
+            LAYERS.forEach(function (cfg) {
+                const L = data.layers[cfg.key];
+                if (!L) return;
+                cards.appendChild(buildCard(L, cfg, T));
+            });
+
+            // --- stacking / gap section ---
+            document.getElementById('stacking').appendChild(buildStacking(S, T, data));
+        })
+        .catch(function (err) {
+            document.getElementById('cards').innerHTML =
+                '<div class="error">Failed to load crosswalk data: ' + err.message + '</div>';
+        });
+
+    function buildCard(L, cfg, T) {
+        const cShare = pct(L.communities_overlapping, L.total_communities);
+        const tShare = pct(L.tracts_overlapping, L.total_tracts);
+        const fillColor = cfg.fill || cfg.color;
+
+        const headline = '<b>' + L.communities_overlapping + ' of ' + L.total_communities +
+            '</b> ENOUGH communities have at least one tract in this program' +
+            ' &mdash; reaching <b>' + L.tracts_overlapping + ' of ' + L.total_tracts + '</b> grantee tracts.';
+
+        const means = '<div class="means"><b>Why it matters:</b> ' + cfg.means(L) + '</div>';
+
+        let extra = '';
+        if (cfg.key === 'bvri') {
+            extra = '<div class="extra-stat"><b>' + L.properties_in_grantee_tracts.toLocaleString() +
+                '</b> of ' + L.properties_total.toLocaleString() +
+                ' Vacants to Value properties (' + pct(L.properties_in_grantee_tracts, L.properties_total) +
+                '%) sit inside an ENOUGH grantee tract.</div>';
+        }
+
+        let tiers = '';
+        if (L.tiers) {
+            const order = ['Severe Distress', 'Distressed', 'Eligible'];
+            tiers = '<div class="tiers">' + order.filter(function (t) { return L.tiers[t]; }).map(function (t) {
+                return '<span class="tier-chip"><span class="dot" style="background:' +
+                    (NMTC_TIER_COLORS[t] || '#48bb78') + ';"></span>' + L.tiers[t] + ' ' + t + '</span>';
+            }).join('') + '</div>';
+        }
+
+        const swatchClass = cfg.shape === 'circle' ? 'swatch circle' : 'swatch';
+        const swatchStyle = 'background:' + fillColor + ';border:1.5px solid ' + cfg.color + ';';
+        let methodExtra = '';
+        if (cfg.key === 'ez' && L.strict_5pct_tracts != null) {
+            methodExtra = ' Under a stricter test that requires at least 5% of a tract’s area to fall inside a zone, <b>' +
+                L.strict_5pct_tracts + ' of ' + L.total_tracts + '</b> grantee tracts (' +
+                L.strict_5pct_communities + ' communities) count — the difference is tracts that only clip a zone’s edge.';
+        }
+        const method = L.join ? '<div class="method-note">How overlap is measured for this layer: <b>' + L.join + '</b>.' + methodExtra + '</div>' : '';
+
+        return el(
+            '<div class="layer-card">' +
+              '<div class="layer-head">' +
+                '<span class="' + swatchClass + '" style="' + swatchStyle + '"></span>' +
+                '<div class="lh-text">' +
+                  '<h2>' + L.label + '</h2>' +
+                  '<div class="blurb">' + cfg.blurb + '</div>' +
+                  '<span class="coverage-tag">' + cfg.coverage + '</span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="answer"><div class="headline">' + headline + '</div>' + means + '</div>' +
+              '<div class="bars">' +
+                barBlock('Communities reached', L.communities_overlapping, L.total_communities, cShare, cfg.color) +
+                barBlock('Grantee tracts reached', L.tracts_overlapping, L.total_tracts, tShare, cfg.color) +
+              '</div>' +
+              extra + tiers +
+              breakdownEl(L, cfg) +
+              method +
+            '</div>'
+        );
+    }
+
+    function barBlock(metric, n, d, share, color) {
+        return '<div class="bar-block">' +
+            '<div class="bar-top"><span class="bar-metric">' + metric + '</span>' +
+            '<span class="bar-val"><b>' + n + '</b> of ' + d + '</span></div>' +
+            '<div class="track"><div class="fill" style="width:' + share + '%;background:' + color + ';"></div></div>' +
+            '<div class="pct">' + share + '%</div>' +
+        '</div>';
+    }
+
+    function breakdownEl(L, cfg) {
+        if (!L.breakdown || !L.breakdown.length) return '';
+        const hasProps = cfg.key === 'bvri';
+        const rows = L.breakdown.map(function (r) {
+            const tot = r.grantee_total_tracts || r.tracts;
+            const frac = pct(r.tracts, tot);
+            const propCell = hasProps
+                ? '<td class="num">' + (r.properties || 0).toLocaleString() + '</td>' : '';
+            return '<tr>' +
+                '<td class="g-name">' + r.grantee + '</td>' +
+                '<td class="num">' + r.tracts + ' <span class="frac">of ' + tot + '</span>' +
+                    '<span class="minibar"><span style="width:' + frac + '%;background:' + cfg.color + ';"></span></span></td>' +
+                propCell +
+            '</tr>';
+        }).join('');
+        const propHead = hasProps ? '<th class="num">Properties</th>' : '';
+        const tHead = hasProps ? 'Tracts w/ properties' : 'Tracts in program';
+        return '<details class="breakdown">' +
+            '<summary><span class="chev">&#9654;</span>Which communities&nbsp;&mdash;&nbsp;' +
+                L.communities_overlapping + ' with tracts in this program</summary>' +
+            '<table class="bk-table"><thead><tr>' +
+                '<th>ENOUGH community</th><th class="num">' + tHead + '</th>' + propHead +
+            '</tr></thead><tbody>' + rows + '</tbody></table>' +
+        '</details>';
+    }
+
+    function buildStacking(S, T, data) {
+        const total = T.tracts;
+        const counts = [0, 1, 2, 3].map(function (i) { return S.histogram[String(i)] || 0; });
+        const maxc = Math.max.apply(null, counts) || 1;
+        const cols = counts.map(function (n, i) {
+            const h = Math.round((n / maxc) * 120) + 4;
+            const label = i === 0 ? 'No other<br>program' : i + (i === 1 ? ' program' : ' programs');
+            return '<div class="stack-col">' +
+                '<div class="col-num">' + n + '</div>' +
+                '<div class="col-bar" style="height:124px;align-items:flex-end;">' +
+                    '<div class="col-fill" style="height:' + h + 'px;background:' + STACK_COLORS[i] + ';"></div>' +
+                '</div>' +
+                '<div class="col-label">' + label + '</div>' +
+            '</div>';
+        }).join('');
+
+        // gap detail
+        const zeroN = S.tracts_in_zero;
+        let gapList = '';
+        if (S.zero_by_grantee && S.zero_by_grantee.length) {
+            gapList = '<ul>' + S.zero_by_grantee.map(function (r) {
+                return '<li><b>' + r.grantee + '</b> &mdash; ' + r.tracts + ' of its ' +
+                    r.grantee_total_tracts + ' tracts sit in no statewide incentive program.</li>';
+            }).join('') + '</ul>';
+        }
+        const gap = zeroN === 0
+            ? '<div class="gap-callout"><b>No gaps:</b> every grantee tract falls inside at least one statewide incentive program.</div>'
+            : '<div class="gap-callout"><b>Where ENOUGH is the only lever:</b> ' + zeroN +
+              ' grantee tract' + (zeroN === 1 ? '' : 's') +
+              ' sit in <b>none</b> of the three statewide incentive programs. In these places, ENOUGH is currently the sole place-based tool &mdash; the clearest candidates for new investment tools or targeted advocacy.' +
+              gapList + '</div>';
+
+        return el(
+            '<div class="stack-card">' +
+              '<h2>How many programs stack in the same tract?</h2>' +
+              '<p>Counting the three <b>statewide</b> tax-incentive programs (NMTC, Opportunity Zones, Enterprise Zones), this shows how many overlap each grantee tract. More overlapping programs means more tools a grantee could braid in the same neighborhood. (Baltimore-only layers are excluded here so rural tracts aren’t penalized.)</p>' +
+              '<div class="stack-hist">' + cols + '</div>' +
+              gap +
+            '</div>'
+        );
+    }
+})();
+</script>
+
+</body>
+</html>

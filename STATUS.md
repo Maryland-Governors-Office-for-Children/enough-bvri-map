@@ -1,11 +1,12 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-07-20._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-07-20 (added ENOUGH Crosswalk page + LLM-council iteration)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
-This is a single-page Leaflet map (deployed via GitHub Pages from `docs/`) showing where active
-ENOUGH grantee tracts overlap Baltimore Vacants Reinvestment Initiative (BVRI) activity, plus two
-federal/state eligibility layers. Requested by Mihir Parikh; intentionally simple.
+A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
+tracts overlap Baltimore Vacants Reinvestment Initiative (BVRI) activity plus federal/state incentive
+layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-program; and a
+**methodology** page. Originally requested by Mihir Parikh; intentionally simple, since expanded.
 **Live:** https://maryland-governors-office-for-children.github.io/enough-bvri-map/
 
 ## Workstream A — Map build & layers
@@ -29,6 +30,28 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
   Opportunity Zones (designated, off), Enterprise Zones (zones + focus areas, off).
 - BVRI-in-grantee-tracts overlap (565 as of the latest data) computed client-side via
   point-in-polygon ray casting; recomputes per-grantee when one is selected in the sidebar.
+- **ENOUGH Crosswalk page (`docs/crosswalk.html`)** — for each non-grantee layer, shows how many
+  ENOUGH communities + grantee tracts overlap, per-community breakdown, NMTC distress tiers, a
+  plain-language explainer, a hero takeaway ("all 28 communities in ≥1 program"), a "why it matters"
+  line per layer, and a **stacking/gap section** (how many statewide programs coincide per tract; which
+  tracts sit in zero — 6 tracts, Boys & Girls Clubs of Harford/Cecil + One Annapolis). Data-driven from
+  `crosswalk.json`. Built + reviewed by the LLM council, then iterated (see below). Linked from the map
+  header and the methodology nav.
+- **EZ stat moved to server-side crosswalk (headline 86, footnote 71).** The map's "Grantee Tracts in
+  Enterprise Zones" headline previously used a loose client-side vertex-containment test (86). It now
+  reads the value from `crosswalk.json`, so the map, its per-grantee sidebar count, and the crosswalk
+  page all agree; the old client-side polygon helpers were removed from `index.html`. Per Nick's call,
+  the EZ headline uses **any-overlap** (a tract touching a zone = 86), with the stricter **≥5%-area**
+  count (71) footnoted on the crosswalk page and documented in `methodology.html`. The 15-tract gap is
+  boundary slivers (all <5% of tract area, smallest 0.5%). OZ/DHCD still use ≥5% (OZ's threshold is
+  validated against its exact-GEOID join; EZ has no tract-based ground truth, so any-overlap is used).
+- **LLM council review done + acted on.** 5-advisor council flagged: a real double-count in the BVRI
+  per-grantee breakdown (shared tracts — now footnoted, not hidden), "any-one-tract overlaps" inflating
+  coverage (now tract-share shown alongside community-share everywhere), jargon (added plain-language
+  explainer + per-layer "why it matters"), the 86→71 restatement needing a visible note (added),
+  low-contrast text (darkened `#a0aec0` → `#5a6678`), and reproducibility gaps (see Workstream B).
+  Also surfaced the highest-value framing: lead with "every ENOUGH community is validated by other
+  distress definitions" + the gap view — both now on the page.
 
 **Open (build — can be done in-repo)**
 - [ ] Decide whether to ship the additional DHCD layers (vacant building notices, demolitions,
@@ -50,6 +73,11 @@ federal/state eligibility layers. Requested by Mihir Parikh; intentionally simpl
 - `scripts/fetch_ez.py` — pulls iMap `MD_IncentiveZones` Layer 4 (Enterprise Zones, 32) + Layer 5
   (Focus Areas, 2) into `ez_maryland.geojson` with a `focus_area` flag. Note: Layer 5 lacks the
   `extent`/`Expiration` fields, so the script requests `outFields=*` rather than a fixed field list.
+- `scripts/build_crosswalk.py` (Shapely) — computes ENOUGH × every layer overlap → `docs/data/crosswalk.json`.
+  Join per layer: NMTC exact-GEOID; OZ/EZ/DHCD geometric ≥5% tract-area; BVRI point-in-polygon. Also
+  computes the statewide stacking histogram + zero-program gap list. Stamps a `source_hash`; `--check`
+  mode exits 1 if the committed JSON is stale vs. source geojson. Needs shapely (PEP 668 blocks system
+  pip) — pinned in `scripts/requirements-crosswalk.txt`; run from a repo-local `.venv-geo`.
 
 **Open (build — can be done in-repo)**
 - [ ] **No saved grantee-tract build script.** The `grantee_tracts.geojson` build is only an inline

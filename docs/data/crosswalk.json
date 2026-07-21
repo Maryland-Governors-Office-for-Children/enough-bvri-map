@@ -1,0 +1,831 @@
+{
+  "generated_note": "Built by scripts/build_crosswalk.py \u2014 do not edit by hand.",
+  "source_hash": "62710ed6caca8c4da585bdf1469fbb199fde54be205cf24390826caa3983d250",
+  "totals": {
+    "communities": 28,
+    "tracts": 111,
+    "shared_tracts": 3
+  },
+  "min_overlap_frac": 0.05,
+  "layers": {
+    "nmtc": {
+      "label": "NMTC-Eligible Tracts",
+      "tracts_overlapping": 102,
+      "total_tracts": 111,
+      "communities_overlapping": 28,
+      "total_communities": 28,
+      "geoids": [
+        "24001000700",
+        "24001000800",
+        "24003706404",
+        "24003750101",
+        "24003750102",
+        "24003750201",
+        "24005450501",
+        "24005450503",
+        "24005450504",
+        "24011955600",
+        "24017850901",
+        "24019970500",
+        "24019970600",
+        "24019970804",
+        "24021750504",
+        "24021750505",
+        "24021750506",
+        "24021750507",
+        "24021750508",
+        "24025301302",
+        "24025301601",
+        "24031700713",
+        "24031700724",
+        "24031700725",
+        "24031700726",
+        "24031700727",
+        "24031700731",
+        "24031701702",
+        "24031701900",
+        "24031702000",
+        "24031702301",
+        "24033801801",
+        "24033801802",
+        "24033801808",
+        "24033801809",
+        "24033802301",
+        "24033802404",
+        "24033802406",
+        "24033802407",
+        "24033803200",
+        "24033803403",
+        "24033803508",
+        "24033803509",
+        "24033803602",
+        "24033803606",
+        "24033805500",
+        "24033805601",
+        "24033805602",
+        "24033805700",
+        "24033806602",
+        "24033807301",
+        "24033807305",
+        "24033807410",
+        "24043000500",
+        "24043000601",
+        "24043000700",
+        "24043000800",
+        "24043000900",
+        "24510030100",
+        "24510070100",
+        "24510070200",
+        "24510070300",
+        "24510090100",
+        "24510090300",
+        "24510090400",
+        "24510090600",
+        "24510090700",
+        "24510090800",
+        "24510120300",
+        "24510120400",
+        "24510120500",
+        "24510130300",
+        "24510130400",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510150702",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510160100",
+        "24510160200",
+        "24510160300",
+        "24510170200",
+        "24510170300",
+        "24510250203",
+        "24510250204",
+        "24510250207",
+        "24510250402",
+        "24510250500",
+        "24510260301",
+        "24510271001",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280102",
+        "24510280500"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 10,
+          "grantee_total_tracts": 10
+        },
+        {
+          "grantee": "Good Intentions Foundation Inc.",
+          "tracts": 6,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Identity, Inc.",
+          "tracts": 6,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 6,
+          "grantee_total_tracts": 7
+        },
+        {
+          "grantee": "Child First Authority",
+          "tracts": 5,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Local Management Board Frederick County",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "San Mar Family & Community Services: Bester Community of Hope",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "CASA, Inc.",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "CHEER (Community Health and Empowerment through Education and Research)",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Latin American Youth Center",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Prince George's County Department of Social Services",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "United Communities Against Poverty",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Anne Arundel County Partnership for Children, Youth, and Families",
+          "tracts": 3,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Cherry Hill Strong",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Community Assistance Network, Inc.",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Moving Dorchester Forward, INC",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Tendea Family INC.",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Boys & Girls Clubs of Harford and Cecil Counties",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "City of Cumberland",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Urban Strategies Inc",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Caroline Human Services Council, Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 1
+        },
+        {
+          "grantee": "Leaders Breeders Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 1
+        },
+        {
+          "grantee": "LifeStyles of Maryland Foundation, Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 1
+        },
+        {
+          "grantee": "One Annapolis, Inc",
+          "tracts": 1,
+          "grantee_total_tracts": 4
+        }
+      ],
+      "tiers": {
+        "Distressed": 16,
+        "Severe Distress": 86
+      },
+      "join": "exact GEOID match (2020 tracts)"
+    },
+    "oz": {
+      "label": "Designated Opportunity Zones",
+      "tracts_overlapping": 38,
+      "total_tracts": 111,
+      "communities_overlapping": 20,
+      "total_communities": 28,
+      "geoids": [
+        "24001000800",
+        "24003750101",
+        "24003750102",
+        "24003750201",
+        "24005450501",
+        "24011955600",
+        "24019970600",
+        "24025301302",
+        "24031700713",
+        "24031700724",
+        "24031702000",
+        "24031702301",
+        "24033801802",
+        "24033803508",
+        "24033803602",
+        "24033805601",
+        "24043000500",
+        "24043000700",
+        "24043000800",
+        "24510030100",
+        "24510090800",
+        "24510120500",
+        "24510130200",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510170200",
+        "24510250203",
+        "24510250204",
+        "24510250207",
+        "24510250500",
+        "24510271600",
+        "24510271700",
+        "24510280500"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Child First Authority",
+          "tracts": 5,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Anne Arundel County Partnership for Children, Youth, and Families",
+          "tracts": 3,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Cherry Hill Strong",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 3,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 3,
+          "grantee_total_tracts": 10
+        },
+        {
+          "grantee": "San Mar Family & Community Services: Bester Community of Hope",
+          "tracts": 3,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "CHEER (Community Health and Empowerment through Education and Research)",
+          "tracts": 2,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Good Intentions Foundation Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Identity, Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Urban Strategies Inc",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Boys & Girls Clubs of Harford and Cecil Counties",
+          "tracts": 1,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "CASA, Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Caroline Human Services Council, Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 1
+        },
+        {
+          "grantee": "City of Cumberland",
+          "tracts": 1,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Community Assistance Network, Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Moving Dorchester Forward, INC",
+          "tracts": 1,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Prince George's County Department of Social Services",
+          "tracts": 1,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 1,
+          "grantee_total_tracts": 2
+        }
+      ],
+      "join": "geometric overlap \u22655% of tract area"
+    },
+    "ez": {
+      "label": "Maryland Enterprise Zones",
+      "tracts_overlapping": 86,
+      "total_tracts": 111,
+      "communities_overlapping": 21,
+      "total_communities": 28,
+      "geoids": [
+        "24003750101",
+        "24003750102",
+        "24003750201",
+        "24003750204",
+        "24019970500",
+        "24019970600",
+        "24021750504",
+        "24021750505",
+        "24021750506",
+        "24021750507",
+        "24021750508",
+        "24031700713",
+        "24031700724",
+        "24031700725",
+        "24031700727",
+        "24031700731",
+        "24033801801",
+        "24033801802",
+        "24033801808",
+        "24033801809",
+        "24033802301",
+        "24033802404",
+        "24033802406",
+        "24033802407",
+        "24033803200",
+        "24033803403",
+        "24033803508",
+        "24033803509",
+        "24033803602",
+        "24033803606",
+        "24033805500",
+        "24033805601",
+        "24033805602",
+        "24033805700",
+        "24033806602",
+        "24033807305",
+        "24033807410",
+        "24043000500",
+        "24043000601",
+        "24043000700",
+        "24043000800",
+        "24043000900",
+        "24510030100",
+        "24510070100",
+        "24510070200",
+        "24510070300",
+        "24510090100",
+        "24510090200",
+        "24510090300",
+        "24510090400",
+        "24510090600",
+        "24510090700",
+        "24510090800",
+        "24510120300",
+        "24510120400",
+        "24510120500",
+        "24510130200",
+        "24510130300",
+        "24510130400",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510160200",
+        "24510160300",
+        "24510170200",
+        "24510170300",
+        "24510250203",
+        "24510250204",
+        "24510250207",
+        "24510250402",
+        "24510250500",
+        "24510260301",
+        "24510271001",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280102",
+        "24510280500"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 10,
+          "grantee_total_tracts": 10
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 7,
+          "grantee_total_tracts": 7
+        },
+        {
+          "grantee": "Child First Authority",
+          "tracts": 6,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Good Intentions Foundation Inc.",
+          "tracts": 6,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Identity, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Local Management Board Frederick County",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "San Mar Family & Community Services: Bester Community of Hope",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Anne Arundel County Partnership for Children, Youth, and Families",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "CASA, Inc.",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 4,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 4,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Prince George's County Department of Social Services",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "United Communities Against Poverty",
+          "tracts": 4,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Cherry Hill Strong",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Latin American Youth Center",
+          "tracts": 3,
+          "grantee_total_tracts": 4
+        },
+        {
+          "grantee": "Tendea Family INC.",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Moving Dorchester Forward, INC",
+          "tracts": 2,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Urban Strategies Inc",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "Leaders Breeders Inc.",
+          "tracts": 1,
+          "grantee_total_tracts": 1
+        }
+      ],
+      "join": "any geometric overlap (tract touches a zone)",
+      "strict_5pct_tracts": 71,
+      "strict_5pct_communities": 21
+    },
+    "dhcd": {
+      "label": "DHCD Impact Investment Areas",
+      "tracts_overlapping": 21,
+      "total_tracts": 111,
+      "communities_overlapping": 6,
+      "total_communities": 28,
+      "geoids": [
+        "24510090600",
+        "24510090700",
+        "24510090800",
+        "24510120500",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150500",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510170200",
+        "24510170300",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280102"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 10,
+          "grantee_total_tracts": 10
+        },
+        {
+          "grantee": "Child First Authority",
+          "tracts": 5,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 2,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 2,
+          "grantee_total_tracts": 7
+        }
+      ],
+      "join": "geometric overlap \u22655% of tract area (Baltimore City only)"
+    },
+    "bvri": {
+      "label": "BVRI Vacants to Value",
+      "tracts_overlapping": 33,
+      "total_tracts": 111,
+      "communities_overlapping": 10,
+      "total_communities": 28,
+      "geoids": [
+        "24510070200",
+        "24510070300",
+        "24510090100",
+        "24510090400",
+        "24510090600",
+        "24510090700",
+        "24510090800",
+        "24510120300",
+        "24510120500",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150600",
+        "24510150702",
+        "24510151200",
+        "24510151300",
+        "24510160100",
+        "24510160200",
+        "24510160300",
+        "24510170200",
+        "24510170300",
+        "24510250203",
+        "24510250207",
+        "24510250402",
+        "24510271001",
+        "24510271600",
+        "24510271700",
+        "24510271801",
+        "24510271802",
+        "24510280101",
+        "24510280500"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 7,
+          "grantee_total_tracts": 10,
+          "properties": 167
+        },
+        {
+          "grantee": "Child First Authority",
+          "tracts": 5,
+          "grantee_total_tracts": 6,
+          "properties": 127
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 5,
+          "properties": 233
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 5,
+          "grantee_total_tracts": 7,
+          "properties": 12
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 4,
+          "grantee_total_tracts": 5,
+          "properties": 21
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 3,
+          "grantee_total_tracts": 5,
+          "properties": 17
+        },
+        {
+          "grantee": "Cherry Hill Strong",
+          "tracts": 2,
+          "grantee_total_tracts": 3,
+          "properties": 3
+        },
+        {
+          "grantee": "Tendea Family INC.",
+          "tracts": 2,
+          "grantee_total_tracts": 3,
+          "properties": 18
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 1,
+          "grantee_total_tracts": 2,
+          "properties": 1
+        },
+        {
+          "grantee": "Urban Strategies Inc",
+          "tracts": 1,
+          "grantee_total_tracts": 2,
+          "properties": 1
+        }
+      ],
+      "properties_total": 1192,
+      "properties_in_grantee_tracts": 565,
+      "join": "point-in-polygon (Baltimore City only)"
+    }
+  },
+  "stacking": {
+    "layers_considered": [
+      "nmtc",
+      "oz",
+      "ez"
+    ],
+    "histogram": {
+      "0": 6,
+      "1": 15,
+      "2": 59,
+      "3": 31
+    },
+    "tracts_in_zero": 6,
+    "zero_geoids": [
+      "24003702500",
+      "24003706303",
+      "24003706403",
+      "24025301301",
+      "24025301401",
+      "24025301402"
+    ],
+    "zero_by_grantee": [
+      {
+        "grantee": "Boys & Girls Clubs of Harford and Cecil Counties",
+        "tracts": 3,
+        "grantee_total_tracts": 5
+      },
+      {
+        "grantee": "One Annapolis, Inc",
+        "tracts": 3,
+        "grantee_total_tracts": 4
+      }
+    ],
+    "communities_in_at_least_one": 28,
+    "communities_in_none": []
+  }
+}
