@@ -26,11 +26,13 @@ docs/                    GitHub Pages site (index.html + data/)
     bvri_vacants.geojson           1,192 Vacants to Value properties (Baltimore City, from DHCD ArcGIS)
     bvri_investment_areas.geojson  7 DHCD Impact Investment Area polygons (Baltimore City)
     nmtc_maryland.geojson          587 NMTC-eligible tracts statewide (CDFI Fund)
-    oz_designated_maryland.geojson 149 designated Opportunity Zones (2018 TCJA; MD DHCD/Commerce via iMap)
+    oz_designated_maryland.geojson 149 designated Opportunity Zones (2018 TCJA; MD DHCD/Commerce via iMap) + rural flag
+    oz2_eligible_maryland.geojson  451 OZ 2.0-eligible tracts (2020–2024 ACS; OpportunityZones.com) w/ MFI ratio + poverty
     ez_maryland.geojson            34 Maryland Enterprise Zones + Focus Areas (MD Commerce via iMap)
     crosswalk.json                 Precomputed ENOUGH × layer overlap (built by build_crosswalk.py)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
+  fetch_oz2.py           Refresh OZ 2.0-eligible tracts from opportunityzones.com + rural flag on designated OZs
   fetch_ez.py            Refresh Maryland Enterprise Zones from iMap MD_IncentiveZones
   build_crosswalk.py     Compute ENOUGH × layer overlap (Shapely) -> docs/data/crosswalk.json
   requirements-crosswalk.txt  Pinned shapely for build_crosswalk.py
@@ -82,7 +84,9 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 - 1,192 BVRI Vacants to Value properties (Baltimore City only)
 - 7 DHCD Impact Investment Areas (Baltimore City only)
 - 587 NMTC-eligible tracts statewide (350 Severe Distress, 237 Distressed)
-- 149 designated Opportunity Zones statewide (2018 TCJA, in effect through 2028)
+- 149 designated Opportunity Zones statewide (2018 TCJA, in effect through 2028; 47 rural)
+- 451 OZ 2.0-eligible tracts statewide (2020–2024 ACS via opportunityzones.com; MD may nominate up to 113, effective 2027).
+  **92** grantee tracts (26/28 communities) are OZ 2.0-eligible — exact-GEOID join
 - 32 Maryland Enterprise Zones + 2 Focus Areas statewide; **86** grantee tracts touch an Enterprise Zone
   (any-overlap; headline). A stricter ≥5%-area test gives **71** (footnoted on the crosswalk page — the
   15-tract gap is boundary slivers). EZ uses any-overlap because it has no tract-based ground truth to
@@ -91,7 +95,8 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 
 ### ENOUGH Crosswalk overlap (from `crosswalk.json`)
 - NMTC: 28/28 communities, 102/111 tracts (86 Severe Distress, 16 Distressed) — every community is NMTC-eligible
-- Opportunity Zones: 20/28 communities, 38/111 tracts (≥5% area)
+- Opportunity Zones (designated): 20/28 communities, 38/111 tracts (≥5% area)
+- OZ 2.0-eligible: 26/28 communities, 92/111 tracts (exact GEOID; 20% of the 451-tract eligible pool)
 - Enterprise Zones: 21/28 communities, 86/111 tracts (any overlap; 71 at ≥5% area)
 - BVRI Vacants: 10/28 communities, 33/111 tracts (565 of 1,192 properties inside a grantee tract)
 - DHCD Impact Areas: 6/28 communities, 21/111 tracts

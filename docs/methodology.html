@@ -75,13 +75,14 @@
 <h2>Overview</h2>
 <p>This map overlays six geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The six layers, with their geographic coverage:</p>
+<p>The seven layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>DHCD Impact Investment Areas (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
     <li><strong>NMTC eligibility (US Treasury CDFI Fund)</strong> &mdash; statewide</li>
     <li><strong>Designated Opportunity Zones (MD DHCD / Commerce via iMap)</strong> &mdash; statewide</li>
+    <li><strong>OZ 2.0-eligible tracts (OpportunityZones.com, 2020&ndash;2024 ACS)</strong> &mdash; statewide</li>
     <li><strong>Maryland Enterprise Zones (MD Dept. of Commerce)</strong> &mdash; statewide</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
@@ -276,14 +277,52 @@
             <tr><td><code>COUNTY_N</code></td><td>County name</td></tr>
             <tr><td><code>Selected_T</code></td><td>Designation flag ("Yes" for designated zones)</td></tr>
             <tr><td><code>MHI</code></td><td>Tract median household income</td></tr>
+            <tr><td><code>rural</code></td><td>Local flag: <code>true</code> if the zone is a rural Opportunity Zone, <code>false</code> if non-rural. Joined by GEOID from OpportunityZones.com's Maryland profile (47 of the 149 are rural). Rural zones are drawn with a dashed yellow outline on the map.</td></tr>
         </tbody>
     </table>
 
     <h3>Note</h3>
-    <p>These are the currently designated (OZ 1.0) zones, distinct from the preliminary OZ 2.0 <em>eligible</em> tracts. A separate OZ 2.0 designation cycle is expected to take effect in a future year and would replace this list once finalized.</p>
+    <p>These are the currently designated (OZ 1.0) zones, distinct from the OZ 2.0 <em>eligible</em> tracts documented in the next layer. The rural/non-rural split is sourced from <a href="https://opportunityzones.com/location/maryland/">OpportunityZones.com's Maryland profile</a> and joined onto the iMap geometry by GEOID (all 149 matched). The OZ 2.0 designation cycle (see Layer 6) will replace this list once Treasury finalizes it.</p>
 </div>
 
-<h2>Layer 6 &mdash; Maryland Enterprise Zones</h2>
+<h2>Layer 6 &mdash; OZ 2.0-Eligible Tracts</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#9f7aea;"></span>
+        <span class="layer-label">OZ 2.0-Eligible Tracts</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The 451 Maryland census tracts that meet the statutory income and/or poverty thresholds to be nominated as Opportunity Zones under the "OZ 2.0" framework. These are <em>eligible</em> tracts, <strong>not</strong> designated zones: under the 25% statutory cap, Maryland may nominate up to <strong>113</strong> of them, with new designations taking effect January 1, 2027 (the state's nomination window opened in 2026, administered by MD DHCD). Eligibility is derived from the 2020&ndash;2024 five-year American Community Survey (ACS) estimates the Census Bureau released on January 29, 2026.</p>
+
+    <h3>Source</h3>
+    <p><a href="https://opportunityzones.com/location/maryland/">OpportunityZones.com's Maryland state profile</a> (Kingsbury Media LLC), which publishes the eligible-tract list with each tract's median-family-income ratio and poverty rate from its analysis of the 2020&ndash;2024 ACS. The list of GEOIDs is read from that page; tract <em>geometry</em> is not scraped &mdash; instead each eligible GEOID is joined to the statewide 2020-vintage tract boundaries already used to build the ENOUGH grantee-tract layer, so the polygons are authoritative Census geometry.</p>
+
+    <div class="meta">
+        <strong>Program:</strong> Opportunity Zones 2.0 (next designation round)<br>
+        <strong>Tract geometries:</strong> 2020 Census Tracts (joined by GEOID)<br>
+        <strong>Underlying data:</strong> 2020&ndash;2024 ACS 5-year estimates (released 2026-01-29)<br>
+        <strong>Status:</strong> Eligible &mdash; not yet designated; MD may nominate up to 113 (effective 2027)<br>
+        <strong>Refresh cadence:</strong> Run <code>python3 scripts/fetch_oz2.py</code> to re-pull; also writes the rural flag onto Layer 5
+    </div>
+
+    <h3>Schema (relevant fields)</h3>
+    <table class="field-table">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>GEOID</code></td><td>2020 Census tract identifier (join key to grantee tracts)</td></tr>
+            <tr><td><code>county</code></td><td>County name</td></tr>
+            <tr><td><code>mfi_ratio</code></td><td>Tract median family income as a percent of the area benchmark</td></tr>
+            <tr><td><code>poverty</code></td><td>Tract poverty rate (percent)</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Note</h3>
+    <p>Because these tracts share the 2020 Census vintage with the ENOUGH grantee tracts, overlap on the <a href="crosswalk.html">crosswalk</a> uses an <strong>exact-GEOID join</strong> (like NMTC), not a geometric threshold. This is a forward-looking eligibility layer, so it is deliberately excluded from the "how many statewide programs stack per tract" gap analysis, which counts only currently-designated programs (NMTC, designated OZ, Enterprise Zones).</p>
+</div>
+
+<h2>Layer 7 &mdash; Maryland Enterprise Zones</h2>
 
 <div class="source-card">
     <div class="swatch-row">
@@ -336,7 +375,8 @@
     <thead><tr><th>Layer</th><th>How a grantee tract is matched</th><th>Why</th></tr></thead>
     <tbody>
         <tr><td>NMTC eligibility</td><td><strong>Exact GEOID match</strong></td><td>NMTC tracts and ENOUGH grantee tracts are both 2020-vintage census tracts, so a tract either <em>is</em> or <em>is not</em> on the NMTC-eligible list &mdash; no geometry needed.</td></tr>
-        <tr><td>Opportunity Zones</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>OZ polygons are 2010-vintage tracts, which don't line up 1:1 with 2020 tracts, so overlap is measured geometrically.</td></tr>
+        <tr><td>Opportunity Zones (designated)</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>OZ polygons are 2010-vintage tracts, which don't line up 1:1 with 2020 tracts, so overlap is measured geometrically.</td></tr>
+        <tr><td>OZ 2.0-eligible tracts</td><td><strong>Exact GEOID match</strong></td><td>The eligible tracts are 2020-vintage census tracts, same as the grantee tracts, so a tract either is or is not on the eligible list &mdash; no geometry needed.</td></tr>
         <tr><td>Enterprise Zones</td><td><strong>Any geometric overlap</strong> (tract touches a zone); ≥5%-area count footnoted</td><td>Zones are irregular economic-development polygons, not tracts. Headline uses any-overlap to match the state's "is this neighborhood in a zone?" framing.</td></tr>
         <tr><td>DHCD Impact Areas</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>Neighborhood polygons (Baltimore City only).</td></tr>
         <tr><td>BVRI Vacants to Value</td><td><strong>Point-in-polygon</strong></td><td>BVRI properties are points; a tract is counted if it contains any (Baltimore City only).</td></tr>
@@ -367,6 +407,9 @@ python3 scripts/fetch_nmtc.py
 
 # Refresh designated Opportunity Zones
 python3 scripts/fetch_oz.py
+
+# Refresh OZ 2.0-eligible tracts (also writes the rural flag onto designated OZs)
+python3 scripts/fetch_oz2.py
 
 # Refresh Maryland Enterprise Zones
 python3 scripts/fetch_ez.py

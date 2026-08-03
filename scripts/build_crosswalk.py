@@ -57,6 +57,7 @@ SOURCE_FILES = [
     "grantees.json",
     "nmtc_maryland.geojson",
     "oz_designated_maryland.geojson",
+    "oz2_eligible_maryland.geojson",
     "ez_maryland.geojson",
     "bvri_investment_areas.geojson",
     "bvri_vacants.geojson",
@@ -87,6 +88,7 @@ def compute():
     grantees = load("grantees.json")["grantees"]
     nmtc = load("nmtc_maryland.geojson")
     oz = load("oz_designated_maryland.geojson")
+    oz2 = load("oz2_eligible_maryland.geojson")
     ez = load("ez_maryland.geojson")
     dhcd = load("bvri_investment_areas.geojson")
     bvri = load("bvri_vacants.geojson")
@@ -195,6 +197,14 @@ def compute():
     results["oz"] = summarize(oz_hits, "Designated Opportunity Zones")
     results["oz"]["join"] = f"geometric overlap ≥{int(MIN_OVERLAP_FRAC*100)}% of tract area"
 
+    # OZ 2.0-eligible tracts: 2020-vintage census tracts (same vintage as the
+    # grantee tracts), so an exact GEOID match is the correct join — like NMTC.
+    oz2_geoids = {f["properties"]["GEOID"] for f in oz2["features"]}
+    oz2_hits = all_geoids & oz2_geoids
+    results["oz2"] = summarize(oz2_hits, "OZ 2.0-Eligible Tracts")
+    results["oz2"]["join"] = "exact GEOID match (2020 tracts)"
+    results["oz2"]["layer_total_tracts"] = len(oz2_geoids)
+
     # Enterprise Zones: headline counts any overlap (a tract that touches a zone),
     # matching the state's Enterprise Zone lookup framing. We also compute the
     # stricter ≥5%-area count and expose it as a footnote figure.
@@ -290,7 +300,7 @@ def print_summary(out):
     T = out["totals"]
     print(f"ENOUGH: {T['communities']} communities, {T['tracts']} tracts "
           f"({T['shared_tracts']} shared by two grantees)\n")
-    for key in ["bvri", "dhcd", "nmtc", "oz", "ez"]:
+    for key in ["bvri", "dhcd", "nmtc", "oz", "oz2", "ez"]:
         r = out["layers"][key]
         print(f"{r['label']}:")
         print(f"  {r['communities_overlapping']}/{T['communities']} communities, "

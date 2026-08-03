@@ -1,6 +1,6 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-07-21 (ENOUGH Crosswalk page + LLM-council iteration + EZ headline set to any-overlap; pushed)._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-08-03 (added OZ 2.0-eligible tracts layer + rural flag on designated OZs, per Mihir; wired into map/crosswalk/methodology; pushed)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -28,7 +28,20 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
   the state EZ lookup app.
 - All map layers wired in `docs/index.html`: grantee tracts (colored by org, on by default),
   BVRI vacants (red points), DHCD Impact Investment Areas (off), NMTC (two distress tiers, off),
-  Opportunity Zones (designated, off), Enterprise Zones (zones + focus areas, off).
+  Opportunity Zones (designated, off), OZ 2.0-eligible tracts (purple, off), Enterprise Zones (off).
+- **OZ 2.0-eligible layer added (2026-08-03, per Mihir).** Sourced the two datasets from
+  https://opportunityzones.com/location/maryland/ : (1) **451 OZ 2.0-eligible tracts** (2020–2024 ACS,
+  each with MFI-vs-area ratio + poverty rate) — a new statewide layer, purple, off by default; and
+  (2) a **rural/non-rural flag** on the existing 149 designated OZs (47 rural), rendered as a dashed
+  yellow outline. Eligible-tract GEOIDs (2020 vintage) join exact-match to grantee tracts: **92/111
+  grantee tracts across 26/28 communities are OZ 2.0-eligible** — i.e. positioned to keep a federal
+  capital-gains incentive after the 2018 zones lapse in 2028. Built by `scripts/fetch_oz2.py`
+  (parses the page tables, joins geometry from `enough-eligibility-analysis/.../tracts_2026.geojson`,
+  rewrites the designated-OZ geojson with the rural flag). Added to `build_crosswalk.py` (exact-GEOID
+  join, `oz2` layer key), the map, the crosswalk page (new card + nomination-cap context line), and
+  `methodology.html` (new Layer 6; EZ renumbered to Layer 7). Verified in a headless browser (no
+  console errors, both layers render, crosswalk card in place). Kept out of the statewide "stacking/gap"
+  histogram since it's forward-looking eligibility, not a current designation.
 - BVRI-in-grantee-tracts overlap (565 as of the latest data) computed client-side via
   point-in-polygon ray casting; recomputes per-grantee when one is selected in the sidebar.
 - **ENOUGH Crosswalk page (`docs/crosswalk.html`)** — for each non-grantee layer, shows how many
@@ -70,7 +83,13 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
   tier** locally (the source service has no single tier field): 587 eligible tracts statewide
   (350 Severe Distress, 237 Distressed).
 - `scripts/fetch_oz.py` — pulls MD iMap `MD_IncentiveZones` Layer 14 (designated Opportunity Zones):
-  149 tracts statewide (2018 TCJA designation, in effect through 2028). No rural/non-rural split.
+  149 tracts statewide (2018 TCJA designation, in effect through 2028). Rural/non-rural split now
+  added by `fetch_oz2.py` (below), not this script.
+- `scripts/fetch_oz2.py` — parses https://opportunityzones.com/location/maryland/ for the 451
+  OZ 2.0-eligible tracts (MFI ratio + poverty) and the rural flag on the 149 designated OZs. Joins
+  eligible-tract geometry by GEOID from `enough-eligibility-analysis/.../tracts_2026.geojson`
+  (451/451 matched); writes `oz2_eligible_maryland.geojson` and rewrites `oz_designated_maryland.geojson`
+  with a `rural` bool. Source is a scraped HTML table — re-verify table structure if the page is redesigned.
 - `scripts/fetch_ez.py` — pulls iMap `MD_IncentiveZones` Layer 4 (Enterprise Zones, 32) + Layer 5
   (Focus Areas, 2) into `ez_maryland.geojson` with a `focus_area` flag. Note: Layer 5 lacks the
   `extent`/`Expiration` fields, so the script requests `outFields=*` rather than a fixed field list.

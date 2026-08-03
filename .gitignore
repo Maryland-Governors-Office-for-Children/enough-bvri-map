@@ -1,0 +1,5 @@
+# Local geo build venv (rebuild via scripts/requirements-crosswalk.txt)
+.venv-geo/
+__pycache__/
+*.pyc
+.claude/settings.local.json

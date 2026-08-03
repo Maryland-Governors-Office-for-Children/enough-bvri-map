@@ -173,6 +173,9 @@
         { key: 'oz', color: '#3182ce', shape: 'square', coverage: 'Statewide',
           blurb: 'Federal Opportunity Zones (2017 Tax Cuts and Jobs Act) &mdash; investors who put capital gains into these tracts get federal tax breaks, in effect through 2028.',
           means: function (L) { return 'Projects in these tracts can attract Opportunity Fund capital alongside ENOUGH programming.'; } },
+        { key: 'oz2', color: '#553c9a', fill: '#9f7aea', shape: 'square', coverage: 'Statewide',
+          blurb: 'OZ 2.0-eligible tracts &mdash; census tracts that meet the next-round Opportunity Zone income/poverty thresholds (2020&ndash;2024 ACS). Maryland may nominate up to 113 of the 451 eligible tracts, with designations effective 2027.',
+          means: function (L) { return 'These are the neighborhoods most likely to become the <em>next</em> Opportunity Zones &mdash; strong candidates for the state to prioritize when it nominates, so ENOUGH communities keep a federal capital-gains incentive after the 2018 zones lapse in 2028.'; } },
         { key: 'ez', color: '#dd6b20', shape: 'square', coverage: 'Statewide',
           blurb: 'Maryland Enterprise Zones &mdash; a state program giving businesses that locate or expand in a zone real-property and income tax credits.',
           means: function (L) { return 'Businesses and employers inside these tracts qualify for state tax credits &mdash; a workforce and economic-development lever for ENOUGH neighborhoods.'; } },
@@ -246,6 +249,12 @@
                 '</b> of ' + L.properties_total.toLocaleString() +
                 ' Vacants to Value properties (' + pct(L.properties_in_grantee_tracts, L.properties_total) +
                 '%) sit inside an ENOUGH grantee tract.</div>';
+        }
+        if (cfg.key === 'oz2' && L.layer_total_tracts != null) {
+            extra = '<div class="extra-stat">Statewide, <b>' + L.layer_total_tracts +
+                '</b> tracts are OZ 2.0-eligible; Maryland may nominate up to <b>113</b> (a 25% cap). ' +
+                'ENOUGH grantee tracts are ' + pct(L.tracts_overlapping, L.layer_total_tracts) +
+                '% of the eligible pool &mdash; a ready-made case for prioritizing them in the nomination round.</div>';
         }
 
         let tiers = '';
