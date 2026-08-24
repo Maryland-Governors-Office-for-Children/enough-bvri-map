@@ -75,7 +75,7 @@
 <h2>Overview</h2>
 <p>This map overlays six geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The seven layers, with their geographic coverage:</p>
+<p>The eight layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
@@ -84,6 +84,7 @@
     <li><strong>Designated Opportunity Zones (MD DHCD / Commerce via iMap)</strong> &mdash; statewide</li>
     <li><strong>OZ 2.0-eligible tracts (OpportunityZones.com, 2020&ndash;2024 ACS)</strong> &mdash; statewide</li>
     <li><strong>Maryland Enterprise Zones (MD Dept. of Commerce)</strong> &mdash; statewide</li>
+    <li><strong>Just Communities (MD DHCD, Just Communities Act of 2024)</strong> &mdash; statewide</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
@@ -367,6 +368,67 @@
     <div class="meta"><strong>A stricter alternative:</strong> under a test requiring at least 5% of a tract's area to fall inside a zone, <strong>71</strong> grantee tracts count. The 15-tract difference is entirely boundary slivers &mdash; tracts that only clip a zone's edge (all under 5% of tract area; the smallest is 0.5%). The crosswalk page footnotes this 71 figure alongside the 86 headline. Note that Opportunity Zones and the DHCD areas still use the 5%-area test, because for Opportunity Zones the 5% threshold is validated against an exact-GEOID join (both reproduce 38 tracts); Enterprise Zones have no tract-based ground truth to validate against, so the more inclusive any-overlap count is used as the headline.</div>
 </div>
 
+<h2>Layer 8 &mdash; Just Communities</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#d53f8c;"></span>
+        <span class="layer-label">Just Communities</span>
+        <span style="color:#718096;font-size:0.85rem;">— off by default</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The 419 Maryland census tracts designated as <strong>Just Communities</strong>. The designation was created by the <strong>Just Communities Act of 2024</strong> (Maryland HB 241 / SB 308) and is administered by MD DHCD's Division of Just Communities. In DHCD's words, the designation "serves to counteract policies of the past that have robbed generations of families of wealth-building through home ownership and the intentional disinvestment in minoritized neighborhoods&hellip; By identifying these areas of disinvestment, the Just Communities Designation can target investment in areas that have been historically excluded from the benefits of State resources." Unlike the tax-incentive layers above, this designation directs <em>State funding priority</em> rather than a tax credit.</p>
+
+    <h3>Source</h3>
+    <p>MD DHCD data, published on Maryland's statewide GIS platform (iMap) as the <code>MD_HousingDesignatedAreas</code> feature service &mdash; the same iMap platform that supplies the Opportunity Zones and Enterprise Zones layers.</p>
+    <pre><code>https://mdgeodata.md.gov/imap/rest/services/BusinessEconomy/
+  MD_HousingDesignatedAreas/FeatureServer/9   (Just Communities)</code></pre>
+    <p>This is the same 419-tract dataset published in DHCD's public <a href="https://experience.arcgis.com/experience/3cdabbc618224902a2ed2ef9aa44d12a/page/Viewer">Just Communities Viewer</a> (we verified the GEOID sets are identical). We read the authoritative iMap service rather than the app's own layer because iMap is the State's published source of record and carries documented field aliases and a county-name field.</p>
+
+    <h3>How the 419 tracts were selected</h3>
+    <p>Per DHCD's <a href="https://maryland.maps.arcgis.com/sharing/rest/content/items/d230db6691404f6c9055690bfe6c9e3a/data">Methodology Report v1.0</a> (2025-04-23, prepared with the Eastern Shore Regional GIS Cooperative), DHCD translated the legislation into 14 criteria &mdash; Priority Funding Area status, homeownership, property-value trends, commercial/residential vacancy, history of redlining, exclusionary zoning, racially restrictive covenants, demolition via eminent domain or State/federal funds, State imprisonment rate, Superfund proximity, lead-paint exposure, and adult asthma rates. Four of those criteria had no authoritative statewide data source at the time and were omitted from v1.0. The remaining indicators were binned into quartiles and weighted into a <strong>Just Communities Score</strong>, and results were clipped to Maryland Priority Funding Areas. DHCD set the qualifying threshold at a score of <strong>13.5 or greater</strong>, which reduced 1,439 candidate census tracts to the <strong>419</strong> designated tracts.</p>
+
+    <div class="meta">
+        <strong>Program:</strong> Just Communities Act of 2024 (Maryland HB 241 / SB 308)<br>
+        <strong>Administering agency:</strong> MD DHCD, Division of Just Communities<br>
+        <strong>Tract geometries:</strong> 2020 Census Tracts<br>
+        <strong>Threshold:</strong> Just Communities Score &ge; 13.5 (1,439 tracts &rarr; 419)<br>
+        <strong>Vintage:</strong> DHCD Methodology <strong>Version 1.0</strong> (report dated 2025-04-23); iMap snapshot fetched <strong>2026-08-24</strong><br>
+        <strong>Refresh cadence:</strong> Run <code>python3 scripts/fetch_jc.py</code>. Re-pull when DHCD publishes a v2.0 &mdash; see the caveat below
+    </div>
+
+    <div class="meta"><strong>This is a Version 1.0 designation and it is expected to move.</strong> DHCD labels the methodology v1.0 and states it hopes "to identify available data for the criteria lacking authoritative data" in future analysis. Four of the fourteen legislated criteria had no statewide data source and were left out, and the qualifying cutoff (a score of 13.5) is an administrative judgment by DHCD rather than a number set in the statute. A v2.0 that adds the missing criteria or moves the cutoff would change both the 419 statewide count and the 81-tract ENOUGH overlap. Treat the figures on this page as "as designated under v1.0," not as permanent.</div>
+
+    <h3>Schema (fields we keep)</h3>
+    <table class="field-table">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>GEOID</code></td><td>2020 Census tract identifier (join key to grantee tracts)</td></tr>
+            <tr><td><code>tract_name</code></td><td>Census tract name (source <code>NAMELSAD</code>)</td></tr>
+            <tr><td><code>county</code></td><td>County name</td></tr>
+            <tr><td><code>redlining</code></td><td>Tract falls inside a 1930s HOLC-mapped (redlined) area &mdash; source: Univ. of Richmond "Mapping Inequality" via DHCD. <strong>Important:</strong> across the 419 tracts this field is only ever <code>true</code> (184 tracts) or <code>null</code> (235, where the source reads "No Data Available"). It is <em>never</em> <code>false</code> &mdash; HOLC only mapped a handful of Maryland cities, so <code>null</code> means "no HOLC map covers this tract," <strong>not</strong> "this tract was not redlined."</td></tr>
+            <tr><td><code>recap</code></td><td>Racially or Ethnically Concentrated Area of Poverty (R/ECAP)</td></tr>
+            <tr><td><code>vacant_housing_pct</code></td><td>Vacant housing units (percent, ACS)</td></tr>
+            <tr><td><code>owner_occupied_pct</code></td><td>Owner-occupied housing units (percent, ACS)</td></tr>
+            <tr><td><code>cost_burden_renters_pct</code> / <code>cost_burden_owners_pct</code></td><td>Severe housing cost burden, renters / owners (percent)</td></tr>
+            <tr><td><code>lead_paint_index</code></td><td>HUD Deteriorated Paint Index</td></tr>
+            <tr><td><code>superfund_proximity_pctile</code></td><td>Proximity to a federal Superfund site (percentile, CEJST)</td></tr>
+            <tr><td><code>asthma_pctile</code></td><td>Adult asthma rate above the 90th percentile (CEJST) &mdash; sparse</td></tr>
+            <tr><td><code>imprisonment_rate</code></td><td>State imprisonment rate &gt;750 per 100,000 (Prison Policy) &mdash; sparse</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Grantee-tract overlap</h3>
+    <p>Because Just Communities are 2020-vintage census tracts &mdash; the same vintage as the ENOUGH grantee tracts &mdash; overlap uses an <strong>exact-GEOID join</strong> (like NMTC and OZ 2.0), not a geometric threshold. <strong>81 of the 111</strong> grantee tracts, across <strong>26 of 28</strong> communities, are designated Just Communities. Of those 81, <strong>18</strong> are R/ECAPs and <strong>43</strong> fall inside a historically redlined (HOLC-mapped) area. Read that 43 carefully: the remaining 38 are <em>not</em> established to be un-redlined &mdash; as noted in the schema above, the HOLC source never records a "No," so those 38 are simply tracts no HOLC map covers.</p>
+
+    <p>The <strong>30 grantee tracts that are not designated</strong> are not randomly distributed: 10 are in Prince George's County, 7 in Anne Arundel, 4 in Montgomery, 3 in Harford, 2 each in Dorchester and Frederick, and 1 each in Caroline and Baltimore City. Two ENOUGH communities have <em>no</em> Just Communities tracts at all (Caroline Human Services Council and One Annapolis). Part of the explanation is structural rather than a judgment about need: DHCD clipped the Just Communities analysis to Maryland <strong>Priority Funding Areas</strong>, so a grantee tract outside a PFA could not score into the designation regardless of its conditions. We have not independently verified PFA status tract-by-tract, so this is offered as the likely mechanism, not a confirmed cause.</p>
+
+    <h3>Notes and caveats</h3>
+    <p>Two fields in the source (<code>asthma_pctile</code>, <code>imprisonment_rate</code>) are sparsely populated &mdash; most tracts are null because the underlying CEJST and Prison Policy datasets only flag tracts above a threshold. The map popup shows "No data" rather than implying a zero. Separately, a narrower <em>"Refined Just Communities Designations"</em> layer (398 tracts, a strict subset of the 419) exists in Maryland's ArcGIS Online but is not published on iMap; we use the 419-tract layer because that is the count the State publishes as designated and the one shown in the public Viewer. Choosing the 398-tract subset instead would change the grantee overlap by exactly one tract (81 &rarr; 80).</p>
+
+    <p>Just Communities is deliberately <strong>excluded from the crosswalk's "stacking" histogram</strong>, which counts only the three statewide <em>tax-incentive</em> programs. Just Communities directs State funding priority rather than a tax credit, so mixing it in would compare unlike instruments. It is reported as its own card instead. As a cross-check on the gap narrative, the build script also confirms whether any of the tracts in zero tax-incentive programs are Just Communities &mdash; currently <strong>none</strong> of the 6 are, so those tracts have no State place-based designation reaching them at all.</p>
+</div>
+
 <h2>The ENOUGH Crosswalk page</h2>
 <p>The <a href="crosswalk.html">ENOUGH Crosswalk</a> page answers, for each non-grantee layer, how many ENOUGH communities and grantee tracts overlap it &mdash; plus a "stacking" view of how many statewide incentive programs coincide in each tract. All of its figures are precomputed at build time by <code>scripts/build_crosswalk.py</code> (Python + <a href="https://shapely.readthedocs.io/">Shapely</a>) and written to <code>docs/data/crosswalk.json</code>, which both the crosswalk page and the map read. Computing overlaps once, server-side, keeps every page consistent and avoids re-deriving geometry in the browser.</p>
 
@@ -378,6 +440,7 @@
         <tr><td>Opportunity Zones (designated)</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>OZ polygons are 2010-vintage tracts, which don't line up 1:1 with 2020 tracts, so overlap is measured geometrically.</td></tr>
         <tr><td>OZ 2.0-eligible tracts</td><td><strong>Exact GEOID match</strong></td><td>The eligible tracts are 2020-vintage census tracts, same as the grantee tracts, so a tract either is or is not on the eligible list &mdash; no geometry needed.</td></tr>
         <tr><td>Enterprise Zones</td><td><strong>Any geometric overlap</strong> (tract touches a zone); ≥5%-area count footnoted</td><td>Zones are irregular economic-development polygons, not tracts. Headline uses any-overlap to match the state's "is this neighborhood in a zone?" framing.</td></tr>
+        <tr><td>Just Communities</td><td><strong>Exact GEOID match</strong></td><td>Just Communities are 2020-vintage census tracts, same as the grantee tracts, so a tract either is or is not designated.</td></tr>
         <tr><td>DHCD Impact Areas</td><td><strong>Geometric overlap &ge; 5% of tract area</strong></td><td>Neighborhood polygons (Baltimore City only).</td></tr>
         <tr><td>BVRI Vacants to Value</td><td><strong>Point-in-polygon</strong></td><td>BVRI properties are points; a tract is counted if it contains any (Baltimore City only).</td></tr>
     </tbody>
@@ -389,7 +452,7 @@
 <p>A community is counted as overlapping a layer if <strong>any one</strong> of its tracts does. This is a deliberately generous "is this tool available anywhere in this community?" measure &mdash; useful, but it can make coverage look higher than the on-the-ground footprint (a 10-tract grantee with one tract in a zone counts the same as one fully inside it). That's why the page always shows the <strong>grantee-tract share</strong> alongside the community share: the tract number is the stricter measure of how much of a community a program actually reaches. Three tracts are served by two grantees each, so per-community counts in the breakdown tables can sum to slightly more than a layer's tract total; the layer's headline tract count is de-duplicated.</p>
 
 <h3>Stacking and gaps</h3>
-<p>The crosswalk page's final section counts, for each grantee tract, how many of the three <em>statewide</em> incentive programs (NMTC, Opportunity Zones, Enterprise Zones) overlap it. The Baltimore-only layers are excluded from this count so a rural grantee tract isn't penalized for lacking a Baltimore vacant-property program. Tracts in <strong>zero</strong> statewide program are surfaced explicitly &mdash; these are the places where ENOUGH is currently the only place-based tool and the clearest candidates for new investment or advocacy.</p>
+<p>The crosswalk page's final section counts, for each grantee tract, how many of the three <em>statewide</em> incentive programs (NMTC, Opportunity Zones, Enterprise Zones) overlap it. The Baltimore-only layers are excluded from this count so a rural grantee tract isn't penalized for lacking a Baltimore vacant-property program. OZ 2.0 is excluded because it is future eligibility rather than a live designation, and Just Communities because it directs State funding rather than a tax credit &mdash; both get their own cards instead. Tracts in <strong>zero</strong> statewide program are surfaced explicitly &mdash; these are the places where ENOUGH is currently the only place-based tool and the clearest candidates for new investment or advocacy. The build also cross-checks those tracts against Just Communities so the "only lever" claim can't quietly overstate itself.</p>
 
 <h3>Keeping the data fresh</h3>
 <p><code>crosswalk.json</code> is a committed artifact, so it can drift from its source layers if one is refreshed without rebuilding. To guard against that, the build script stamps a <code>source_hash</code> (a SHA-256 of all input files) into the output, and <code>python scripts/build_crosswalk.py --check</code> recomputes that hash and exits with an error if the committed JSON is stale. Run the check before sharing the site externally; if it reports "STALE," rerun the build and commit the refreshed <code>crosswalk.json</code>.</p>
@@ -413,6 +476,9 @@ python3 scripts/fetch_oz2.py
 
 # Refresh Maryland Enterprise Zones
 python3 scripts/fetch_ez.py
+
+# Refresh Just Communities (MD DHCD via iMap)
+python3 scripts/fetch_jc.py
 
 # Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
 # See CLAUDE.md for the inline Python snippet

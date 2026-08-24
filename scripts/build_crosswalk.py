@@ -9,6 +9,8 @@ statewide investment program (where ENOUGH is the only lever).
 
 Join method per layer:
   - NMTC  : exact GEOID match (grantee tracts and NMTC are both 2020-vintage tracts)
+  - OZ2   : exact GEOID match (OZ 2.0-eligible tracts are 2020-vintage)
+  - JC    : exact GEOID match (Just Communities are 2020-vintage tracts)
   - OZ    : geometric intersection (OZ polygons are 2010-vintage tracts)
   - EZ    : geometric intersection (irregular economic-development polygons)
   - DHCD  : geometric intersection (neighborhood polygons, Baltimore City only)
@@ -59,6 +61,7 @@ SOURCE_FILES = [
     "oz_designated_maryland.geojson",
     "oz2_eligible_maryland.geojson",
     "ez_maryland.geojson",
+    "just_communities_maryland.geojson",
     "bvri_investment_areas.geojson",
     "bvri_vacants.geojson",
 ]
@@ -90,6 +93,7 @@ def compute():
     oz = load("oz_designated_maryland.geojson")
     oz2 = load("oz2_eligible_maryland.geojson")
     ez = load("ez_maryland.geojson")
+    jc = load("just_communities_maryland.geojson")
     dhcd = load("bvri_investment_areas.geojson")
     bvri = load("bvri_vacants.geojson")
 
@@ -217,6 +221,19 @@ def compute():
     results["ez"]["strict_5pct_communities"] = len(set(
         gn for geoid in ez_hits_5pct for gn in tracts[geoid]["grantees"]))
 
+    # Just Communities: designated 2020-vintage census tracts (Just Communities
+    # Act of 2024), so an exact GEOID match is the correct join — like NMTC.
+    jc_props = {f["properties"]["GEOID"]: f["properties"] for f in jc["features"]}
+    jc_hits = all_geoids & set(jc_props)
+    results["jc"] = summarize(jc_hits, "Just Communities")
+    results["jc"]["join"] = "exact GEOID match (2020 tracts)"
+    results["jc"]["layer_total_tracts"] = len(jc_props)
+    # How many of the overlapping grantee tracts carry each designation marker.
+    results["jc"]["markers"] = {
+        "recap": sum(1 for g in jc_hits if jc_props[g].get("recap")),
+        "redlining": sum(1 for g in jc_hits if jc_props[g].get("redlining")),
+    }
+
     dhcd_hits = polygon_layer_hits(dhcd["features"])
     results["dhcd"] = summarize(dhcd_hits, "DHCD Impact Investment Areas")
     results["dhcd"]["join"] = f"geometric overlap ≥{int(MIN_OVERLAP_FRAC*100)}% of tract area (Baltimore City only)"
@@ -283,6 +300,12 @@ def compute():
             key=lambda r: (-r["tracts"], r["grantee"])),
         "communities_in_at_least_one": len(covered_communities),
         "communities_in_none": sorted(all_communities - covered_communities),
+        # Cross-check: Just Communities is a state funding-priority designation,
+        # not a tax incentive, so it's not one of the three stacked layers. But if
+        # a zero-incentive tract were a Just Community it would still have a state
+        # lever, which would weaken the "ENOUGH is the only lever" claim — so we
+        # report the count explicitly rather than leaving it implied.
+        "zero_also_just_community": sorted(set(zero_geoids) & jc_hits),
     }
 
     return {
@@ -300,7 +323,7 @@ def print_summary(out):
     T = out["totals"]
     print(f"ENOUGH: {T['communities']} communities, {T['tracts']} tracts "
           f"({T['shared_tracts']} shared by two grantees)\n")
-    for key in ["bvri", "dhcd", "nmtc", "oz", "oz2", "ez"]:
+    for key in ["bvri", "dhcd", "nmtc", "oz", "oz2", "ez", "jc"]:
         r = out["layers"][key]
         print(f"{r['label']}:")
         print(f"  {r['communities_overlapping']}/{T['communities']} communities, "

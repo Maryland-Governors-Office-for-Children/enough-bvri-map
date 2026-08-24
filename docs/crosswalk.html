@@ -179,6 +179,9 @@
         { key: 'ez', color: '#dd6b20', shape: 'square', coverage: 'Statewide',
           blurb: 'Maryland Enterprise Zones &mdash; a state program giving businesses that locate or expand in a zone real-property and income tax credits.',
           means: function (L) { return 'Businesses and employers inside these tracts qualify for state tax credits &mdash; a workforce and economic-development lever for ENOUGH neighborhoods.'; } },
+        { key: 'jc', color: '#97266d', fill: '#d53f8c', shape: 'square', coverage: 'Statewide',
+          blurb: '&ldquo;Just Communities&rdquo; is the official name of a Maryland designation created by the <b>Just Communities Act of 2024</b> &mdash; not a judgment about the places named. MD DHCD scored every census tract on conditions tied to past disinvestment (history of redlining, concentrated poverty, vacancy, lead-paint exposure, imprisonment rate, Superfund proximity) and designated the 419 highest-scoring tracts for priority State reinvestment.',
+          means: function (L) { return 'This is the State’s own definition of where past disinvestment must be repaired &mdash; and it lands on the same neighborhoods ENOUGH serves. It is a state funding-priority lever rather than a tax credit, so it complements the incentive programs above.'; } },
         { key: 'bvri', color: '#e53e3e', shape: 'circle', coverage: 'Baltimore City only',
           blurb: 'Baltimore City DHCD "Vacants to Value" &mdash; vacant properties on the open-bid list, being marketed for rehab and reinvestment.',
           means: function (L) { return 'These are concrete, parcel-level rehab opportunities inside ENOUGH neighborhoods &mdash; where housing revitalization and ENOUGH services can reinforce each other.'; } },
@@ -249,6 +252,20 @@
                 '</b> of ' + L.properties_total.toLocaleString() +
                 ' Vacants to Value properties (' + pct(L.properties_in_grantee_tracts, L.properties_total) +
                 '%) sit inside an ENOUGH grantee tract.</div>';
+        }
+        if (cfg.key === 'jc' && L.layer_total_tracts != null) {
+            const m = L.markers || {};
+            const notRed = L.tracts_overlapping - (m.redlining || 0);
+            extra = '<div class="extra-stat">Maryland has <b>' + L.layer_total_tracts +
+                '</b> designated Just Communities statewide, and <b>' + L.tracts_overlapping +
+                '</b> of them are ENOUGH grantee tracts (' +
+                pct(L.tracts_overlapping, L.layer_total_tracts) + '% of the statewide total). ' +
+                'Among those ' + L.tracts_overlapping + ' tracts, <b>' + (m.recap || 0) +
+                '</b> are a Racially or Ethnically Concentrated Area of Poverty (R/ECAP) and <b>' +
+                (m.redlining || 0) + '</b> sit inside a historically redlined area. ' +
+                '<span style="color:#5a6678;">The other ' + notRed + ' are <em>not</em> known to be un-redlined &mdash; ' +
+                'the 1930s HOLC maps this flag comes from only covered a few Maryland cities, so for most ' +
+                'of the State no map exists either way.</span></div>';
         }
         if (cfg.key === 'oz2' && L.layer_total_tracts != null) {
             extra = '<div class="extra-stat">Statewide, <b>' + L.layer_total_tracts +
@@ -358,17 +375,31 @@
                     r.grantee_total_tracts + ' tracts sit in no statewide incentive program.</li>';
             }).join('') + '</ul>';
         }
+        // Just Communities is a state funding-priority designation rather than a tax
+        // incentive, so it is not one of the three stacked layers. If a zero-incentive
+        // tract were also a Just Community it would still have a State lever, so we
+        // state that check explicitly instead of leaving it to inference.
+        let jcCheck = '';
+        if (S.zero_also_just_community) {
+            const n = S.zero_also_just_community.length;
+            jcCheck = n === 0
+                ? ' None of them is a designated Just Community either. (That covers the programs on this map only &mdash; these tracts may still fall inside other State designations we do not map, such as Sustainable Communities or a Priority Funding Area.)'
+                : ' ' + n + ' of them ' + (n === 1 ? 'is' : 'are') +
+                  ' a designated Just Community, which does give ' + (n === 1 ? 'it' : 'them') +
+                  ' a State funding-priority lever even without a tax incentive.';
+        }
         const gap = zeroN === 0
             ? '<div class="gap-callout"><b>No gaps:</b> every grantee tract falls inside at least one statewide incentive program.</div>'
             : '<div class="gap-callout"><b>Where ENOUGH is the only lever:</b> ' + zeroN +
               ' grantee tract' + (zeroN === 1 ? '' : 's') +
-              ' sit in <b>none</b> of the three statewide incentive programs. In these places, ENOUGH is currently the sole place-based tool &mdash; the clearest candidates for new investment tools or targeted advocacy.' +
+              ' sit in <b>none</b> of the three statewide tax-incentive programs counted above (NMTC, Opportunity Zones, Enterprise Zones).' + jcCheck +
+              ' Of the tools this map tracks, ENOUGH is the only one reaching these places &mdash; the clearest candidates for new investment tools or targeted advocacy.' +
               gapList + '</div>';
 
         return el(
             '<div class="stack-card">' +
               '<h2>How many programs stack in the same tract?</h2>' +
-              '<p>Counting the three <b>statewide</b> tax-incentive programs (NMTC, Opportunity Zones, Enterprise Zones), this shows how many overlap each grantee tract. More overlapping programs means more tools a grantee could braid in the same neighborhood. (Baltimore-only layers are excluded here so rural tracts aren’t penalized.)</p>' +
+              '<p>Counting the three <b>statewide</b> tax-incentive programs (NMTC, Opportunity Zones, Enterprise Zones), this shows how many overlap each grantee tract. More overlapping programs means more tools a grantee could braid in the same neighborhood. (Baltimore-only layers are excluded here so rural tracts aren’t penalized. OZ 2.0 is excluded because it is future eligibility, not a live designation, and Just Communities because it directs State funding rather than a tax credit &mdash; both are reported as their own cards above.)</p>' +
               '<div class="stack-hist">' + cols + '</div>' +
               gap +
             '</div>'

@@ -29,11 +29,13 @@ docs/                    GitHub Pages site (index.html + data/)
     oz_designated_maryland.geojson 149 designated Opportunity Zones (2018 TCJA; MD DHCD/Commerce via iMap) + rural flag
     oz2_eligible_maryland.geojson  451 OZ 2.0-eligible tracts (2020–2024 ACS; OpportunityZones.com) w/ MFI ratio + poverty
     ez_maryland.geojson            34 Maryland Enterprise Zones + Focus Areas (MD Commerce via iMap)
+    just_communities_maryland.geojson  419 designated Just Communities (MD DHCD via iMap; Just Communities Act of 2024)
     crosswalk.json                 Precomputed ENOUGH × layer overlap (built by build_crosswalk.py)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
   fetch_oz2.py           Refresh OZ 2.0-eligible tracts from opportunityzones.com + rural flag on designated OZs
   fetch_ez.py            Refresh Maryland Enterprise Zones from iMap MD_IncentiveZones
+  fetch_jc.py            Refresh Just Communities from iMap MD_HousingDesignatedAreas Layer 9
   build_crosswalk.py     Compute ENOUGH × layer overlap (Shapely) -> docs/data/crosswalk.json
   requirements-crosswalk.txt  Pinned shapely for build_crosswalk.py
 ```
@@ -42,7 +44,8 @@ scripts/
 
 ```bash
 python3 scripts/fetch_bvri.py   # re-fetches bvri_vacants.geojson + bvri_investment_areas.geojson
-# then commit docs/data/bvri_vacants.geojson
+python3 scripts/fetch_jc.py     # re-fetches just_communities_maryland.geojson (419 tracts)
+# then commit the refreshed docs/data/*.geojson
 ```
 
 BVRI data source: `https://egisdata.baltimorecity.gov/egis/rest/services/Housing/DHCD_Open_Baltimore_Datasets/FeatureServer`
@@ -87,6 +90,12 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 - 149 designated Opportunity Zones statewide (2018 TCJA, in effect through 2028; 47 rural)
 - 451 OZ 2.0-eligible tracts statewide (2020–2024 ACS via opportunityzones.com; MD may nominate up to 113, effective 2027).
   **92** grantee tracts (26/28 communities) are OZ 2.0-eligible — exact-GEOID join
+- 419 designated **Just Communities** statewide (Just Communities Act of 2024, HB 241/SB 308; MD DHCD via iMap
+  `MD_HousingDesignatedAreas` Layer 9). **81** grantee tracts (26/28 communities) are Just Communities — exact-GEOID
+  join. DHCD Methodology **v1.0** (2025-04-23): 4 of 14 legislated criteria had no data; qualifying score ≥13.5 is an
+  administrative cutoff, not statutory; results clipped to Priority Funding Areas. A v2.0 will move both counts.
+  **Careful with `redlining`:** it is only ever `true` (184) or `null` (235) — never `false`. HOLC mapped only a few
+  Maryland cities, so `null` means "no HOLC map here", NOT "not redlined". Never report the complement as un-redlined.
 - 32 Maryland Enterprise Zones + 2 Focus Areas statewide; **86** grantee tracts touch an Enterprise Zone
   (any-overlap; headline). A stricter ≥5%-area test gives **71** (footnoted on the crosswalk page — the
   15-tract gap is boundary slivers). EZ uses any-overlap because it has no tract-based ground truth to
@@ -98,6 +107,9 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 - Opportunity Zones (designated): 20/28 communities, 38/111 tracts (≥5% area)
 - OZ 2.0-eligible: 26/28 communities, 92/111 tracts (exact GEOID; 20% of the 451-tract eligible pool)
 - Enterprise Zones: 21/28 communities, 86/111 tracts (any overlap; 71 at ≥5% area)
+- Just Communities: 26/28 communities, 81/111 tracts (exact GEOID; 19% of the 419 statewide). The 30
+  non-designated grantee tracts cluster in Prince George's (10) + Anne Arundel (7); Caroline Human Services
+  Council and One Annapolis have zero. Excluded from the stacking histogram (funding priority, not a tax credit)
 - BVRI Vacants: 10/28 communities, 33/111 tracts (565 of 1,192 properties inside a grantee tract)
 - DHCD Impact Areas: 6/28 communities, 21/111 tracts
 - Stacking (statewide NMTC/OZ/EZ, EZ any-overlap): 6 tracts in zero program, 15 in one, 59 in two,

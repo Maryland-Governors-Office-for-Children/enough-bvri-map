@@ -1,6 +1,8 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-08-03 (added OZ 2.0-eligible tracts layer + rural flag on designated OZs, per Mihir; wired into map/crosswalk/methodology; pushed)._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-08-24 (added **Just Communities** layer per Mihir's 8/20 email; LLM-council review caught a
+redlining null-vs-false framing bug, fixed; map pane z-order bug fixed; pushed)._ Living index of what's done,
+what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -28,7 +30,35 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
   the state EZ lookup app.
 - All map layers wired in `docs/index.html`: grantee tracts (colored by org, on by default),
   BVRI vacants (red points), DHCD Impact Investment Areas (off), NMTC (two distress tiers, off),
-  Opportunity Zones (designated, off), OZ 2.0-eligible tracts (purple, off), Enterprise Zones (off).
+  Opportunity Zones (designated, off), OZ 2.0-eligible tracts (purple, off), Enterprise Zones (off),
+  Just Communities (magenta, off).
+- **Just Communities layer added (2026-08-24, per Mihir's 8/20 "Another data layer" email).** He linked DHCD's
+  ArcGIS "Just Communities Viewer"; note "JUST" was the *program name*, not the adverb "only". Shipped the **419
+  designated Just Communities** tracts from the authoritative iMap `MD_HousingDesignatedAreas` **Layer 9** (GEOID
+  set verified identical to the app's own layer, so the state service is used for better provenance + a county
+  field). Created by the **Just Communities Act of 2024** (HB 241/SB 308). Exact-GEOID join (2020 tracts, like
+  NMTC/OZ2): **81/111 grantee tracts, 26/28 communities**. New 6th stat-bar metric "Grantee Tracts in Just
+  Communities" (per-grantee aware), popup of the designation indicators, crosswalk card, methodology Layer 8,
+  `scripts/fetch_jc.py`. Coordinates rounded to 5dp in the fetch script (6 MB → 3.4 MB).
+- **Map pane z-order bug fixed (found while adding the above).** Context layers had been rendering *on top of*
+  the grantee tracts, because Leaflet stacks by the order layers get toggled on. Introduced explicit panes
+  (`ctxPane` 410 → `granteePane` 450 → `pointPane` 460), so designation polygons always sit under the grantee
+  tracts and the BVRI points sit on top. Most visible with Just Communities, which blankets Baltimore City
+  (167 tracts there) — its fill is also deliberately lighter (0.22) than the other designation layers.
+- **LLM-council review done + acted on (2026-08-24).** All 5 advisors ran; 3 independent peer reviewers
+  unanimously ranked the Contrarian strongest and the Expansionist's suggestions the biggest blind spot. Fixed:
+  (a) **the real bug — `redlining` is only ever `true`(184)/`null`(235), never `false`.** The page had said "43
+  have a documented history of redlining", implying the other 38 were not redlined; HOLC only mapped a few MD
+  cities, so `null` means "no map exists". Reworded on the crosswalk + methodology and in the popup ("No HOLC
+  map for this area"), and the schema row now states the field is never `false`. (b) narrowed an over-claim
+  ("no State funding-priority designation reaches them" → "none is a designated Just Community", + a note that
+  only mapped programs are covered). (c) disclosed the **30 non-designated grantee tracts** by county
+  (PG 10, AA 7) incl. the 2 communities with zero, and offered PFA-clipping as the likely (unverified) mechanism.
+  (d) added a **v1.0 caveat box** (4 of 14 criteria unsourced, ≥13.5 is administrative not statutory, a v2.0 will
+  move the counts) + a Vintage/fetch-date stamp. (e) Outsider fixes: quoted the designation name so it doesn't
+  read as a value judgment, named the three stacked programs explicitly, units + direction on every popup row,
+  reversed the ambiguous "19% of them" phrasing. Declined (per peer review): on-by-default, naming the 6
+  "invisible" tracts on a public page, and sending the redlining count onward as an analytic covariate.
 - **OZ 2.0-eligible layer added (2026-08-03, per Mihir).** Sourced the two datasets from
   https://opportunityzones.com/location/maryland/ : (1) **451 OZ 2.0-eligible tracts** (2020–2024 ACS,
   each with MFI-vs-area ratio + poverty rate) — a new statewide layer, purple, off by default; and
@@ -68,6 +98,12 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
   distress definitions" + the gap view — both now on the page.
 
 **Open (build — can be done in-repo)**
+- [ ] **Lazy-load the off-by-default layers.** `index.html` fetches every geojson up front in one `Promise.all`
+  (~25 MB: NMTC 9.4 MB, EZ 8.4 MB, JC 3.4 MB, OZ 1.9 MB, OZ2 1.0 MB), including layers that are off by default.
+  Load each on first toggle instead. Highest-value follow-up in the repo; flagged by the council as pre-existing
+  debt rather than a blocker. Rounding coords to 5dp (as `fetch_jc.py` does) would also shrink the older layers.
+- [ ] Consider a v2.0 watch on Just Communities — DHCD said it intends to add the 4 unsourced criteria; re-run
+  `fetch_jc.py` and rebuild the crosswalk when that lands.
 - [ ] Decide whether to ship the additional DHCD layers (vacant building notices, demolitions,
   receivership — Layers 0/1/2/4/5 of the same feature server) noted as available in methodology, or
   keep the map to just the open-bid Vacants to Value list.

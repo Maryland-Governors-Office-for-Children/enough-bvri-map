@@ -75,7 +75,7 @@
 <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;">
     <div>
         <h1>BVRI &times; ENOUGH Grantees</h1>
-        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide tax-incentive layers (NMTC eligibility, designated Opportunity Zones, OZ 2.0-eligible tracts, Enterprise Zones)</p>
+        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide designation layers (NMTC eligibility, designated Opportunity Zones, OZ 2.0-eligible tracts, Enterprise Zones, Just Communities)</p>
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0;">
         <a href="crosswalk.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;">ENOUGH Crosswalk &rarr;</a>
@@ -89,6 +89,7 @@
     <div class="stat"><div class="stat-num" id="stat-bvri-total">—</div><div class="stat-label">BVRI Properties (Baltimore)</div></div>
     <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Grantee Tracts</div></div>
     <div class="stat"><div class="stat-num" id="stat-ez-overlap">—</div><div class="stat-label">Grantee Tracts in Enterprise Zones</div></div>
+    <div class="stat"><div class="stat-num" id="stat-jc-overlap">—</div><div class="stat-label">Grantee Tracts in Just Communities</div></div>
 </div>
 
 <div class="map-wrap">
@@ -102,6 +103,7 @@
             <label class="layer-toggle"><input type="checkbox" id="layer-oz"><span class="swatch" style="background:#3182ce;border:1px solid #2a4365;"></span> Opportunity Zones <span style="color:#a0aec0;font-size:0.72rem;">(designated 2018, statewide)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-oz2"><span class="swatch" style="background:#9f7aea;border:1px solid #553c9a;"></span> OZ 2.0-Eligible Tracts <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-ez"><span class="swatch" style="background:#dd6b20;border:1px solid #9c4221;"></span> Enterprise Zones <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-jc"><span class="swatch" style="background:#d53f8c;border:1px solid #97266d;"></span> "Just Communities" <span style="color:#a0aec0;font-size:0.72rem;">(MD DHCD designation, statewide)</span></label>
         </div>
 
         <div class="layer-group">
@@ -128,6 +130,7 @@
             <div class="legend-item"><span class="swatch" style="background:#9f7aea;"></span> OZ 2.0-eligible tract</div>
             <div class="legend-item"><span class="swatch" style="background:#dd6b20;"></span> Enterprise Zone</div>
             <div class="legend-item"><span class="swatch" style="background:#c05621;"></span> Enterprise Zone Focus Area</div>
+            <div class="legend-item"><span class="swatch" style="background:#d53f8c;"></span> "Just Community" (State-designated tract)</div>
         </div>
 
         <div style="font-size:0.72rem;color:#a0aec0;margin-top:auto;padding-top:8px;">
@@ -179,6 +182,15 @@
         maxZoom: 19
     }).addTo(map);
 
+    // Explicit panes so stacking order is fixed rather than depending on the
+    // order layers happen to be toggled on. Context/designation polygons sit
+    // underneath the grantee tracts, which sit underneath the BVRI points —
+    // otherwise a broad layer like Just Communities (which covers most of
+    // Baltimore City) would bury the grantee tracts the map exists to show.
+    map.createPane('ctxPane').style.zIndex = 410;
+    map.createPane('granteePane').style.zIndex = 450;
+    map.createPane('pointPane').style.zIndex = 460;
+
     const lgGrantee = L.layerGroup().addTo(map);
     const lgVacants = L.layerGroup().addTo(map);
     const lgInvest  = L.layerGroup();
@@ -186,8 +198,10 @@
     const lgOz      = L.layerGroup();
     const lgOz2     = L.layerGroup();
     const lgEz      = L.layerGroup();
+    const lgJc      = L.layerGroup();
 
     const OZ2_COLOR = { fill: '#9f7aea', stroke: '#553c9a' };  // OZ 2.0-eligible
+    const JC_COLOR  = { fill: '#d53f8c', stroke: '#97266d' };  // Just Communities
 
     const EZ_COLOR       = { fill: '#dd6b20', stroke: '#9c4221' };  // Enterprise Zone
     const EZ_FOCUS_COLOR = { fill: '#c05621', stroke: '#7b341e' };  // Focus Area (enhanced credits)
@@ -258,6 +272,8 @@
     let bvriPerGrantee = {}; // grantee name -> count
     let ezTractsTotal = 0;
     let ezTractsPerGrantee = {}; // grantee name -> count of that grantee's tracts in an Enterprise Zone
+    let jcTractsTotal = 0;
+    let jcTractsPerGrantee = {}; // grantee name -> count of that grantee's tracts that are Just Communities
     function updateOverlapDisplay() {
         if (activeGrantee) {
             const n = bvriPerGrantee[activeGrantee] || 0;
@@ -266,12 +282,14 @@
                 'BVRI properties within<br><strong>' + activeGrantee + '</strong>';
             document.getElementById('stat-bvri-overlap').textContent = n.toLocaleString();
             document.getElementById('stat-ez-overlap').textContent = (ezTractsPerGrantee[activeGrantee] || 0).toLocaleString();
+            document.getElementById('stat-jc-overlap').textContent = (jcTractsPerGrantee[activeGrantee] || 0).toLocaleString();
         } else {
             document.getElementById('overlap-num').textContent = bvriTotalInGrantees.toLocaleString();
             document.getElementById('overlap-sub').innerHTML =
                 'BVRI properties within ENOUGH<br>grantee tract boundaries';
             document.getElementById('stat-bvri-overlap').textContent = bvriTotalInGrantees.toLocaleString();
             document.getElementById('stat-ez-overlap').textContent = ezTractsTotal.toLocaleString();
+            document.getElementById('stat-jc-overlap').textContent = jcTractsTotal.toLocaleString();
         }
     }
 
@@ -329,8 +347,9 @@
         fetchJSON('data/oz_designated_maryland.geojson'),
         fetchJSON('data/oz2_eligible_maryland.geojson'),
         fetchJSON('data/ez_maryland.geojson'),
+        fetchJSON('data/just_communities_maryland.geojson'),
         fetchJSON('data/crosswalk.json'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, crosswalk]) {
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -346,7 +365,7 @@
         // Render each grantee tract individually so we can restyle on filter
         granteeTracts.features.forEach(function (feat) {
             const granteeName = feat.properties.grantee_name || '(unknown)';
-            const lyr = L.geoJSON(feat, { style: styleForGrantee(granteeName, false) });
+            const lyr = L.geoJSON(feat, { style: styleForGrantee(granteeName, false), pane: 'granteePane' });
             const p = feat.properties;
             const pov = p.F2024_Child_Poverty_Rate__2026_ != null
                 ? parseFloat(p.F2024_Child_Poverty_Rate__2026_).toFixed(1) + '%' : 'N/A';
@@ -398,6 +417,17 @@
                 ezTractsPerGrantee[row.grantee] = row.tracts;
             });
         }
+        // Grantee-tract × Just Communities overlap, same precomputed source
+        // (exact GEOID match, since both are 2020-vintage census tracts).
+        jcTractsPerGrantee = {};
+        jcTractsTotal = 0;
+        if (crosswalk && crosswalk.layers && crosswalk.layers.jc) {
+            const jcLayer = crosswalk.layers.jc;
+            jcTractsTotal = jcLayer.tracts_overlapping;
+            (jcLayer.breakdown || []).forEach(function (row) {
+                jcTractsPerGrantee[row.grantee] = row.tracts;
+            });
+        }
         updateOverlapDisplay();
 
         // BVRI vacant properties
@@ -409,6 +439,7 @@
                     color: '#9b2c2c',
                     weight: 0.8,
                     fillOpacity: 0.75,
+                    pane: 'pointPane',
                 });
             },
             onEachFeature: function (feature, layer) {
@@ -430,6 +461,7 @@
 
         // DHCD Impact Investment Areas (off by default)
         L.geoJSON(investAreas, {
+            pane: 'ctxPane',
             style: { color: '#b7791f', weight: 2, fillColor: '#f6e05e', fillOpacity: 0.18, dashArray: '6,3' },
             onEachFeature: function (feature, layer) {
                 layer.bindPopup('<strong>DHCD Impact Investment Area</strong><br>' + (feature.properties.Name || ''));
@@ -440,6 +472,7 @@
         // Designated Opportunity Zones (2018 TCJA, off by default).
         // Rural tracts get a dashed yellow outline to distinguish them.
         L.geoJSON(oz, {
+            pane: 'ctxPane',
             style: function (feature) {
                 const rural = feature.properties.rural === true;
                 return {
@@ -473,6 +506,7 @@
         // OZ 2.0-eligible tracts (candidate tracts for the 2026-27 designation
         // round; off by default). 451 tracts statewide; MD may nominate up to 113.
         L.geoJSON(oz2, {
+            pane: 'ctxPane',
             style: {
                 color: OZ2_COLOR.stroke,
                 weight: 0.8,
@@ -499,8 +533,70 @@
             }
         }).addTo(lgOz2);
 
+        // Just Communities (Just Communities Act of 2024; off by default).
+        // 419 designated tracts statewide.
+        L.geoJSON(jc, {
+            pane: 'ctxPane',
+            // Lower fill opacity than the other designation layers on purpose:
+            // Just Communities covers 167 tracts in Baltimore City alone, so a
+            // heavier fill would wash out the basemap and the grantee outlines.
+            style: {
+                color: JC_COLOR.stroke,
+                weight: 0.7,
+                fillColor: JC_COLOR.fill,
+                fillOpacity: 0.22,
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const num = function (v, suffix) {
+                    return v != null ? v.toFixed(1) + (suffix || '') : 'N/A';
+                };
+                const flag = function (v) {
+                    return v === true ? 'Yes' : (v === false ? 'No' : 'No data');
+                };
+                // Redlining is only ever "Yes" or blank in the source (HOLC mapped
+                // just a few Maryland cities), so a blank must not read as "No".
+                const redFlag = p.redlining === true
+                    ? 'Yes' : 'No HOLC map for this area';
+                layer.bindTooltip((p.tract_name || 'Just Community') + ' — State-designated', { sticky: true });
+                layer.bindPopup(
+                    '<div style="min-width:265px;">' +
+                      '<strong style="color:' + JC_COLOR.stroke + ';">Designated &ldquo;Just Community&rdquo;</strong>' +
+                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">' +
+                        (p.tract_name || '') + ' &middot; Tract ' + (p.GEOID || '') + '</div>' +
+                      '<div style="font-size:0.78em;color:#666;">' + (p.county || '') + '</div>' +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<div style="font-size:0.72em;color:#888;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:1px;">Why it was designated</div>' +
+                      '<div style="font-size:0.72em;color:#888;margin-bottom:4px;">Conditions DHCD scored. Higher = more distress, except owner-occupancy.</div>' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>In a historically redlined area:</td><td><strong>' + redFlag + '</strong></td></tr>' +
+                        '<tr><td>Concentrated poverty (R/ECAP):</td><td><strong>' + flag(p.recap) + '</strong></td></tr>' +
+                        '<tr><td>Vacant housing:</td><td>' + num(p.vacant_housing_pct, '% of units') + '</td></tr>' +
+                        '<tr><td>Owner-occupied:</td><td>' + num(p.owner_occupied_pct, '% of units') + '</td></tr>' +
+                        '<tr><td>Renters paying &gt;50% of income on rent:</td><td>' + num(p.cost_burden_renters_pct, '%') + '</td></tr>' +
+                        '<tr><td>Lead paint risk (HUD index):</td><td>' + num(p.lead_paint_index) +
+                          ' <span style="color:#888;">(higher = more risk)</span></td></tr>' +
+                        '<tr><td>Near a Superfund site:</td><td>' + num(p.superfund_proximity_pctile, 'th pctile') +
+                          ' <span style="color:#888;">of US tracts</span></td></tr>' +
+                        // Only shown when present: the source flags these two only for
+                        // tracts above a threshold (asthma >90th pctile, imprisonment
+                        // >750 per 100k), so a blank is "not flagged", not a zero.
+                        (p.asthma_pctile != null
+                          ? '<tr><td>Adult asthma rate:</td><td>' + num(p.asthma_pctile, 'th pctile') +
+                            ' <span style="color:#888;">(flagged, &gt;90th)</span></td></tr>' : '') +
+                        (p.imprisonment_rate != null
+                          ? '<tr><td>Imprisonment rate:</td><td>' + Math.round(p.imprisonment_rate).toLocaleString() +
+                            ' <span style="color:#888;">per 100k (flagged, &gt;750)</span></td></tr>' : '') +
+                      '</table>' +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">&ldquo;Just Community&rdquo; is the official State designation name (Just Communities Act of 2024, HB 241/SB 308) &mdash; it marks a place targeted for State reinvestment, not a judgment about the community. Source: MD DHCD via Maryland iMap.</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgJc);
+
         // Maryland Enterprise Zones (off by default)
         L.geoJSON(ez, {
+            pane: 'ctxPane',
             style: function (feature) {
                 const c = feature.properties.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
                 return { color: c.stroke, weight: 1.2, fillColor: c.fill, fillOpacity: feature.properties.focus_area ? 0.5 : 0.3 };
@@ -536,6 +632,7 @@
 
         // NMTC eligibility (off by default — adds beneath grantee tracts)
         L.geoJSON(nmtc, {
+            pane: 'ctxPane',
             style: function (feature) {
                 const c = NMTC_COLORS[feature.properties.nmtc_class] || NMTC_COLORS['Not Eligible'];
                 return { color: c.stroke, weight: 0.8, fillColor: c.fill, fillOpacity: 0.45 };
@@ -583,6 +680,7 @@
         ['layer-oz',      lgOz],
         ['layer-oz2',     lgOz2],
         ['layer-ez',      lgEz],
+        ['layer-jc',      lgJc],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);
