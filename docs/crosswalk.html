@@ -440,32 +440,46 @@
         const shareB = pct(T.vacant_buildings, C.vacant_buildings);
         const shareAll = pct(T.total_vacants, C.total_vacants);
 
+        const ratio = function (a, b) {
+            if (!a && !b) return '&mdash;';
+            if (!b) return n(a) + ':0';
+            return (a / b).toFixed(1) + ':1';
+        };
         const rows = v.by_grantee.map(function (r) {
             return '<tr>' +
                 '<td>' + r.grantee + '</td>' +
                 '<td>' + n(r.baseline_buildings) + '</td>' +
+                '<td class="down">' + n(r.gross_resolved) + '</td>' +
+                '<td>' + n(r.new_issued) + '</td>' +
                 '<td>' + signed(r.change_buildings) + '</td>' +
                 '<td>' + n(r.vacant_buildings) + '</td>' +
-                '<td>' + n(r.vacant_lots) + '</td>' +
-                '<td><b>' + n(r.total_vacants) + '</b></td>' +
+                '<td>' + n(r.rehabs) + '</td>' +
+                '<td>' + n(r.demolitions) + '</td>' +
+                '<td>' + ratio(r.rehabs, r.demolitions) + '</td>' +
             '</tr>';
         }).join('');
 
         const totRow = '<tr class="tot">' +
             '<td>ENOUGH communities in Baltimore City (' + v.by_grantee.length + ')</td>' +
             '<td>' + n(T.baseline_buildings) + '</td>' +
+            '<td class="down">' + n(T.gross_resolved) + '</td>' +
+            '<td>' + n(T.new_issued) + '</td>' +
             '<td>' + signed(T.change_buildings) + '</td>' +
             '<td>' + n(T.vacant_buildings) + '</td>' +
-            '<td>' + n(T.vacant_lots) + '</td>' +
-            '<td>' + n(T.total_vacants) + '</td>' +
+            '<td>' + n(T.rehabs) + '</td>' +
+            '<td>' + n(T.demolitions) + '</td>' +
+            '<td>' + ratio(T.rehabs, T.demolitions) + '</td>' +
         '</tr>' +
         '<tr class="tot" style="color:#5a6678;">' +
             '<td>Baltimore City, all neighborhoods</td>' +
             '<td>' + n(C.stock_by_mark[base]) + '</td>' +
+            '<td>' + n(C.gross_resolved) + '</td>' +
+            '<td>' + n(C.new_issued) + '</td>' +
             '<td>' + signed(C.change_buildings) + '</td>' +
             '<td>' + n(C.vacant_buildings) + '</td>' +
-            '<td>' + n(C.vacant_lots) + '</td>' +
-            '<td>' + n(C.total_vacants) + '</td>' +
+            '<td>' + n(C.rehabs) + '</td>' +
+            '<td>' + n(C.demolitions) + '</td>' +
+            '<td>' + ratio(C.rehabs, C.demolitions) + '</td>' +
         '</tr>';
 
         // Neighborhood view, for lining up against DHCD's own dashboard and press
@@ -499,9 +513,13 @@
                 '<div class="vh"><div class="vh-num down">' + signed(T.change_buildings) + '</div>' +
                   '<div class="vh-lab">Vacant buildings since ' + base + '</div>' +
                   '<div class="vh-sub">citywide ' + signed(C.change_buildings) + ' over the same period</div></div>' +
-                '<div class="vh"><div class="vh-num">' + T.tracts_with_vacants + ' of ' + T.baltimore_tracts + '</div>' +
-                  '<div class="vh-lab">City grantee tracts with vacants</div>' +
-                  '<div class="vh-sub">across ' + T.communities_with_vacants + ' ENOUGH communities</div></div>' +
+                '<div class="vh"><div class="vh-num down">' + n(T.gross_resolved - T.cycled_properties) + '</div>' +
+                  '<div class="vh-lab">Properties left vacancy &amp; stayed off</div>' +
+                  '<div class="vh-sub">of ' + n(T.gross_resolved) + ' notices closed; ' +
+                  n(T.cycled_properties) + ' were re-noticed</div></div>' +
+                '<div class="vh"><div class="vh-num">' + (T.demolitions ? (T.rehabs/T.demolitions).toFixed(1)+':1' : '&mdash;') + '</div>' +
+                  '<div class="vh-lab">Rehab : demolition</div>' +
+                  '<div class="vh-sub">' + n(T.rehabs) + ' rehab permits vs ' + n(T.demolitions) + ' demolitions</div></div>' +
               '</div>' +
 
               '<p style="margin-top:14px;"><b>Why this matters:</b> ENOUGH communities hold about ' +
@@ -517,13 +535,32 @@
               'footprint are working on substantially the same blocks, which makes these grantees natural ' +
               'partners for BVRI targeting &mdash; and gives GOC a per-community baseline to hold the trend against.</p>' +
 
+              '<p><b>Net change hides both the volume of work and what kind of work it was.</b> ' +
+              '<b>' + n(T.gross_resolved) + '</b> vacant-building notices closed in ENOUGH tracts over this period ' +
+              'and <b>' + n(T.new_issued) + '</b> new ones were issued. But those two figures should not be read as ' +
+              '&ldquo;properties fixed&rdquo; versus &ldquo;properties newly abandoned&rdquo;: <b>' +
+              n(T.cycled_properties) + '</b> of the closures were properties that received another notice inside ' +
+              'the same window &mdash; notice renewal and re-inspection churn, not rehabilitation. Netting that ' +
+              'out, roughly <b>' + n(T.gross_resolved - T.cycled_properties) + ' properties left the vacancy list ' +
+              'and stayed off it</b>. That is the honest gross figure, and it is the one to quote. ' +
+              'Critically, the resolutions are overwhelmingly <b>preservation rather than clearance</b>: ' +
+              n(T.rehabs) + ' rehab permits against ' + n(T.demolitions) + ' completed demolitions, a ratio of <b>' +
+              (T.demolitions ? (T.rehabs/T.demolitions).toFixed(1)+':1' : 'n/a') +
+              '</b>, slightly better than the citywide ' +
+              (C.demolitions ? (C.rehabs/C.demolitions).toFixed(1)+':1' : 'n/a') +
+              '. Housing units in ENOUGH communities are mostly being <em>repaired and returned to use</em>, ' +
+              'not demolished &mdash; which matters directly for whether ENOUGH families can eventually own them.</p>' +
+
               '<table class="vac-table"><thead><tr>' +
                 '<th>ENOUGH community</th>' +
                 '<th>Vacant bldgs<br>' + base + '</th>' +
-                '<th>Net change<br>since ' + base + '</th>' +
+                '<th>VBNs<br>resolved</th>' +
+                '<th>New VBNs<br>issued</th>' +
+                '<th>Net<br>change</th>' +
                 '<th>Vacant bldgs<br>now</th>' +
-                '<th>Vacant<br>lots</th>' +
-                '<th>Total<br>vacants</th>' +
+                '<th>Rehab<br>permits</th>' +
+                '<th>Demo-<br>litions</th>' +
+                '<th>Rehab :<br>demo</th>' +
               '</tr></thead><tbody>' + rows + totRow + '</tbody></table>' +
 
               '<details class="vac-nb"><summary>Neighborhood view &mdash; biggest vacancy declines since ' + base + '</summary>' +
@@ -538,6 +575,22 @@
                 ' Baltimore City grantee tracts are served by <b>two</b> ENOUGH grantees each, so each ' +
                 'is counted in both of their rows. The per-community rows therefore add up to more than ' +
                 'the ENOUGH total &mdash; the total row is de-duplicated and is the figure to quote.</div>' : '') +
+
+              '<div class="vac-note"><b>How the flow columns are defined.</b> ' +
+              '<b>VBNs resolved</b> = distinct properties whose vacant-building notice <em>closed</em> during the ' +
+              'window. <b>New VBNs issued</b> = distinct properties that received a <em>new</em> notice during it. ' +
+              'These two do not subtract to the net change, because a property can be resolved and then re-noticed ' +
+              'inside the same window and is counted once in each column' +
+              (T.cycled_properties ? ' &mdash; and ' + n(T.cycled_properties) + ' ENOUGH properties (' +
+                pct(T.cycled_properties, T.gross_resolved) + '% of all closures) did exactly that' : '') +
+              '. <b>This is the single easiest way to overstate progress with this data:</b> a raw count of closed ' +
+              'notices reads as rehabilitation when much of it is administrative renewal. The stock identity holds on notice <em>intervals</em> rather than distinct properties; citywide, ' +
+              n(C.gross_resolved_intervals) + ' intervals closed against ' + n(C.new_issued_intervals) +
+              ' opened, which does reconcile to the ' + signed(C.change_buildings) + ' net change. ' +
+              '<b>Rehab permits</b> and <b>demolitions</b> are separate DHCD datasets (rehab permits issued, and ' +
+              'completed City demolitions) counted over the same window; together they explain most but not all ' +
+              'resolutions, since a notice can also close on reoccupancy, private demolition or reclassification. ' +
+              'Demolition counts are <em>City</em> demolitions only.</div>' +
 
               '<div class="vac-note"><b>Method and caveats.</b> Built by ' +
               '<code>scripts/fetch_vacants.py</code> from Baltimore City DHCD&rsquo;s open ArcGIS services. ' +

@@ -472,12 +472,44 @@
         <strong>Refresh cadence:</strong> <code>.venv-geo/bin/python scripts/fetch_vacants.py</code> (needs shapely)
     </div>
 
+    <h3>Flow measures: gross, net, rehab and demolition</h3>
+    <p>The change in the stock is the difference between two much larger flows, so the site reports both. Definitions, with the exact primary-source query behind each:</p>
+    <table class="field-table">
+        <thead><tr><th>Measure</th><th>Definition</th><th>Primary source + filter</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Stock on date D</strong></td><td>Distinct properties under an open notice on D</td><td><code>VacantsTimeSlider/0</code>: <code>DateNotice &lt;= D AND DateEnd &gt; D</code></td></tr>
+            <tr><td><strong>VBNs resolved</strong></td><td>Distinct properties whose notice closed inside the window</td><td><code>VacantsTimeSlider/0</code>: <code>DateEnd &gt;= 2024-07-01 AND DateEnd &lt; snapshot</code></td></tr>
+            <tr><td><strong>New VBNs issued</strong></td><td>Distinct properties receiving a new notice inside the window</td><td><code>VacantsTimeSlider/0</code>: <code>DateNotice &gt;= 2024-07-01</code></td></tr>
+            <tr><td><strong>Rehab permits</strong></td><td>Rehab permits issued on vacant buildings in the window</td><td><code>DHCD_Open_Baltimore_Datasets/2</code>: <code>DateIssue &gt;= 2024-07-01</code></td></tr>
+            <tr><td><strong>Demolitions</strong></td><td>City demolitions completed in the window</td><td><code>DHCD_Open_Baltimore_Datasets/0</code>: <code>DateDemoFinished &gt;= 2024-07-01</code></td></tr>
+        </tbody>
+    </table>
+    <p>All five are then assigned to ENOUGH grantee tracts by <strong>point-in-polygon containment</strong> (Shapely <code>contains</code>, STRtree broad phase) against <code>grantee_tracts.geojson</code>, restricted to <code>JURSCODE == 'BACI'</code>.</p>
+
+    <div class="meta"><strong>The measurement trap in this data.</strong> A raw count of closed notices reads like rehabilitation, but it is not. Of the 2,211 notices closed in ENOUGH tracts, <strong>1,378 (62%)</strong> were properties that received another notice inside the same window &mdash; notice renewal and re-inspection churn. Only about <strong>833</strong> properties left the vacancy list and stayed off it. Any "gross reduction" figure that does not net out re-noticing will overstate progress by roughly 2.7&times;. The crosswalk page reports the 833 figure as the headline for this reason.</div>
+
+    <div class="meta"><strong>Why gross minus new does not equal net.</strong> The two flow columns count <em>distinct properties</em>, and a property counted in both (resolved, then re-noticed) nets to zero in the stock while appearing once in each column. The stock identity holds on notice <em>intervals</em>: citywide <strong>7,199</strong> intervals closed against <strong>5,451</strong> opened, a difference of 1,748, which reconciles to the observed net change of &minus;1,703 (45 residual from snapshot-boundary effects). Both interval counts are published in <code>crosswalk.json</code> as <code>gross_resolved_intervals</code> / <code>new_issued_intervals</code> so the identity can be re-checked.</p></div>
+
+    <h3>Reproducing these figures from scratch</h3>
+    <p>Every number on the vacancy card can be reproduced with two commands and no credentials:</p>
+    <pre><code># 1. rebuild from the primary sources (~3 min)
+.venv-geo/bin/python scripts/fetch_vacants.py
+
+# 2. spot-check any single figure directly against DHCD, e.g. the citywide
+#    FY25 baseline stock, which should return 13,226:
+curl -s "https://egisdata.baltimorecity.gov/egis/rest/services/Housing/\
+VacantsTimeSlider/MapServer/0/query?returnCountOnly=true&f=json&where=\
+DateNotice%20%3C=%20DATE%20'2024-07-01'%20AND%20DateEnd%20%3E%20DATE%20'2024-07-01'"</code></pre>
+    <p>A per-tract check can be run by passing that tract's polygon as the <code>geometry</code> parameter with <code>spatialRel=esriSpatialRelIntersects</code>. Note that a spatial <em>intersects</em> query can return one or two more records than the pipeline's <em>contains</em> test for properties sitting on a tract boundary; the pipeline uses <code>contains</code> so that no property is counted in two tracts.</p>
+
     <h3>Caveats</h3>
     <ul>
         <li><strong>Lots are a current snapshot only.</strong> The vacant-lot service carries no interval history, so lots are excluded from every change/trend column. Only buildings have a baseline.</li>
         <li><strong>The lot service is still named <code>_Test</code>.</strong> It is the only vacant-lot layer the City publishes and is the one feeding its Tolemi integration, but the name is a standing risk. Re-verify before citing lot counts externally.</li>
         <li><strong>Three Baltimore City grantee tracts are served by two grantees each</strong>, so the per-community rows on the crosswalk sum to more than the ENOUGH total. The total row is de-duplicated and is the figure to quote.</li>
-        <li>A net reduction reflects notices closing for any reason &mdash; rehab, demolition, or reclassification &mdash; not rehabilitation alone.</li>
+        <li>A net reduction reflects notices closing for any reason &mdash; rehab, demolition, reoccupancy, or reclassification &mdash; not rehabilitation alone.</li>
+        <li><strong>Rehab permits are permits, not completions.</strong> A permit issued is an intention to rehabilitate; the site does not track whether the work finished. Treat rehab counts as pipeline activity.</li>
+        <li><strong>Demolitions are City demolitions only</strong> (<code>Completed City Demo</code>). Privately funded demolitions are not in this dataset, so the rehab:demolition ratio is an upper bound on preservation.</li>
     </ul>
 </div>
 

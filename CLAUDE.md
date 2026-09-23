@@ -100,6 +100,12 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   (**−685, −14.3%**) vs citywide −1,703 (−12.9%) — so ENOUGH communities delivered ~40% of the entire
   citywide reduction. Source: DHCD `VacantsTimeSlider` (interval data → stock computable at any date;
   validated within 0.6% of DHCD's Power BI dashboard at every FY boundary) + `VacantLot_Test`.
+  **Flows since FY25 start (ENOUGH):** 2,211 VBNs closed and 1,793 newly issued — but **1,378 of the closures
+  were re-noticed in the same window** (renewal/re-inspection churn), so only **~833 properties left vacancy and
+  stayed off**. Quote 833, not 2,211 — a raw closed-notice count overstates progress ~2.7×. Resolution is
+  overwhelmingly preservation: **1,062 rehab permits vs 97 City demolitions (10.9:1**, vs citywide 9.9:1).
+  Rehab permits ≠ completions; demolitions are City-funded only. Per-grantee ratio varies a lot
+  (Park Heights 13.4:1, Elev8 4.0:1).
   **Do not confuse with the BVRI open-bid list below** — that is ~1,200 properties being marketed, not
   the vacancy stock. Lots have no history, so they are excluded from all trend columns.
 - 1,192 BVRI **open-bid** properties (Baltimore City only; the slice DHCD is marketing for sale — a

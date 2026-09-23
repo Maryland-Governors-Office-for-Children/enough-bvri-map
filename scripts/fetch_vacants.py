@@ -80,6 +80,15 @@ SPELLS = ("https://egisdata.baltimorecity.gov/egis/rest/services/Housing/"
 LOTS = ("https://egisdata.baltimorecity.gov/egis/rest/services/Housing/"
         "VacantLot_Test/MapServer/0/query")
 
+# Outflow detail: what actually happened to properties that left the VBN list.
+# Rehab preserves a housing unit (and a potential homeownership asset for an
+# ENOUGH family); demolition removes it. That distinction is the policy question
+# the vacancy net-change number hides, so both flows are counted separately.
+DHCD = ("https://egisdata.baltimorecity.gov/egis/rest/services/Housing/"
+        "DHCD_Open_Baltimore_Datasets/FeatureServer")
+REHABS = f"{DHCD}/2/query"   # "Rehabs of Vacant Buildings"  (DateIssue)
+DEMOS = f"{DHCD}/0/query"    # "Completed City Demo"         (DateDemoFinished)
+
 # Fiscal-year boundaries to report the trend against. FY25 is the baseline the
 # Vacants Reinvestment Council set its 5,000-property goal from.
 FY_MARKS = [
@@ -183,6 +192,12 @@ def main():
     print("Fetching vacant lots (VacantLot_Test Layer 0)...")
     lots = fetch_all(LOTS, ["BLOCKLOT", "FULLADDR", "NO_IMPRV"], page=5000)
 
+    print("Fetching rehabs of vacant buildings (DHCD Layer 2)...")
+    rehabs = fetch_all(REHABS, ["BLOCKLOT", "DateIssue", "Neighborhood"])
+
+    print("Fetching completed city demolitions (DHCD Layer 0)...")
+    demos = fetch_all(DEMOS, ["BLOCKLOT", "DateDemoFinished", "Neighborhood"])
+
     # The service marks still-open intervals with a sentinel DateEnd equal to the
     # data snapshot date. Detect it as the most common maximum end date.
     ends = [ms_to_date(f["properties"].get("DateEnd")) for f in spells]
@@ -194,6 +209,10 @@ def main():
     spell_geoid = assign(spells, geoms, geoids)
     print("Assigning lots to grantee tracts...")
     lot_geoid = assign(lots, geoms, geoids)
+    print("Assigning rehabs to grantee tracts...")
+    rehab_geoid = assign(rehabs, geoms, geoids)
+    print("Assigning demolitions to grantee tracts...")
+    demo_geoid = assign(demos, geoms, geoids)
 
     marks = [(label, datetime.strptime(d, "%Y-%m-%d").date()) for label, d in FY_MARKS]
 
@@ -219,6 +238,52 @@ def main():
                 if geoid:
                     stock_at[label][geoid].add(bl)
 
+    # --- flows over the baseline window ------------------------------------
+    # Net change in the stock is the difference of two much larger flows. Counting
+    # only the net hides how much work produced it: DHCD can resolve thousands of
+    # VBNs while thousands of new ones are issued. "Gross resolved" is an interval
+    # ENDING inside the window (a VBN closed); "new issued" is an interval
+    # STARTING inside it. A property can appear in both if it cycled.
+    window_start = marks[0][1]
+    gross_resolved = defaultdict(set)   # geoid -> {blocklot} VBNs closed in window
+    new_issued = defaultdict(set)       # geoid -> {blocklot} VBNs opened in window
+    cw_resolved, cw_new = set(), set()
+    iv_resolved = iv_new = 0   # interval counts: stock identity holds on these
+    for f, geoid in zip(spells, spell_geoid):
+        p = f["properties"]
+        bl = p.get("blocklot")
+        start, end = ms_to_date(p.get("DateNotice")), ms_to_date(p.get("DateEnd"))
+        if not start or not end:
+            continue
+        if window_start <= end < snapshot:      # closed inside the window
+            iv_resolved += 1
+            cw_resolved.add(bl)
+            if geoid:
+                gross_resolved[geoid].add(bl)
+        if start >= window_start:                # opened inside the window
+            iv_new += 1
+            cw_new.add(bl)
+            if geoid:
+                new_issued[geoid].add(bl)
+
+    def date_filtered(features, hits, field):
+        """geoid -> {blocklot} for records dated inside the window."""
+        out = defaultdict(set)
+        cw = set()
+        for f, geoid in zip(features, hits):
+            p = f["properties"]
+            d = ms_to_date(p.get(field))
+            if not d or d < window_start:
+                continue
+            bl = p.get("BLOCKLOT")
+            cw.add(bl)
+            if geoid:
+                out[geoid].add(bl)
+        return out, cw
+
+    tract_rehabs, cw_rehabs = date_filtered(rehabs, rehab_geoid, "DateIssue")
+    tract_demos, cw_demos = date_filtered(demos, demo_geoid, "DateDemoFinished")
+
     cur_lots = defaultdict(set)
     citywide_lots = set()
     for f, geoid in zip(lots, lot_geoid):
@@ -238,6 +303,10 @@ def main():
     g_buildings = rollup(cur_buildings)
     g_lots = rollup(cur_lots)
     g_at = {label: rollup(stock_at[label]) for label, _ in marks}
+    g_resolved = rollup(gross_resolved)
+    g_new = rollup(new_issued)
+    g_rehabs = rollup(tract_rehabs)
+    g_demos = rollup(tract_demos)
 
     base_label = FY_MARKS[0][0]
     grantee_rows = []
@@ -253,6 +322,11 @@ def main():
             "baseline_buildings": base,
             "change_buildings": b - base,
             "pct_change_buildings": round((b - base) / base * 100, 1) if base else None,
+            "gross_resolved": g_resolved.get(gname, 0),
+            "new_issued": g_new.get(gname, 0),
+            "gross_pct_of_baseline": round(g_resolved.get(gname, 0) / base * 100, 1) if base else None,
+            "rehabs": g_rehabs.get(gname, 0),
+            "demolitions": g_demos.get(gname, 0),
             "grantee_total_tracts": grantee_total.get(gname),
             "baltimore_tracts": sum(
                 1 for geoid in geoids if gname in tract_grantees.get(geoid, [])),
@@ -270,6 +344,10 @@ def main():
             "grantees": tract_grantees.get(geoid, []),
             "vacant_buildings": b, "vacant_lots": lt, "total_vacants": b + lt,
             "baseline_buildings": base, "change_buildings": b - base,
+            "gross_resolved": len(gross_resolved.get(geoid, ())),
+            "new_issued": len(new_issued.get(geoid, ())),
+            "rehabs": len(tract_rehabs.get(geoid, ())),
+            "demolitions": len(tract_demos.get(geoid, ())),
         })
 
     # --- neighborhood view, to line up with press coverage -----------------
@@ -306,6 +384,13 @@ def main():
             "total_vacants": len(citywide_cur) + len(citywide_lots),
             "stock_by_mark": {l: len(citywide_at[l]) for l, _ in marks},
             "change_buildings": len(citywide_cur) - len(citywide_at[base_label]),
+            "gross_resolved": len(cw_resolved),
+            "new_issued": len(cw_new),
+            "gross_resolved_intervals": iv_resolved,
+            "new_issued_intervals": iv_new,
+            "cycled_properties": len(cw_resolved & cw_new),
+            "rehabs": len(cw_rehabs),
+            "demolitions": len(cw_demos),
         },
         # NB these are deduplicated across tracts. Three Baltimore City grantee
         # tracts are served by two grantees each, so summing the per-grantee rows
@@ -318,6 +403,13 @@ def main():
             "vacant_buildings": sum(len(v) for v in cur_buildings.values()),
             "vacant_lots": sum(len(v) for v in cur_lots.values()),
             "baseline_buildings": sum(len(v) for v in stock_at[base_label].values()),
+            "gross_resolved": sum(len(v) for v in gross_resolved.values()),
+            "new_issued": sum(len(v) for v in new_issued.values()),
+            "rehabs": sum(len(v) for v in tract_rehabs.values()),
+            "demolitions": sum(len(v) for v in tract_demos.values()),
+            "cycled_properties": sum(
+                len(gross_resolved[g] & new_issued[g])
+                for g in set(gross_resolved) | set(new_issued)),
             "communities_with_vacants": len(grantee_rows),
             "shared_tracts": sum(
                 1 for geoid in geoids if len(tract_grantees.get(geoid, [])) > 1),
@@ -374,6 +466,13 @@ def main():
           f"{T['vacant_lots']:,} lots = {T['total_vacants']:,} total vacants")
     print(f"  across {T['communities_with_vacants']} communities, "
           f"{T['tracts_with_vacants']}/{T['baltimore_tracts']} city tracts")
+    print(f"\nFlows since {base_label} — ENOUGH: {T['gross_resolved']:,} VBNs resolved, "
+          f"{T['new_issued']:,} newly issued | {T['rehabs']:,} rehabs, {T['demolitions']:,} demolitions")
+    print(f"  citywide: {C['gross_resolved']:,} resolved, {C['new_issued']:,} newly issued | "
+          f"{C['rehabs']:,} rehabs, {C['demolitions']:,} demolitions")
+    if C['demolitions']:
+        print(f"  rehab:demolition ratio — ENOUGH "
+              f"{T['rehabs']/max(T['demolitions'],1):.1f}:1, citywide {C['rehabs']/C['demolitions']:.1f}:1")
     print("\nTop ENOUGH communities by total vacants:")
     for r in grantee_rows[:12]:
         pct = f"{r['pct_change_buildings']:+.1f}%" if r["pct_change_buildings"] is not None else "  n/a"

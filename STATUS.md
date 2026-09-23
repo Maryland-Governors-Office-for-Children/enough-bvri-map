@@ -13,6 +13,37 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 
 ## Workstream A — Map build & layers
 
+**Done (2026-09-23) — Analysis #1: gross/net flows + rehab-vs-demolition per grantee.** Extends the vacancy card
+with the flow decomposition behind the net change. Since FY25 start, in ENOUGH tracts: **2,211 VBNs closed,
+1,793 newly issued, 1,062 rehab permits, 97 City demolitions → 10.9:1 rehab:demolition** (citywide 9.9:1), so
+reduction is overwhelmingly *preservation*, not clearance. Per-grantee ratios vary sharply (Park Heights 13.4:1,
+Elev8 4.0:1) — worth a look.
+- **Important measurement trap found:** **1,378 of the 2,211 closures (62%) were properties re-noticed inside the
+  same window** — notice renewal/re-inspection churn, not rehab. Only **~833 properties left vacancy and stayed
+  off**. A raw closed-notice count overstates progress ~2.7×. The page leads with 833 and discloses the churn.
+- Also documented why gross − new ≠ net: flow columns count *distinct properties*; the stock identity holds on
+  *intervals* (citywide 7,199 closed − 5,451 opened = 1,748 ≈ observed −1,703). Both interval counts are published
+  in the JSON so the identity is re-checkable.
+- `methodology.html` gained a measure-by-measure source/filter table and a **"Reproducing these figures from
+  scratch"** section with runnable `curl` spot-checks.
+
+**⚠ Open (needs Nick / author) — the Gemini-drafted ENOUGH vacancy explainer does not reconcile.**
+[Google Doc](https://docs.google.com/document/d/13sb3wyZVu--2zkFvVyYmbyg8p9RU9Ga0Y6LylRA0UyY/edit) (has comments
+from Cleo Hirsch + Madeline Pawlak). Its **tract roster is exactly right** (46 unique, matches ours) but its VBN
+counts match no universe in the primary source. Verified against DHCD directly:
+- Flagship claim — Urban Strategies / Perkins Somerset Oldtown at **−218 VBNs, 39.1%** — is wrong in sign and
+  magnitude. Those 2 tracts (24510280500, 24510030100) hold **57 → 65** VBNs; vacancy **rose 8**. Oldtown as a
+  whole neighborhood has only 34 open VBNs, so −218 there is arithmetically impossible.
+- Doc totals 8,290 baseline / 7,552 current vs true **4,793 / 4,108**. Doc's total = the exact sum of its rows, so
+  it also double-counts the 3 tracts shared by two grantees, and states "44 unique tracts" when its own list has 46.
+- Errors run in **both** directions (Urban Strategies 10× high; The Y and Mondawmin *low*), which rules out a
+  different-but-valid method. All internal arithmetic is flawless — every % and every baseline−current subtraction
+  checks out — which is exactly what makes it convincing. 8,290 would also imply ENOUGH holds 63% of citywide
+  vacancy, a failed sanity check against the City's published 13,312.
+- Doc's **gross/net framing is good and has been adopted** (it's better than net-only). Its qualitative NAP
+  strategy sections stand.
+- **Next step:** hand the corrected figures table to the author before the doc goes anywhere. Not overwritten.
+
 **Done (2026-09-23) — Baltimore vacancy inventory + "Vacants Reduction" crosswalk (Mihir's ask).** Mihir
 asked to (a) overlay the Power BI dashboard's *Vacants Reduction* section so it can be crosswalked with
 ENOUGH, and (b) show total vacants — standing buildings **and** lots — by grantee. Analysed DHCD's
