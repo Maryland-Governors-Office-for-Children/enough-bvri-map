@@ -54,8 +54,9 @@ Vacant lots:
 
 Writes:
   docs/data/vacants_enough.json              per-tract + per-grantee counts & trend
-  docs/data/vacant_buildings_enough.geojson  current open VBNs inside grantee tracts
-  docs/data/vacant_lots_enough.geojson       vacant lots inside grantee tracts
+  docs/data/vacant_buildings_baltimore.geojson  all current open VBNs citywide,
+      each flagged in_enough=1 when it falls in an ENOUGH grantee tract
+  docs/data/vacant_lots_baltimore.geojson       all vacant lots citywide, same flag
 
 Needs shapely; run from the repo-local venv:
     .venv-geo/bin/python scripts/fetch_vacants.py
@@ -428,37 +429,45 @@ def main():
 
     # --- map layers: only the points inside grantee tracts -----------------
     def dump(features, hits, path, props):
+        """Write every Baltimore City point, flagged by whether it sits in an
+        ENOUGH grantee tract. The out-of-area points are what let a reader see how
+        ENOUGH's footprint relates to the city's overall vacancy pattern, so they
+        are context, not clutter — but they carry only the minimum properties,
+        since bytes matter at ~30k points and they get a lighter popup."""
         feats = []
+        n_in = 0
         for f, geoid in zip(features, hits):
-            if not geoid:
-                continue
             p = f["properties"]
             keep = {k: p.get(src) for k, src in props.items()}
-            keep["GEOID"] = geoid
-            keep["grantees"] = tract_grantees.get(geoid, [])
+            if geoid:
+                keep["in_enough"] = 1
+                keep["GEOID"] = geoid
+                keep["grantees"] = tract_grantees.get(geoid, [])
+                n_in += 1
             coords = [round(c, 5) for c in f["geometry"]["coordinates"]]
             feats.append({"type": "Feature",
                           "geometry": {"type": "Point", "coordinates": coords},
                           "properties": keep})
         (DATA / path).write_text(json.dumps(
             {"type": "FeatureCollection", "features": feats}))
-        return len(feats)
+        return len(feats), n_in
 
     open_spells, open_hits = [], []
     for f, geoid in zip(spells, spell_geoid):
         if ms_to_date(f["properties"].get("DateEnd")) >= snapshot:
             open_spells.append(f)
             open_hits.append(geoid)
-    nb = dump(open_spells, open_hits, "vacant_buildings_enough.geojson",
-              {"blocklot": "blocklot", "address": "Address",
-               "neighborhood": "NEIGHBOR", "date_notice": "DateNotice"})
-    nl = dump(lots, lot_geoid, "vacant_lots_enough.geojson",
-              {"blocklot": "BLOCKLOT", "address": "FULLADDR"})
+    nb, nb_in = dump(open_spells, open_hits, "vacant_buildings_baltimore.geojson",
+                     {"blocklot": "blocklot", "address": "Address",
+                      "neighborhood": "NEIGHBOR", "date_notice": "DateNotice"})
+    nl, nl_in = dump(lots, lot_geoid, "vacant_lots_baltimore.geojson",
+                     {"blocklot": "BLOCKLOT", "address": "FULLADDR"})
 
     T = out["enough_totals"]
     C = out["citywide"]
     print(f"\nWrote {DATA/'vacants_enough.json'}")
-    print(f"  map layers: {nb} vacant buildings, {nl} vacant lots inside grantee tracts")
+    print(f"  map layers (citywide, flagged by ENOUGH): {nb:,} vacant buildings "
+          f"({nb_in:,} in ENOUGH tracts), {nl:,} vacant lots ({nl_in:,} in ENOUGH tracts)")
     print(f"\nCitywide: {C['vacant_buildings']:,} vacant buildings + "
           f"{C['vacant_lots']:,} lots = {C['total_vacants']:,} total")
     print(f"  buildings since {base_label}: {C['change_buildings']:+,}")

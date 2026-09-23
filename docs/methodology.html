@@ -440,7 +440,11 @@
         <span style="color:#718096;font-size:0.85rem;">&mdash; both off by default; Baltimore City only</span>
     </div>
 
-    <p><strong>What it shows:</strong> The whole vacancy inventory inside ENOUGH grantee tracts &mdash; every property under an <strong>open Vacant Building Notice</strong> (a standing vacant building) and every <strong>vacant lot</strong>. This is the universe Baltimore DHCD, the Vacants Reinvestment Council dashboard and local press actually mean by "Baltimore's vacants."</p>
+    <p><strong>What it shows:</strong> The whole vacancy inventory for <strong>all of Baltimore City</strong> &mdash; every property under an <strong>open Vacant Building Notice</strong> (a standing vacant building) and every <strong>vacant lot</strong>. This is the universe Baltimore DHCD, the Vacants Reinvestment Council dashboard and local press actually mean by "Baltimore's vacants."</p>
+
+    <p>Points <strong>inside</strong> an ENOUGH grantee tract are drawn solid and full-size; points elsewhere in the city are drawn smaller and faded. Both are included deliberately: showing only the ENOUGH points would make it impossible to see how the grantee footprint sits against the city's overall vacancy pattern, which is the main reason to put these on a map at all. The stat bar and every figure on the crosswalk page remain <strong>ENOUGH-only</strong> &mdash; the out-of-area points are visual context, not part of any count. Each feature carries <code>in_enough: 1</code> when it falls in a grantee tract, so the two groups are separable in the data as well as on screen.</p>
+
+    <p>Because the two layers together are roughly 30,000 points, they render to an HTML <strong>canvas</strong> rather than as individual SVG markers; at this density SVG markers make panning and zooming unusably slow.</p>
 
     <div class="meta"><strong>This is not the same thing as the BVRI layer in Layer 2.</strong> That layer is the DHCD <em>Open Bid List</em> &mdash; roughly 1,200 properties the City is actively marketing for sale. The vacancy inventory here is about <strong>11,500 vacant buildings and 18,500 vacant lots citywide</strong>, an order of magnitude larger. Both are on the map, and the sidebar now labels the smaller one "BVRI Open Bid List" so the two are not mistaken for each other. If someone asks "how many vacants are in my ENOUGH community?", this layer answers it; the open-bid list does not.</p>
 

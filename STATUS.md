@@ -27,6 +27,15 @@ Elev8 4.0:1) — worth a look.
 - `methodology.html` gained a measure-by-measure source/filter table and a **"Reproducing these figures from
   scratch"** section with runnable `curl` spot-checks.
 
+**Done (2026-09-23) — vacancy layers extended to the whole city (Nick's catch).** The map had been drawing only
+the vacants *inside* grantee tracts, which makes it impossible to see how ENOUGH's footprint sits against the
+city's vacancy pattern — the main reason to map it. Both layers now carry **all** of Baltimore: 11,523 vacant
+buildings and 18,676 lots, each flagged `in_enough:1` for the 4,108 / 5,376 inside grantee tracts. Inside points
+draw solid and full-size; the rest draw smaller and faded as context. Files renamed
+`vacant_*_baltimore.geojson`. Switched to a Leaflet **canvas renderer** — ~30k SVG markers stalled pan/zoom;
+canvas renders both layers in ~6s and keeps popups. All counts (stat tile, crosswalk) stay ENOUGH-only; the
+out-of-area points are context, not data. Raw payload +5.9 MB (~1.5 MB gzipped over Pages).
+
 **⚠ Open (needs Nick / author) — the Gemini-drafted ENOUGH vacancy explainer does not reconcile.**
 [Google Doc](https://docs.google.com/document/d/13sb3wyZVu--2zkFvVyYmbyg8p9RU9Ga0Y6LylRA0UyY/edit) (has comments
 from Cleo Hirsch + Madeline Pawlak). Its **tract roster is exactly right** (46 unique, matches ours) but its VBN

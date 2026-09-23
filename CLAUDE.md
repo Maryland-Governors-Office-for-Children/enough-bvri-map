@@ -30,8 +30,9 @@ docs/                    GitHub Pages site (index.html + data/)
     oz2_eligible_maryland.geojson  451 OZ 2.0-eligible tracts (2020–2024 ACS; OpportunityZones.com) w/ MFI ratio + poverty
     ez_maryland.geojson            34 Maryland Enterprise Zones + Focus Areas (MD Commerce via iMap)
     just_communities_maryland.geojson  419 designated Just Communities (MD DHCD via iMap; Just Communities Act of 2024)
-    vacant_buildings_enough.geojson    4,108 open Vacant Building Notices inside ENOUGH grantee tracts (Baltimore)
-    vacant_lots_enough.geojson         5,376 vacant lots inside ENOUGH grantee tracts (Baltimore)
+    vacant_buildings_baltimore.geojson  ALL 11,523 open Vacant Building Notices citywide; `in_enough:1` on the
+                                        4,108 inside grantee tracts (map fades the rest as context)
+    vacant_lots_baltimore.geojson       ALL 18,676 vacant lots citywide; `in_enough:1` on the 5,376 in tracts
     vacants_enough.json                vacancy rollup: per-grantee/tract/neighborhood counts + reduction trend
     crosswalk.json                 Precomputed ENOUGH × layer overlap (built by build_crosswalk.py)
 scripts/

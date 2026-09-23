@@ -98,8 +98,8 @@
         <div class="layer-group">
             <h3>Layers</h3>
             <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-vbn"><span class="swatch circle" style="background:#1a202c"></span> Vacant Buildings (VBN) <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-lots"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant Lots <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-vbn"><span class="swatch circle" style="background:#1a202c"></span> Vacant Buildings (VBN) <span style="color:#a0aec0;font-size:0.72rem;">(all Baltimore; solid = in ENOUGH)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-lots"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant Lots <span style="color:#a0aec0;font-size:0.72rem;">(all Baltimore; solid = in ENOUGH)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Open Bid List <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
@@ -124,8 +124,10 @@
 
         <div class="layer-group">
             <h3>Legend</h3>
-            <div class="legend-item"><span class="swatch circle" style="background:#1a202c"></span> Vacant building (open VBN)</div>
-            <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant lot</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#1a202c"></span> Vacant building &mdash; in an ENOUGH tract</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#1a202c;opacity:0.3;width:9px;height:9px;"></span> Vacant building &mdash; elsewhere in the city</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant lot &mdash; in an ENOUGH tract</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;opacity:0.35;width:9px;height:9px;"></span> Vacant lot &mdash; elsewhere in the city</div>
             <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI open-bid property</div>
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
             <div class="legend-item"><span class="swatch" style="background:#1c4532;"></span> NMTC Severe Distress</div>
@@ -208,6 +210,11 @@
     map.createPane('ctxPane').style.zIndex = 410;
     map.createPane('granteePane').style.zIndex = 450;
     map.createPane('pointPane').style.zIndex = 460;
+
+    // ~30,000 vacancy points citywide. SVG markers at that count stall the map,
+    // so these two layers render to a canvas instead. Canvas keeps pan/zoom smooth
+    // and still supports click popups.
+    const vacancyCanvas = L.canvas({ pane: 'pointPane', padding: 0.3 });
 
     const lgGrantee = L.layerGroup().addTo(map);
     const lgVacants = L.layerGroup().addTo(map);
@@ -379,8 +386,8 @@
         fetchJSON('data/ez_maryland.geojson'),
         fetchJSON('data/just_communities_maryland.geojson'),
         fetchJSON('data/crosswalk.json'),
-        fetchJSON('data/vacant_buildings_enough.geojson'),
-        fetchJSON('data/vacant_lots_enough.geojson'),
+        fetchJSON('data/vacant_buildings_baltimore.geojson'),
+        fetchJSON('data/vacant_lots_baltimore.geojson'),
         fetchJSON('data/vacants_enough.json'),
     ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk, vbn, lots, vacStats]) {
 
@@ -509,15 +516,25 @@
         function vacancyLayer(fc, color, label, radius) {
             return L.geoJSON(fc, {
                 pane: 'pointPane',
+                renderer: vacancyCanvas,
                 pointToLayer: function (feature, latlng) {
+                    // Inside an ENOUGH tract: full size and opacity. Outside:
+                    // smaller and faded, so citywide vacancy reads as context
+                    // rather than competing with the grantee footprint.
+                    const inEnough = feature.properties.in_enough === 1;
                     return L.circleMarker(latlng, {
-                        radius: radius, fillColor: color.fill, color: color.stroke,
-                        weight: 0.6, fillOpacity: 0.8, pane: 'pointPane',
+                        radius: inEnough ? radius : radius * 0.62,
+                        fillColor: color.fill,
+                        color: inEnough ? color.stroke : color.fill,
+                        weight: inEnough ? 0.6 : 0,
+                        fillOpacity: inEnough ? 0.85 : 0.3,
+                        renderer: vacancyCanvas,
                     });
                 },
                 onEachFeature: function (feature, layer) {
                     const p = feature.properties;
                     const who = (p.grantees || []).join(', ');
+                    const outside = p.in_enough !== 1;
                     let since = '';
                     if (p.date_notice) {
                         const d = new Date(p.date_notice);
@@ -533,8 +550,9 @@
                           '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
                           '<div style="font-size:0.82em;">' + since +
                             '<div>Block/Lot: ' + (p.blocklot || '—') + '</div>' +
-                            '<div>Tract ' + (p.GEOID || '') + '</div>' +
+                            (p.GEOID ? '<div>Tract ' + p.GEOID + '</div>' : '') +
                             (who ? '<div style="margin-top:3px;">ENOUGH: <strong>' + who + '</strong></div>' : '') +
+                            (outside ? '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>' : '') +
                           '</div>' +
                           '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: Baltimore City DHCD via Open Baltimore ArcGIS.</div>' +
                         '</div>'
