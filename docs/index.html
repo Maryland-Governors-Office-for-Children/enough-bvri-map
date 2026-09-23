@@ -177,8 +177,21 @@
 
     const map = L.map('map');
     map.fitBounds(MD_BOUNDS, { padding: [10, 10] });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    // Basemap: Esri Light Gray Canvas, which needs no API key. Esri ships it as
+    // two layers — a gray base and a separate labels/reference layer — so both are
+    // added, and both stay in Leaflet's default tilePane so place labels render
+    // *under* the data layers, the way the previous single-raster basemap did.
+    // (Replaced CartoDB Positron 2026-09-23: CARTO began requiring an API key and
+    // now stamps "API KEY REQUIRED" diagonally into the tile images themselves.
+    // A key was not adopted because this is a public repo — a client-side key is
+    // exposed by definition. Esri is also the same platform our layers come from.)
+    const ESRI_CANVAS = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+    L.tileLayer(ESRI_CANVAS + 'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; ' +
+            'Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS user community',
+        maxZoom: 19
+    }).addTo(map);
+    L.tileLayer(ESRI_CANVAS + 'World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 19
     }).addTo(map);
 

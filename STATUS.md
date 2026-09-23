@@ -1,8 +1,7 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-08-24 (added **Just Communities** layer per Mihir's 8/20 email; LLM-council review caught a
-redlining null-vs-false framing bug, fixed; map pane z-order bug fixed; pushed)._ Living index of what's done,
-what's open, and what needs a decision.
+_Last reviewed: 2026-09-23 (basemap swapped off CARTO — it now watermarks its tiles "API KEY REQUIRED" — to
+Esri's keyless Light Gray Canvas; pushed)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -12,6 +11,19 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 **Live:** https://maryland-governors-office-for-children.github.io/enough-bvri-map/
 
 ## Workstream A — Map build & layers
+
+**Done (2026-09-23) — basemap moved off CARTO.** CARTO put its hosted basemaps behind an API key and
+started rendering an "API KEY REQUIRED / carto.com/basemaps/apikey" watermark diagonally across the
+tile PNGs, so the map had a visible watermark on every tile. The watermark is raster pixel data, so no
+CSS/styling change could hide it — the tiles had to come from elsewhere. Replaced with **Esri Light Gray
+Canvas** (`server.arcgisonline.com/.../Canvas/World_Light_Gray_Base` + `World_Light_Gray_Reference`),
+added as the two layers Esri publishes it in, both kept in Leaflet's default `tilePane` so place labels
+stay *under* the data (matching Positron's old behavior). No API key needed. Chose this over registering
+a CARTO key because the repo is public and a basemap key must ship client-side, where it's exposed by
+definition; Esri is also the same platform serving most layers here (iMap), and Light Gray Canvas is a
+close visual match for Positron. Attribution updated; `methodology.html` Basemap section rewritten with
+a dated change note. Verified in a headless browser: 48 tiles load, no failed requests, no console
+errors, labels render, and the pane z-order still puts grantee tracts and BVRI points above the fills.
 
 **Done**
 - Initial build: BVRI × ENOUGH overlay map for Baltimore City (`8d68452`).

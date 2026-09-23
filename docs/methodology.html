@@ -458,7 +458,12 @@
 <p><code>crosswalk.json</code> is a committed artifact, so it can drift from its source layers if one is refreshed without rebuilding. To guard against that, the build script stamps a <code>source_hash</code> (a SHA-256 of all input files) into the output, and <code>python scripts/build_crosswalk.py --check</code> recomputes that hash and exits with an error if the committed JSON is stale. Run the check before sharing the site externally; if it reports "STALE," rerun the build and commit the refreshed <code>crosswalk.json</code>.</p>
 
 <h2>Basemap</h2>
-<p>The map tile layer is <a href="https://github.com/CartoDB/basemap-styles">CartoDB Positron</a>, served from <code>basemaps.cartocdn.com</code>. Tiles are © OpenStreetMap contributors, © CARTO. No authentication required; CARTO's free tier permits non-commercial public use under the OpenStreetMap ODbL.</p>
+<p>The basemap is <strong>Esri Light Gray Canvas</strong>, served from <code>server.arcgisonline.com</code> and added as the two layers Esri publishes it in — a gray base plus a separate labels/reference layer:</p>
+<pre><code>https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/
+  World_Light_Gray_Base/MapServer        (gray canvas)
+  World_Light_Gray_Reference/MapServer   (place labels)</code></pre>
+<p>Tiles are © Esri — Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community. No API key or authentication is required. A deliberately low-contrast gray canvas is used so the data layers, not the basemap, carry the visual weight.</p>
+<div class="meta"><strong>Changed 2026-09-23 (was CartoDB Positron).</strong> CARTO moved its hosted basemaps behind an API key and began rendering an "API KEY REQUIRED" watermark diagonally across the tile images, so the old tiles became unusable — the watermark is raster pixel data in the PNG, not something styling can hide. We moved to Esri's keyless Light Gray Canvas rather than registering for a CARTO key: this site is a public repo and any basemap key would have to ship client-side, where it is exposed by definition. Esri is also the platform already serving most of the layers on this map (Maryland iMap), and Light Gray Canvas is a close visual match for Positron.</div>
 
 <h2>How to refresh data</h2>
 <p>From the project root:</p>
