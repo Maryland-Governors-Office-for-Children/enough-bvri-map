@@ -101,6 +101,13 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   (**−685, −14.3%**) vs citywide −1,703 (−12.9%) — so ENOUGH communities delivered ~40% of the entire
   citywide reduction. Source: DHCD `VacantsTimeSlider` (interval data → stock computable at any date;
   validated within 0.6% of DHCD's Power BI dashboard at every FY boundary) + `VacantLot_Test`.
+  **Host note:** Open Baltimore's public [Vacant Building Notices](https://data.baltimorecity.gov/datasets/baltimore::vacant-building-notices/explore)
+  dataset is the SAME layer we use (`DHCD_Open_Baltimore_Datasets/FeatureServer/1`) served from `baltegis`
+  instead of `egisdata`; its count (11,448) is exactly the dashboard's headline. It has **no history**
+  (`DateCancel`/`DateAbate` are non-null 0 times), so it cannot produce any baseline or trend — that needs
+  `VacantsTimeSlider`. Three "current" numbers exist (11,448 baltegis / 11,481 egisdata / 11,523 ours from
+  intervals); ~0.65% snapshot drift, not a definitional gap. We stay on `egisdata` because it is the only host
+  that also publishes the vacant-lot layer. Quote DHCD's dashboard for official figures.
   **Flows since FY25 start (ENOUGH):** 2,211 VBNs closed and 1,793 newly issued — but **1,378 of the closures
   were re-noticed in the same window** (renewal/re-inspection churn), so only **~833 properties left vacancy and
   stayed off**. Quote 833, not 2,211 — a raw closed-notice count overstates progress ~2.7×. Resolution is
