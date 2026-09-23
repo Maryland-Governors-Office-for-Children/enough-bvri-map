@@ -75,7 +75,7 @@
 <header style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;">
     <div>
         <h1>BVRI &times; ENOUGH Grantees</h1>
-        <p>ENOUGH grantee tracts statewide, with Baltimore-specific BVRI &amp; DHCD layers and statewide designation layers (NMTC eligibility, designated Opportunity Zones, OZ 2.0-eligible tracts, Enterprise Zones, Just Communities)</p>
+        <p>ENOUGH grantee tracts statewide, with Baltimore vacancy layers (vacant buildings, vacant lots, BVRI open-bid, DHCD areas) and statewide designation layers (NMTC eligibility, designated Opportunity Zones, OZ 2.0-eligible tracts, Enterprise Zones, Just Communities)</p>
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0;">
         <a href="crosswalk.html" style="color:#bee3f8;text-decoration:none;font-size:0.82rem;white-space:nowrap;padding:4px 10px;border:1px solid rgba(190,227,248,0.3);border-radius:4px;">ENOUGH Crosswalk &rarr;</a>
@@ -90,6 +90,7 @@
     <div class="stat"><div class="stat-num" id="stat-bvri-overlap">—</div><div class="stat-label">BVRI in Grantee Tracts</div></div>
     <div class="stat"><div class="stat-num" id="stat-ez-overlap">—</div><div class="stat-label">Grantee Tracts in Enterprise Zones</div></div>
     <div class="stat"><div class="stat-num" id="stat-jc-overlap">—</div><div class="stat-label">Grantee Tracts in Just Communities</div></div>
+    <div class="stat"><div class="stat-num" id="stat-vacants">—</div><div class="stat-label">Total Vacants in Grantee Tracts (Baltimore)</div></div>
 </div>
 
 <div class="map-wrap">
@@ -97,7 +98,9 @@
         <div class="layer-group">
             <h3>Layers</h3>
             <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
-            <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacants to Value <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-vbn"><span class="swatch circle" style="background:#1a202c"></span> Vacant Buildings (VBN) <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-lots"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant Lots <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Open Bid List <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-oz"><span class="swatch" style="background:#3182ce;border:1px solid #2a4365;"></span> Opportunity Zones <span style="color:#a0aec0;font-size:0.72rem;">(designated 2018, statewide)</span></label>
@@ -121,7 +124,9 @@
 
         <div class="layer-group">
             <h3>Legend</h3>
-            <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI Vacant Property</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#1a202c"></span> Vacant building (open VBN)</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant lot</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI open-bid property</div>
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
             <div class="legend-item"><span class="swatch" style="background:#1c4532;"></span> NMTC Severe Distress</div>
             <div class="legend-item"><span class="swatch" style="background:#48bb78;"></span> NMTC Distressed</div>
@@ -212,6 +217,14 @@
     const lgOz2     = L.layerGroup();
     const lgEz      = L.layerGroup();
     const lgJc      = L.layerGroup();
+    const lgVbn     = L.layerGroup();
+    const lgLots    = L.layerGroup();
+
+    // Vacancy inventory: near-black = a standing vacant building, light grey = an
+    // empty lot. Deliberately neutral so they don't compete with the categorical
+    // designation-layer colors, and the dark/light split reads as built/empty.
+    const VBN_COLOR  = { fill: '#1a202c', stroke: '#000000' };
+    const LOT_COLOR  = { fill: '#a0aec0', stroke: '#4a5568' };
 
     const OZ2_COLOR = { fill: '#9f7aea', stroke: '#553c9a' };  // OZ 2.0-eligible
     const JC_COLOR  = { fill: '#d53f8c', stroke: '#97266d' };  // Just Communities
@@ -287,6 +300,8 @@
     let ezTractsPerGrantee = {}; // grantee name -> count of that grantee's tracts in an Enterprise Zone
     let jcTractsTotal = 0;
     let jcTractsPerGrantee = {}; // grantee name -> count of that grantee's tracts that are Just Communities
+    let vacTotal = 0;
+    let vacPerGrantee = {};      // grantee name -> total vacants (buildings + lots) in its tracts
     function updateOverlapDisplay() {
         if (activeGrantee) {
             const n = bvriPerGrantee[activeGrantee] || 0;
@@ -296,6 +311,7 @@
             document.getElementById('stat-bvri-overlap').textContent = n.toLocaleString();
             document.getElementById('stat-ez-overlap').textContent = (ezTractsPerGrantee[activeGrantee] || 0).toLocaleString();
             document.getElementById('stat-jc-overlap').textContent = (jcTractsPerGrantee[activeGrantee] || 0).toLocaleString();
+            document.getElementById('stat-vacants').textContent = (vacPerGrantee[activeGrantee] || 0).toLocaleString();
         } else {
             document.getElementById('overlap-num').textContent = bvriTotalInGrantees.toLocaleString();
             document.getElementById('overlap-sub').innerHTML =
@@ -303,6 +319,7 @@
             document.getElementById('stat-bvri-overlap').textContent = bvriTotalInGrantees.toLocaleString();
             document.getElementById('stat-ez-overlap').textContent = ezTractsTotal.toLocaleString();
             document.getElementById('stat-jc-overlap').textContent = jcTractsTotal.toLocaleString();
+            document.getElementById('stat-vacants').textContent = vacTotal.toLocaleString();
         }
     }
 
@@ -362,7 +379,10 @@
         fetchJSON('data/ez_maryland.geojson'),
         fetchJSON('data/just_communities_maryland.geojson'),
         fetchJSON('data/crosswalk.json'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk]) {
+        fetchJSON('data/vacant_buildings_enough.geojson'),
+        fetchJSON('data/vacant_lots_enough.geojson'),
+        fetchJSON('data/vacants_enough.json'),
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk, vbn, lots, vacStats]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -441,6 +461,16 @@
                 jcTractsPerGrantee[row.grantee] = row.tracts;
             });
         }
+        // Total vacants (open VBNs + vacant lots) inside each grantee's tracts,
+        // precomputed by scripts/fetch_vacants.py. Baltimore City only.
+        vacPerGrantee = {};
+        vacTotal = 0;
+        if (vacStats) {
+            vacTotal = (vacStats.enough_totals || {}).total_vacants || 0;
+            (vacStats.by_grantee || []).forEach(function (row) {
+                vacPerGrantee[row.grantee] = row.total_vacants;
+            });
+        }
         updateOverlapDisplay();
 
         // BVRI vacant properties
@@ -471,6 +501,49 @@
                 );
             }
         }).addTo(lgVacants);
+
+        // Vacancy inventory inside ENOUGH grantee tracts (both off by default).
+        // These are the *whole* vacancy stock — open Vacant Building Notices and
+        // vacant lots — not the BVRI open-bid list, which is only the slice the
+        // City is currently marketing for sale.
+        function vacancyLayer(fc, color, label, radius) {
+            return L.geoJSON(fc, {
+                pane: 'pointPane',
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: radius, fillColor: color.fill, color: color.stroke,
+                        weight: 0.6, fillOpacity: 0.8, pane: 'pointPane',
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    const p = feature.properties;
+                    const who = (p.grantees || []).join(', ');
+                    let since = '';
+                    if (p.date_notice) {
+                        const d = new Date(p.date_notice);
+                        if (!isNaN(d)) since = '<div>Vacant notice issued: <strong>' +
+                            d.toLocaleDateString('en-US', {month:'short', year:'numeric'}) + '</strong></div>';
+                    }
+                    layer.bindPopup(
+                        '<div style="min-width:210px;">' +
+                          '<strong style="color:' + color.stroke + ';">' + label + '</strong>' +
+                          '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
+                            (p.address || p.blocklot || '—') + '</strong></div>' +
+                          (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
+                          '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                          '<div style="font-size:0.82em;">' + since +
+                            '<div>Block/Lot: ' + (p.blocklot || '—') + '</div>' +
+                            '<div>Tract ' + (p.GEOID || '') + '</div>' +
+                            (who ? '<div style="margin-top:3px;">ENOUGH: <strong>' + who + '</strong></div>' : '') +
+                          '</div>' +
+                          '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: Baltimore City DHCD via Open Baltimore ArcGIS.</div>' +
+                        '</div>'
+                    );
+                }
+            });
+        }
+        vacancyLayer(vbn, VBN_COLOR, 'Vacant Building (open VBN)', 3).addTo(lgVbn);
+        vacancyLayer(lots, LOT_COLOR, 'Vacant Lot', 2.5).addTo(lgLots);
 
         // DHCD Impact Investment Areas (off by default)
         L.geoJSON(investAreas, {
@@ -694,6 +767,8 @@
         ['layer-oz2',     lgOz2],
         ['layer-ez',      lgEz],
         ['layer-jc',      lgJc],
+        ['layer-vbn',     lgVbn],
+        ['layer-lots',    lgLots],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);

@@ -1,0 +1,2288 @@
+{
+  "generated_note": "Built by scripts/fetch_vacants.py \u2014 do not edit by hand.",
+  "snapshot_date": "2026-09-01",
+  "baseline_label": "FY25 start",
+  "baseline_date": "2024-07-01",
+  "fy_marks": [
+    {
+      "label": "FY25 start",
+      "date": "2024-07-01"
+    },
+    {
+      "label": "FY26 start",
+      "date": "2025-07-01"
+    },
+    {
+      "label": "FY27 start",
+      "date": "2026-07-01"
+    }
+  ],
+  "citywide": {
+    "vacant_buildings": 11523,
+    "vacant_lots": 18497,
+    "total_vacants": 30020,
+    "stock_by_mark": {
+      "FY25 start": 13226,
+      "FY26 start": 12593,
+      "FY27 start": 11604
+    },
+    "change_buildings": -1703
+  },
+  "enough_totals": {
+    "communities_statewide": 28,
+    "baltimore_tracts": 46,
+    "tracts_with_vacants": 46,
+    "vacant_buildings": 4108,
+    "vacant_lots": 5362,
+    "baseline_buildings": 4793,
+    "communities_with_vacants": 11,
+    "shared_tracts": 3,
+    "total_vacants": 9470,
+    "change_buildings": -685
+  },
+  "by_grantee": [
+    {
+      "grantee": "Park Heights Renaissance, Inc.",
+      "vacant_buildings": 954,
+      "vacant_lots": 1141,
+      "total_vacants": 2095,
+      "baseline_buildings": 1084,
+      "change_buildings": -130,
+      "pct_change_buildings": -12.0,
+      "grantee_total_tracts": 10,
+      "baltimore_tracts": 10,
+      "stock_by_mark": {
+        "FY25 start": 1084,
+        "FY26 start": 1031,
+        "FY27 start": 959
+      }
+    },
+    {
+      "grantee": "Elev8 Baltimore, Inc.",
+      "vacant_buildings": 824,
+      "vacant_lots": 1129,
+      "total_vacants": 1953,
+      "baseline_buildings": 935,
+      "change_buildings": -111,
+      "pct_change_buildings": -11.9,
+      "grantee_total_tracts": 5,
+      "baltimore_tracts": 5,
+      "stock_by_mark": {
+        "FY25 start": 935,
+        "FY26 start": 902,
+        "FY27 start": 834
+      }
+    },
+    {
+      "grantee": "Child First Authority",
+      "vacant_buildings": 604,
+      "vacant_lots": 1150,
+      "total_vacants": 1754,
+      "baseline_buildings": 718,
+      "change_buildings": -114,
+      "pct_change_buildings": -15.9,
+      "grantee_total_tracts": 6,
+      "baltimore_tracts": 6,
+      "stock_by_mark": {
+        "FY25 start": 718,
+        "FY26 start": 678,
+        "FY27 start": 605
+      }
+    },
+    {
+      "grantee": "Greater Mondawmin Coordinating Council",
+      "vacant_buildings": 747,
+      "vacant_lots": 393,
+      "total_vacants": 1140,
+      "baseline_buildings": 810,
+      "change_buildings": -63,
+      "pct_change_buildings": -7.8,
+      "grantee_total_tracts": 5,
+      "baltimore_tracts": 5,
+      "stock_by_mark": {
+        "FY25 start": 810,
+        "FY26 start": 790,
+        "FY27 start": 744
+      }
+    },
+    {
+      "grantee": "The Central Baltimore Partnership, Inc.",
+      "vacant_buildings": 416,
+      "vacant_lots": 686,
+      "total_vacants": 1102,
+      "baseline_buildings": 496,
+      "change_buildings": -80,
+      "pct_change_buildings": -16.1,
+      "grantee_total_tracts": 5,
+      "baltimore_tracts": 5,
+      "stock_by_mark": {
+        "FY25 start": 496,
+        "FY26 start": 470,
+        "FY27 start": 419
+      }
+    },
+    {
+      "grantee": "The Y in Central Maryland",
+      "vacant_buildings": 320,
+      "vacant_lots": 556,
+      "total_vacants": 876,
+      "baseline_buildings": 428,
+      "change_buildings": -108,
+      "pct_change_buildings": -25.2,
+      "grantee_total_tracts": 7,
+      "baltimore_tracts": 7,
+      "stock_by_mark": {
+        "FY25 start": 428,
+        "FY26 start": 371,
+        "FY27 start": 329
+      }
+    },
+    {
+      "grantee": "Tendea Family INC.",
+      "vacant_buildings": 264,
+      "vacant_lots": 272,
+      "total_vacants": 536,
+      "baseline_buildings": 359,
+      "change_buildings": -95,
+      "pct_change_buildings": -26.5,
+      "grantee_total_tracts": 3,
+      "baltimore_tracts": 3,
+      "stock_by_mark": {
+        "FY25 start": 359,
+        "FY26 start": 315,
+        "FY27 start": 264
+      }
+    },
+    {
+      "grantee": "Urban Strategies Inc",
+      "vacant_buildings": 65,
+      "vacant_lots": 163,
+      "total_vacants": 228,
+      "baseline_buildings": 57,
+      "change_buildings": 8,
+      "pct_change_buildings": 14.0,
+      "grantee_total_tracts": 2,
+      "baltimore_tracts": 2,
+      "stock_by_mark": {
+        "FY25 start": 57,
+        "FY26 start": 62,
+        "FY27 start": 65
+      }
+    },
+    {
+      "grantee": "South Baltimore Community Land Trust",
+      "vacant_buildings": 69,
+      "vacant_lots": 92,
+      "total_vacants": 161,
+      "baseline_buildings": 84,
+      "change_buildings": -15,
+      "pct_change_buildings": -17.9,
+      "grantee_total_tracts": 2,
+      "baltimore_tracts": 2,
+      "stock_by_mark": {
+        "FY25 start": 84,
+        "FY26 start": 77,
+        "FY27 start": 71
+      }
+    },
+    {
+      "grantee": "Cherry Hill Strong",
+      "vacant_buildings": 51,
+      "vacant_lots": 35,
+      "total_vacants": 86,
+      "baseline_buildings": 55,
+      "change_buildings": -4,
+      "pct_change_buildings": -7.3,
+      "grantee_total_tracts": 3,
+      "baltimore_tracts": 3,
+      "stock_by_mark": {
+        "FY25 start": 55,
+        "FY26 start": 54,
+        "FY27 start": 52
+      }
+    },
+    {
+      "grantee": "Leaders Breeders Inc.",
+      "vacant_buildings": 25,
+      "vacant_lots": 25,
+      "total_vacants": 50,
+      "baseline_buildings": 28,
+      "change_buildings": -3,
+      "pct_change_buildings": -10.7,
+      "grantee_total_tracts": 1,
+      "baltimore_tracts": 1,
+      "stock_by_mark": {
+        "FY25 start": 28,
+        "FY26 start": 25,
+        "FY27 start": 25
+      }
+    }
+  ],
+  "by_tract": [
+    {
+      "GEOID": "24510030100",
+      "grantees": [
+        "Urban Strategies Inc"
+      ],
+      "vacant_buildings": 19,
+      "vacant_lots": 118,
+      "total_vacants": 137,
+      "baseline_buildings": 15,
+      "change_buildings": 4
+    },
+    {
+      "GEOID": "24510070100",
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "vacant_buildings": 81,
+      "vacant_lots": 5,
+      "total_vacants": 86,
+      "baseline_buildings": 107,
+      "change_buildings": -26
+    },
+    {
+      "GEOID": "24510070200",
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "vacant_buildings": 151,
+      "vacant_lots": 121,
+      "total_vacants": 272,
+      "baseline_buildings": 192,
+      "change_buildings": -41
+    },
+    {
+      "GEOID": "24510070300",
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "vacant_buildings": 32,
+      "vacant_lots": 146,
+      "total_vacants": 178,
+      "baseline_buildings": 60,
+      "change_buildings": -28
+    },
+    {
+      "GEOID": "24510090100",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 17,
+      "vacant_lots": 76,
+      "total_vacants": 93,
+      "baseline_buildings": 25,
+      "change_buildings": -8
+    },
+    {
+      "GEOID": "24510090200",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 7,
+      "vacant_lots": 9,
+      "total_vacants": 16,
+      "baseline_buildings": 11,
+      "change_buildings": -4
+    },
+    {
+      "GEOID": "24510090300",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 16,
+      "vacant_lots": 30,
+      "total_vacants": 46,
+      "baseline_buildings": 24,
+      "change_buildings": -8
+    },
+    {
+      "GEOID": "24510090400",
+      "grantees": [
+        "The Y in Central Maryland",
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "vacant_buildings": 19,
+      "vacant_lots": 84,
+      "total_vacants": 103,
+      "baseline_buildings": 25,
+      "change_buildings": -6
+    },
+    {
+      "GEOID": "24510090600",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 75,
+      "vacant_lots": 115,
+      "total_vacants": 190,
+      "baseline_buildings": 104,
+      "change_buildings": -29
+    },
+    {
+      "GEOID": "24510090700",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 159,
+      "vacant_lots": 111,
+      "total_vacants": 270,
+      "baseline_buildings": 206,
+      "change_buildings": -47
+    },
+    {
+      "GEOID": "24510090800",
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "vacant_buildings": 317,
+      "vacant_lots": 216,
+      "total_vacants": 533,
+      "baseline_buildings": 374,
+      "change_buildings": -57
+    },
+    {
+      "GEOID": "24510120300",
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "vacant_buildings": 36,
+      "vacant_lots": 33,
+      "total_vacants": 69,
+      "baseline_buildings": 37,
+      "change_buildings": -1
+    },
+    {
+      "GEOID": "24510120400",
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "vacant_buildings": 28,
+      "vacant_lots": 242,
+      "total_vacants": 270,
+      "baseline_buildings": 41,
+      "change_buildings": -13
+    },
+    {
+      "GEOID": "24510120500",
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "vacant_buildings": 16,
+      "vacant_lots": 111,
+      "total_vacants": 127,
+      "baseline_buildings": 19,
+      "change_buildings": -3
+    },
+    {
+      "GEOID": "24510130200",
+      "grantees": [
+        "Child First Authority"
+      ],
+      "vacant_buildings": 14,
+      "vacant_lots": 28,
+      "total_vacants": 42,
+      "baseline_buildings": 23,
+      "change_buildings": -9
+    },
+    {
+      "GEOID": "24510130300",
+      "grantees": [
+        "Child First Authority",
+        "Elev8 Baltimore, Inc."
+      ],
+      "vacant_buildings": 193,
+      "vacant_lots": 150,
+      "total_vacants": 343,
+      "baseline_buildings": 222,
+      "change_buildings": -29
+    },
+    {
+      "GEOID": "24510130400",
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "vacant_buildings": 104,
+      "vacant_lots": 21,
+      "total_vacants": 125,
+      "baseline_buildings": 117,
+      "change_buildings": -13
+    },
+    {
+      "GEOID": "24510140200",
+      "grantees": [
+        "Child First Authority"
+      ],
+      "vacant_buildings": 109,
+      "vacant_lots": 235,
+      "total_vacants": 344,
+      "baseline_buildings": 116,
+      "change_buildings": -7
+    },
+    {
+      "GEOID": "24510140300",
+      "grantees": [
+        "Child First Authority"
+      ],
+      "vacant_buildings": 167,
+      "vacant_lots": 434,
+      "total_vacants": 601,
+      "baseline_buildings": 206,
+      "change_buildings": -39
+    },
+    {
+      "GEOID": "24510150100",
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "vacant_buildings": 125,
+      "vacant_lots": 175,
+      "total_vacants": 300,
+      "baseline_buildings": 145,
+      "change_buildings": -20
+    },
+    {
+      "GEOID": "24510150400",
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "vacant_buildings": 320,
+      "vacant_lots": 91,
+      "total_vacants": 411,
+      "baseline_buildings": 349,
+      "change_buildings": -29
+    },
+    {
+      "GEOID": "24510150500",
+      "grantees": [
+        "Park Heights Renaissance, Inc.",
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "vacant_buildings": 19,
+      "vacant_lots": 46,
+      "total_vacants": 65,
+      "baseline_buildings": 14,
+      "change_buildings": 5
+    },
+    {
+      "GEOID": "24510150600",
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "vacant_buildings": 270,
+      "vacant_lots": 205,
+      "total_vacants": 475,
+      "baseline_buildings": 288,
+      "change_buildings": -18
+    },
+    {
+      "GEOID": "24510150702",
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "vacant_buildings": 34,
+      "vacant_lots": 30,
+      "total_vacants": 64,
+      "baseline_buildings": 42,
+      "change_buildings": -8
+    },
+    {
+      "GEOID": "24510151100",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 20,
+      "vacant_lots": 58,
+      "total_vacants": 78,
+      "baseline_buildings": 17,
+      "change_buildings": 3
+    },
+    {
+      "GEOID": "24510151200",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 198,
+      "vacant_lots": 153,
+      "total_vacants": 351,
+      "baseline_buildings": 208,
+      "change_buildings": -10
+    },
+    {
+      "GEOID": "24510151300",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 233,
+      "vacant_lots": 170,
+      "total_vacants": 403,
+      "baseline_buildings": 266,
+      "change_buildings": -33
+    },
+    {
+      "GEOID": "24510160100",
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "vacant_buildings": 233,
+      "vacant_lots": 234,
+      "total_vacants": 467,
+      "baseline_buildings": 268,
+      "change_buildings": -35
+    },
+    {
+      "GEOID": "24510160200",
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "vacant_buildings": 150,
+      "vacant_lots": 252,
+      "total_vacants": 402,
+      "baseline_buildings": 163,
+      "change_buildings": -13
+    },
+    {
+      "GEOID": "24510160300",
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "vacant_buildings": 123,
+      "vacant_lots": 318,
+      "total_vacants": 441,
+      "baseline_buildings": 137,
+      "change_buildings": -14
+    },
+    {
+      "GEOID": "24510170200",
+      "grantees": [
+        "Child First Authority"
+      ],
+      "vacant_buildings": 38,
+      "vacant_lots": 47,
+      "total_vacants": 85,
+      "baseline_buildings": 44,
+      "change_buildings": -6
+    },
+    {
+      "GEOID": "24510170300",
+      "grantees": [
+        "Child First Authority"
+      ],
+      "vacant_buildings": 83,
+      "vacant_lots": 256,
+      "total_vacants": 339,
+      "baseline_buildings": 107,
+      "change_buildings": -24
+    },
+    {
+      "GEOID": "24510250203",
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "vacant_buildings": 22,
+      "vacant_lots": 7,
+      "total_vacants": 29,
+      "baseline_buildings": 24,
+      "change_buildings": -2
+    },
+    {
+      "GEOID": "24510250204",
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "vacant_buildings": 20,
+      "vacant_lots": 7,
+      "total_vacants": 27,
+      "baseline_buildings": 21,
+      "change_buildings": -1
+    },
+    {
+      "GEOID": "24510250207",
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "vacant_buildings": 9,
+      "vacant_lots": 21,
+      "total_vacants": 30,
+      "baseline_buildings": 10,
+      "change_buildings": -1
+    },
+    {
+      "GEOID": "24510250402",
+      "grantees": [
+        "South Baltimore Community Land Trust"
+      ],
+      "vacant_buildings": 69,
+      "vacant_lots": 48,
+      "total_vacants": 117,
+      "baseline_buildings": 84,
+      "change_buildings": -15
+    },
+    {
+      "GEOID": "24510250500",
+      "grantees": [
+        "South Baltimore Community Land Trust"
+      ],
+      "vacant_buildings": 0,
+      "vacant_lots": 44,
+      "total_vacants": 44,
+      "baseline_buildings": 0,
+      "change_buildings": 0
+    },
+    {
+      "GEOID": "24510260301",
+      "grantees": [
+        "Leaders Breeders Inc."
+      ],
+      "vacant_buildings": 25,
+      "vacant_lots": 25,
+      "total_vacants": 50,
+      "baseline_buildings": 28,
+      "change_buildings": -3
+    },
+    {
+      "GEOID": "24510271001",
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "vacant_buildings": 27,
+      "vacant_lots": 131,
+      "total_vacants": 158,
+      "baseline_buildings": 33,
+      "change_buildings": -6
+    },
+    {
+      "GEOID": "24510271600",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 71,
+      "vacant_lots": 283,
+      "total_vacants": 354,
+      "baseline_buildings": 83,
+      "change_buildings": -12
+    },
+    {
+      "GEOID": "24510271700",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 96,
+      "vacant_lots": 76,
+      "total_vacants": 172,
+      "baseline_buildings": 112,
+      "change_buildings": -16
+    },
+    {
+      "GEOID": "24510271801",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 103,
+      "vacant_lots": 61,
+      "total_vacants": 164,
+      "baseline_buildings": 125,
+      "change_buildings": -22
+    },
+    {
+      "GEOID": "24510271802",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 176,
+      "vacant_lots": 84,
+      "total_vacants": 260,
+      "baseline_buildings": 217,
+      "change_buildings": -41
+    },
+    {
+      "GEOID": "24510280101",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 12,
+      "vacant_lots": 92,
+      "total_vacants": 104,
+      "baseline_buildings": 17,
+      "change_buildings": -5
+    },
+    {
+      "GEOID": "24510280102",
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "vacant_buildings": 26,
+      "vacant_lots": 118,
+      "total_vacants": 144,
+      "baseline_buildings": 25,
+      "change_buildings": 1
+    },
+    {
+      "GEOID": "24510280500",
+      "grantees": [
+        "Urban Strategies Inc"
+      ],
+      "vacant_buildings": 46,
+      "vacant_lots": 45,
+      "total_vacants": 91,
+      "baseline_buildings": 42,
+      "change_buildings": 4
+    }
+  ],
+  "by_neighborhood": [
+    {
+      "neighborhood": "Sandtown-Winchester",
+      "baseline": 667,
+      "current": 589,
+      "change": -78,
+      "pct_change": -11.7
+    },
+    {
+      "neighborhood": "Coldstream Homestead Montebello",
+      "baseline": 316,
+      "current": 239,
+      "change": -77,
+      "pct_change": -24.4
+    },
+    {
+      "neighborhood": "Broadway East",
+      "baseline": 791,
+      "current": 717,
+      "change": -74,
+      "pct_change": -9.4
+    },
+    {
+      "neighborhood": "Harlem Park",
+      "baseline": 501,
+      "current": 439,
+      "change": -62,
+      "pct_change": -12.4
+    },
+    {
+      "neighborhood": "Central Park Heights",
+      "baseline": 372,
+      "current": 316,
+      "change": -56,
+      "pct_change": -15.1
+    },
+    {
+      "neighborhood": "East Baltimore Midway",
+      "baseline": 373,
+      "current": 318,
+      "change": -55,
+      "pct_change": -14.7
+    },
+    {
+      "neighborhood": "McElderry Park",
+      "baseline": 169,
+      "current": 120,
+      "change": -49,
+      "pct_change": -29.0
+    },
+    {
+      "neighborhood": "Oliver",
+      "baseline": 376,
+      "current": 330,
+      "change": -46,
+      "pct_change": -12.2
+    },
+    {
+      "neighborhood": "Carrollton Ridge",
+      "baseline": 789,
+      "current": 745,
+      "change": -44,
+      "pct_change": -5.6
+    },
+    {
+      "neighborhood": "Franklin Square",
+      "baseline": 278,
+      "current": 238,
+      "change": -40,
+      "pct_change": -14.4
+    },
+    {
+      "neighborhood": "Johnston Square",
+      "baseline": 120,
+      "current": 82,
+      "change": -38,
+      "pct_change": -31.7
+    },
+    {
+      "neighborhood": "Upton",
+      "baseline": 295,
+      "current": 257,
+      "change": -38,
+      "pct_change": -12.9
+    },
+    {
+      "neighborhood": "Brooklyn",
+      "baseline": 181,
+      "current": 144,
+      "change": -37,
+      "pct_change": -20.4
+    },
+    {
+      "neighborhood": "Druid Heights",
+      "baseline": 162,
+      "current": 126,
+      "change": -36,
+      "pct_change": -22.2
+    },
+    {
+      "neighborhood": "Belair-Edison",
+      "baseline": 107,
+      "current": 74,
+      "change": -33,
+      "pct_change": -30.8
+    },
+    {
+      "neighborhood": "Coppin Heights/Ash-Co-East",
+      "baseline": 190,
+      "current": 160,
+      "change": -30,
+      "pct_change": -15.8
+    },
+    {
+      "neighborhood": "Shipley Hill",
+      "baseline": 292,
+      "current": 262,
+      "change": -30,
+      "pct_change": -10.3
+    },
+    {
+      "neighborhood": "Penrose/Fayette Street Outreach",
+      "baseline": 349,
+      "current": 319,
+      "change": -30,
+      "pct_change": -8.6
+    },
+    {
+      "neighborhood": "Middle East",
+      "baseline": 64,
+      "current": 34,
+      "change": -30,
+      "pct_change": -46.9
+    },
+    {
+      "neighborhood": "Mondawmin",
+      "baseline": 309,
+      "current": 280,
+      "change": -29,
+      "pct_change": -9.4
+    },
+    {
+      "neighborhood": "Washington Village/Pigtown",
+      "baseline": 119,
+      "current": 90,
+      "change": -29,
+      "pct_change": -24.4
+    },
+    {
+      "neighborhood": "Penn North",
+      "baseline": 283,
+      "current": 255,
+      "change": -28,
+      "pct_change": -9.9
+    },
+    {
+      "neighborhood": "Millhill",
+      "baseline": 148,
+      "current": 123,
+      "change": -25,
+      "pct_change": -16.9
+    },
+    {
+      "neighborhood": "Midtown-Edmondson",
+      "baseline": 360,
+      "current": 336,
+      "change": -24,
+      "pct_change": -6.7
+    },
+    {
+      "neighborhood": "Greenspring",
+      "baseline": 144,
+      "current": 121,
+      "change": -23,
+      "pct_change": -16.0
+    },
+    {
+      "neighborhood": "Biddle Street",
+      "baseline": 93,
+      "current": 70,
+      "change": -23,
+      "pct_change": -24.7
+    },
+    {
+      "neighborhood": "Four By Four",
+      "baseline": 50,
+      "current": 27,
+      "change": -23,
+      "pct_change": -46.0
+    },
+    {
+      "neighborhood": "Ellwood Park/Monument",
+      "baseline": 122,
+      "current": 101,
+      "change": -21,
+      "pct_change": -17.2
+    },
+    {
+      "neighborhood": "Milton-Montford",
+      "baseline": 77,
+      "current": 56,
+      "change": -21,
+      "pct_change": -27.3
+    },
+    {
+      "neighborhood": "Patterson Park Neighborhood",
+      "baseline": 46,
+      "current": 26,
+      "change": -20,
+      "pct_change": -43.5
+    },
+    {
+      "neighborhood": "Rosemont",
+      "baseline": 137,
+      "current": 117,
+      "change": -20,
+      "pct_change": -14.6
+    },
+    {
+      "neighborhood": "Mosher",
+      "baseline": 190,
+      "current": 171,
+      "change": -19,
+      "pct_change": -10.0
+    },
+    {
+      "neighborhood": "Hollins Market",
+      "baseline": 66,
+      "current": 49,
+      "change": -17,
+      "pct_change": -25.8
+    },
+    {
+      "neighborhood": "Saint Josephs",
+      "baseline": 77,
+      "current": 61,
+      "change": -16,
+      "pct_change": -20.8
+    },
+    {
+      "neighborhood": "Berea",
+      "baseline": 148,
+      "current": 133,
+      "change": -15,
+      "pct_change": -10.1
+    },
+    {
+      "neighborhood": "Arlington",
+      "baseline": 110,
+      "current": 95,
+      "change": -15,
+      "pct_change": -13.6
+    },
+    {
+      "neighborhood": "Edgewood",
+      "baseline": 53,
+      "current": 39,
+      "change": -14,
+      "pct_change": -26.4
+    },
+    {
+      "neighborhood": "Better Waverly",
+      "baseline": 49,
+      "current": 35,
+      "change": -14,
+      "pct_change": -28.6
+    },
+    {
+      "neighborhood": "Auchentoroly-Parkwood",
+      "baseline": 121,
+      "current": 107,
+      "change": -14,
+      "pct_change": -11.6
+    },
+    {
+      "neighborhood": "Northwest Community Action",
+      "baseline": 162,
+      "current": 148,
+      "change": -14,
+      "pct_change": -8.6
+    },
+    {
+      "neighborhood": "Langston Hughes",
+      "baseline": 54,
+      "current": 40,
+      "change": -14,
+      "pct_change": -25.9
+    },
+    {
+      "neighborhood": "Barclay",
+      "baseline": 53,
+      "current": 39,
+      "change": -14,
+      "pct_change": -26.4
+    },
+    {
+      "neighborhood": "Madison-Eastend",
+      "baseline": 80,
+      "current": 67,
+      "change": -13,
+      "pct_change": -16.2
+    },
+    {
+      "neighborhood": "Easterwood",
+      "baseline": 175,
+      "current": 163,
+      "change": -12,
+      "pct_change": -6.9
+    },
+    {
+      "neighborhood": "Waverly",
+      "baseline": 26,
+      "current": 14,
+      "change": -12,
+      "pct_change": -46.2
+    },
+    {
+      "neighborhood": "Gay Street",
+      "baseline": 29,
+      "current": 18,
+      "change": -11,
+      "pct_change": -37.9
+    },
+    {
+      "neighborhood": "Woodmere",
+      "baseline": 28,
+      "current": 17,
+      "change": -11,
+      "pct_change": -39.3
+    },
+    {
+      "neighborhood": "Allendale",
+      "baseline": 81,
+      "current": 70,
+      "change": -11,
+      "pct_change": -13.6
+    },
+    {
+      "neighborhood": "South Clifton Park",
+      "baseline": 84,
+      "current": 74,
+      "change": -10,
+      "pct_change": -11.9
+    },
+    {
+      "neighborhood": "Hampden",
+      "baseline": 32,
+      "current": 22,
+      "change": -10,
+      "pct_change": -31.2
+    },
+    {
+      "neighborhood": "Poppleton",
+      "baseline": 52,
+      "current": 42,
+      "change": -10,
+      "pct_change": -19.2
+    },
+    {
+      "neighborhood": "Walbrook",
+      "baseline": 116,
+      "current": 106,
+      "change": -10,
+      "pct_change": -8.6
+    },
+    {
+      "neighborhood": "Carroll-South Hilton",
+      "baseline": 65,
+      "current": 55,
+      "change": -10,
+      "pct_change": -15.4
+    },
+    {
+      "neighborhood": "Morrell Park",
+      "baseline": 51,
+      "current": 41,
+      "change": -10,
+      "pct_change": -19.6
+    },
+    {
+      "neighborhood": "Reservoir Hill",
+      "baseline": 50,
+      "current": 40,
+      "change": -10,
+      "pct_change": -20.0
+    },
+    {
+      "neighborhood": "Frankford",
+      "baseline": 27,
+      "current": 18,
+      "change": -9,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Canton",
+      "baseline": 29,
+      "current": 20,
+      "change": -9,
+      "pct_change": -31.0
+    },
+    {
+      "neighborhood": "Towanda-Grantley",
+      "baseline": 70,
+      "current": 61,
+      "change": -9,
+      "pct_change": -12.9
+    },
+    {
+      "neighborhood": "CARE",
+      "baseline": 29,
+      "current": 20,
+      "change": -9,
+      "pct_change": -31.0
+    },
+    {
+      "neighborhood": "Darley Park",
+      "baseline": 115,
+      "current": 106,
+      "change": -9,
+      "pct_change": -7.8
+    },
+    {
+      "neighborhood": "Hanlon-Longwood",
+      "baseline": 34,
+      "current": 26,
+      "change": -8,
+      "pct_change": -23.5
+    },
+    {
+      "neighborhood": "Boyd-Booth",
+      "baseline": 136,
+      "current": 128,
+      "change": -8,
+      "pct_change": -5.9
+    },
+    {
+      "neighborhood": "Curtis Bay",
+      "baseline": 130,
+      "current": 122,
+      "change": -8,
+      "pct_change": -6.2
+    },
+    {
+      "neighborhood": "Wilson Park",
+      "baseline": 27,
+      "current": 19,
+      "change": -8,
+      "pct_change": -29.6
+    },
+    {
+      "neighborhood": "Waltherson",
+      "baseline": 23,
+      "current": 16,
+      "change": -7,
+      "pct_change": -30.4
+    },
+    {
+      "neighborhood": "Edmondson Village",
+      "baseline": 25,
+      "current": 18,
+      "change": -7,
+      "pct_change": -28.0
+    },
+    {
+      "neighborhood": "Union Square",
+      "baseline": 82,
+      "current": 75,
+      "change": -7,
+      "pct_change": -8.5
+    },
+    {
+      "neighborhood": "Lakeland",
+      "baseline": 22,
+      "current": 16,
+      "change": -6,
+      "pct_change": -27.3
+    },
+    {
+      "neighborhood": "Cherry Hill",
+      "baseline": 59,
+      "current": 53,
+      "change": -6,
+      "pct_change": -10.2
+    },
+    {
+      "neighborhood": "Baltimore Highlands",
+      "baseline": 46,
+      "current": 40,
+      "change": -6,
+      "pct_change": -13.0
+    },
+    {
+      "neighborhood": "North Harford Road",
+      "baseline": 16,
+      "current": 11,
+      "change": -5,
+      "pct_change": -31.2
+    },
+    {
+      "neighborhood": "Upper Fells Point",
+      "baseline": 14,
+      "current": 9,
+      "change": -5,
+      "pct_change": -35.7
+    },
+    {
+      "neighborhood": "Greenmount West",
+      "baseline": 9,
+      "current": 4,
+      "change": -5,
+      "pct_change": -55.6
+    },
+    {
+      "neighborhood": "Forest Park",
+      "baseline": 22,
+      "current": 17,
+      "change": -5,
+      "pct_change": -22.7
+    },
+    {
+      "neighborhood": "Parklane",
+      "baseline": 21,
+      "current": 16,
+      "change": -5,
+      "pct_change": -23.8
+    },
+    {
+      "neighborhood": "Evergreen Lawn",
+      "baseline": 13,
+      "current": 8,
+      "change": -5,
+      "pct_change": -38.5
+    },
+    {
+      "neighborhood": "Lauraville",
+      "baseline": 12,
+      "current": 8,
+      "change": -4,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Glen",
+      "baseline": 9,
+      "current": 5,
+      "change": -4,
+      "pct_change": -44.4
+    },
+    {
+      "neighborhood": "Pimlico Good Neighbors",
+      "baseline": 18,
+      "current": 14,
+      "change": -4,
+      "pct_change": -22.2
+    },
+    {
+      "neighborhood": "Franklintown",
+      "baseline": 7,
+      "current": 3,
+      "change": -4,
+      "pct_change": -57.1
+    },
+    {
+      "neighborhood": "Winston-Govans",
+      "baseline": 15,
+      "current": 11,
+      "change": -4,
+      "pct_change": -26.7
+    },
+    {
+      "neighborhood": "South Baltimore",
+      "baseline": 5,
+      "current": 1,
+      "change": -4,
+      "pct_change": -80.0
+    },
+    {
+      "neighborhood": "Hamilton",
+      "baseline": 16,
+      "current": 12,
+      "change": -4,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Woodbourne-McCabe",
+      "baseline": 21,
+      "current": 17,
+      "change": -4,
+      "pct_change": -19.0
+    },
+    {
+      "neighborhood": "Hillen",
+      "baseline": 10,
+      "current": 6,
+      "change": -4,
+      "pct_change": -40.0
+    },
+    {
+      "neighborhood": "Mount Winans",
+      "baseline": 16,
+      "current": 12,
+      "change": -4,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Butchers Hill",
+      "baseline": 12,
+      "current": 8,
+      "change": -4,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Bridgeview/Greenlawn",
+      "baseline": 24,
+      "current": 20,
+      "change": -4,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Highlandtown",
+      "baseline": 16,
+      "current": 13,
+      "change": -3,
+      "pct_change": -18.8
+    },
+    {
+      "neighborhood": "Mid-Govans",
+      "baseline": 14,
+      "current": 11,
+      "change": -3,
+      "pct_change": -21.4
+    },
+    {
+      "neighborhood": "Uplands",
+      "baseline": 3,
+      "current": 0,
+      "change": -3,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Franklintown Road",
+      "baseline": 156,
+      "current": 153,
+      "change": -3,
+      "pct_change": -1.9
+    },
+    {
+      "neighborhood": "Wilhelm Park",
+      "baseline": 4,
+      "current": 1,
+      "change": -3,
+      "pct_change": -75.0
+    },
+    {
+      "neighborhood": "Lucille Park",
+      "baseline": 36,
+      "current": 33,
+      "change": -3,
+      "pct_change": -8.3
+    },
+    {
+      "neighborhood": "New Northwood",
+      "baseline": 6,
+      "current": 3,
+      "change": -3,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Dorchester",
+      "baseline": 27,
+      "current": 24,
+      "change": -3,
+      "pct_change": -11.1
+    },
+    {
+      "neighborhood": "Pen Lucy",
+      "baseline": 27,
+      "current": 24,
+      "change": -3,
+      "pct_change": -11.1
+    },
+    {
+      "neighborhood": "Rosemont Homeowners/Tenants",
+      "baseline": 88,
+      "current": 85,
+      "change": -3,
+      "pct_change": -3.4
+    },
+    {
+      "neighborhood": "Graceland Park",
+      "baseline": 11,
+      "current": 8,
+      "change": -3,
+      "pct_change": -27.3
+    },
+    {
+      "neighborhood": "Grove Park",
+      "baseline": 6,
+      "current": 3,
+      "change": -3,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Ednor Gardens-Lakeside",
+      "baseline": 9,
+      "current": 6,
+      "change": -3,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Idlewood",
+      "baseline": 6,
+      "current": 3,
+      "change": -3,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Orangeville",
+      "baseline": 6,
+      "current": 3,
+      "change": -3,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "West Arlington",
+      "baseline": 12,
+      "current": 10,
+      "change": -2,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Beverly Hills",
+      "baseline": 2,
+      "current": 0,
+      "change": -2,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Gwynns Falls",
+      "baseline": 40,
+      "current": 38,
+      "change": -2,
+      "pct_change": -5.0
+    },
+    {
+      "neighborhood": "Callaway-Garrison",
+      "baseline": 17,
+      "current": 15,
+      "change": -2,
+      "pct_change": -11.8
+    },
+    {
+      "neighborhood": "Bolton Hill",
+      "baseline": 4,
+      "current": 2,
+      "change": -2,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Greektown",
+      "baseline": 12,
+      "current": 10,
+      "change": -2,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Harwood",
+      "baseline": 24,
+      "current": 22,
+      "change": -2,
+      "pct_change": -8.3
+    },
+    {
+      "neighborhood": "Cedonia",
+      "baseline": 5,
+      "current": 3,
+      "change": -2,
+      "pct_change": -40.0
+    },
+    {
+      "neighborhood": "Rognel Heights",
+      "baseline": 10,
+      "current": 8,
+      "change": -2,
+      "pct_change": -20.0
+    },
+    {
+      "neighborhood": "Westport",
+      "baseline": 130,
+      "current": 128,
+      "change": -2,
+      "pct_change": -1.5
+    },
+    {
+      "neighborhood": "Madison Park",
+      "baseline": 21,
+      "current": 19,
+      "change": -2,
+      "pct_change": -9.5
+    },
+    {
+      "neighborhood": "Beechfield",
+      "baseline": 6,
+      "current": 4,
+      "change": -2,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Panway/Braddish Avenue",
+      "baseline": 13,
+      "current": 11,
+      "change": -2,
+      "pct_change": -15.4
+    },
+    {
+      "neighborhood": "Saint Helena",
+      "baseline": 4,
+      "current": 2,
+      "change": -2,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Ridgely's Delight",
+      "baseline": 5,
+      "current": 3,
+      "change": -2,
+      "pct_change": -40.0
+    },
+    {
+      "neighborhood": "Cameron Village",
+      "baseline": 3,
+      "current": 1,
+      "change": -2,
+      "pct_change": -66.7
+    },
+    {
+      "neighborhood": "Chinquapin Park",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Reisterstown Station",
+      "baseline": 2,
+      "current": 1,
+      "change": -1,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Roland Park",
+      "baseline": 2,
+      "current": 1,
+      "change": -1,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Rosemont East",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Coldspring",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "University of Maryland",
+      "baseline": 4,
+      "current": 3,
+      "change": -1,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Mount Washington",
+      "baseline": 6,
+      "current": 5,
+      "change": -1,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Saint Paul",
+      "baseline": 4,
+      "current": 3,
+      "change": -1,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Garwyn Oaks",
+      "baseline": 11,
+      "current": 10,
+      "change": -1,
+      "pct_change": -9.1
+    },
+    {
+      "neighborhood": "Central Forest Park",
+      "baseline": 12,
+      "current": 11,
+      "change": -1,
+      "pct_change": -8.3
+    },
+    {
+      "neighborhood": "Penn-Fallsway",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Glen Oaks",
+      "baseline": 5,
+      "current": 4,
+      "change": -1,
+      "pct_change": -20.0
+    },
+    {
+      "neighborhood": "Belair-Parkside",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Fairfield Area",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Kernewood",
+      "baseline": 7,
+      "current": 6,
+      "change": -1,
+      "pct_change": -14.3
+    },
+    {
+      "neighborhood": "Hamilton Hills",
+      "baseline": 8,
+      "current": 7,
+      "change": -1,
+      "pct_change": -12.5
+    },
+    {
+      "neighborhood": "Sabina-Mattfeldt",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Lake Evesham",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Lake Walker",
+      "baseline": 2,
+      "current": 1,
+      "change": -1,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Yale Heights",
+      "baseline": 4,
+      "current": 3,
+      "change": -1,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Hoes Heights",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Pulaski Industrial Area",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Loch Raven",
+      "baseline": 8,
+      "current": 7,
+      "change": -1,
+      "pct_change": -12.5
+    },
+    {
+      "neighborhood": "Ramblewood",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Fairmount",
+      "baseline": 6,
+      "current": 5,
+      "change": -1,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Moravia-Walther",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Brewers Hill",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Medfield",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Hunting Ridge",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Irvington",
+      "baseline": 41,
+      "current": 40,
+      "change": -1,
+      "pct_change": -2.4
+    },
+    {
+      "neighborhood": "Federal Hill",
+      "baseline": 3,
+      "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Little Italy",
+      "baseline": 7,
+      "current": 7,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Rosebank",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Liberty Square",
+      "baseline": 9,
+      "current": 9,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Fallstaff",
+      "baseline": 3,
+      "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Remington",
+      "baseline": 7,
+      "current": 7,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Orangeville Industrial Area",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Westgate",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Stonewood-Pentwood-Winston",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Charles Village",
+      "baseline": 8,
+      "current": 8,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cross Country",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cedmont",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Arcadia",
+      "baseline": 8,
+      "current": 8,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Broening Manor",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Ten Hills",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cheswolde",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Mount Holly",
+      "baseline": 32,
+      "current": 32,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Medford",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Carroll - Camden Industrial Area",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Clifton Park",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Evergreen",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Pleasant View Gardens",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Woodberry",
+      "baseline": 3,
+      "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Howard Park",
+      "baseline": 28,
+      "current": 28,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cedarcroft",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Violetville",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "West Forest Park",
+      "baseline": 16,
+      "current": 16,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Downtown",
+      "baseline": 50,
+      "current": 50,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Riverside",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Park Circle",
+      "baseline": 169,
+      "current": 169,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Guilford",
+      "baseline": 3,
+      "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Locust Point",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "West Hills",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Homeland",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Old Goucher",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Radnor-Winston",
+      "baseline": 2,
+      "current": 3,
+      "change": 1,
+      "pct_change": 50.0
+    },
+    {
+      "neighborhood": "Mayfield",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Dunbar-Broadway",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Mid-Town Belvedere",
+      "baseline": 6,
+      "current": 7,
+      "change": 1,
+      "pct_change": 16.7
+    },
+    {
+      "neighborhood": "Tremont",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Mount Vernon",
+      "baseline": 4,
+      "current": 5,
+      "change": 1,
+      "pct_change": 25.0
+    },
+    {
+      "neighborhood": "Belvedere",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Jones Falls Area",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Kenilworth Park",
+      "baseline": 5,
+      "current": 6,
+      "change": 1,
+      "pct_change": 20.0
+    },
+    {
+      "neighborhood": "Sharp-Leadenhall",
+      "baseline": 2,
+      "current": 3,
+      "change": 1,
+      "pct_change": 50.0
+    },
+    {
+      "neighborhood": "Dolfield",
+      "baseline": 19,
+      "current": 20,
+      "change": 1,
+      "pct_change": 5.3
+    },
+    {
+      "neighborhood": "Kresson",
+      "baseline": 11,
+      "current": 12,
+      "change": 1,
+      "pct_change": 9.1
+    },
+    {
+      "neighborhood": "Saint Agnes",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Seton Hill",
+      "baseline": 4,
+      "current": 5,
+      "change": 1,
+      "pct_change": 25.0
+    },
+    {
+      "neighborhood": "Concerned Citizens of Forest Park",
+      "baseline": 24,
+      "current": 25,
+      "change": 1,
+      "pct_change": 4.2
+    },
+    {
+      "neighborhood": "East Arlington",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Winchester",
+      "baseline": 89,
+      "current": 90,
+      "change": 1,
+      "pct_change": 1.1
+    },
+    {
+      "neighborhood": "Levindale",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Windsor Hills",
+      "baseline": 14,
+      "current": 15,
+      "change": 1,
+      "pct_change": 7.1
+    },
+    {
+      "neighborhood": "Ashburton",
+      "baseline": 11,
+      "current": 12,
+      "change": 1,
+      "pct_change": 9.1
+    },
+    {
+      "neighborhood": "Harbor East",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Keswick",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Richnor Springs",
+      "baseline": 4,
+      "current": 5,
+      "change": 1,
+      "pct_change": 25.0
+    },
+    {
+      "neighborhood": "Cylburn",
+      "baseline": 12,
+      "current": 14,
+      "change": 2,
+      "pct_change": 16.7
+    },
+    {
+      "neighborhood": "Jonestown",
+      "baseline": 15,
+      "current": 17,
+      "change": 2,
+      "pct_change": 13.3
+    },
+    {
+      "neighborhood": "Parkside",
+      "baseline": 1,
+      "current": 3,
+      "change": 2,
+      "pct_change": 200.0
+    },
+    {
+      "neighborhood": "Wyman Park",
+      "baseline": 0,
+      "current": 2,
+      "change": 2,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Washington Hill",
+      "baseline": 14,
+      "current": 16,
+      "change": 2,
+      "pct_change": 14.3
+    },
+    {
+      "neighborhood": "Westfield",
+      "baseline": 2,
+      "current": 4,
+      "change": 2,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Mount Clare",
+      "baseline": 292,
+      "current": 294,
+      "change": 2,
+      "pct_change": 0.7
+    },
+    {
+      "neighborhood": "Oldtown",
+      "baseline": 31,
+      "current": 34,
+      "change": 3,
+      "pct_change": 9.7
+    },
+    {
+      "neighborhood": "Charles North",
+      "baseline": 10,
+      "current": 13,
+      "change": 3,
+      "pct_change": 30.0
+    },
+    {
+      "neighborhood": "Bayview",
+      "baseline": 6,
+      "current": 9,
+      "change": 3,
+      "pct_change": 50.0
+    },
+    {
+      "neighborhood": "Patterson Place",
+      "baseline": 7,
+      "current": 11,
+      "change": 4,
+      "pct_change": 57.1
+    },
+    {
+      "neighborhood": "Oakenshawe",
+      "baseline": 4,
+      "current": 8,
+      "change": 4,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Parkway",
+      "baseline": 5,
+      "current": 10,
+      "change": 5,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Fells Point",
+      "baseline": 11,
+      "current": 18,
+      "change": 7,
+      "pct_change": 63.6
+    },
+    {
+      "neighborhood": "Abell",
+      "baseline": 9,
+      "current": 16,
+      "change": 7,
+      "pct_change": 77.8
+    }
+  ]
+}

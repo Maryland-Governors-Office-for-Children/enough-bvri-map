@@ -75,7 +75,7 @@
 <h2>Overview</h2>
 <p>This map overlays six geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The eight layers, with their geographic coverage:</p>
+<p>The nine layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
@@ -85,6 +85,7 @@
     <li><strong>OZ 2.0-eligible tracts (OpportunityZones.com, 2020&ndash;2024 ACS)</strong> &mdash; statewide</li>
     <li><strong>Maryland Enterprise Zones (MD Dept. of Commerce)</strong> &mdash; statewide</li>
     <li><strong>Just Communities (MD DHCD, Just Communities Act of 2024)</strong> &mdash; statewide</li>
+    <li><strong>Vacant buildings (open VBNs) &amp; vacant lots (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
@@ -429,6 +430,57 @@
     <p>Just Communities is deliberately <strong>excluded from the crosswalk's "stacking" histogram</strong>, which counts only the three statewide <em>tax-incentive</em> programs. Just Communities directs State funding priority rather than a tax credit, so mixing it in would compare unlike instruments. It is reported as its own card instead. As a cross-check on the gap narrative, the build script also confirms whether any of the tracts in zero tax-incentive programs are Just Communities &mdash; currently <strong>none</strong> of the 6 are, so those tracts have no State place-based designation reaching them at all.</p>
 </div>
 
+<h2>Layer 9 &mdash; Vacant Buildings &amp; Vacant Lots (the full vacancy inventory)</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#1a202c;border-radius:50%;"></span>
+        <span class="swatch" style="background:#a0aec0;border:1px solid #4a5568;border-radius:50%;"></span>
+        <span class="layer-label">Vacant Buildings (VBN) &amp; Vacant Lots</span>
+        <span style="color:#718096;font-size:0.85rem;">&mdash; both off by default; Baltimore City only</span>
+    </div>
+
+    <p><strong>What it shows:</strong> The whole vacancy inventory inside ENOUGH grantee tracts &mdash; every property under an <strong>open Vacant Building Notice</strong> (a standing vacant building) and every <strong>vacant lot</strong>. This is the universe Baltimore DHCD, the Vacants Reinvestment Council dashboard and local press actually mean by "Baltimore's vacants."</p>
+
+    <div class="meta"><strong>This is not the same thing as the BVRI layer in Layer 2.</strong> That layer is the DHCD <em>Open Bid List</em> &mdash; roughly 1,200 properties the City is actively marketing for sale. The vacancy inventory here is about <strong>11,500 vacant buildings and 18,500 vacant lots citywide</strong>, an order of magnitude larger. Both are on the map, and the sidebar now labels the smaller one "BVRI Open Bid List" so the two are not mistaken for each other. If someone asks "how many vacants are in my ENOUGH community?", this layer answers it; the open-bid list does not.</p>
+
+    <h3>Source</h3>
+    <p>Baltimore City DHCD, via the City's public ArcGIS server. Vacant buildings come from the vacancy-interval service behind the City's own vacants time slider; vacant lots from the City's vacant-lot service:</p>
+    <pre><code>https://egisdata.baltimorecity.gov/egis/rest/services/Housing/
+  VacantsTimeSlider/MapServer/0   (vacancy intervals — "Open Vacants")
+  VacantLot_Test/MapServer/0      (vacant lots)</code></pre>
+
+    <h3>Why an interval dataset matters</h3>
+    <p>The vacancy service is not a snapshot &mdash; each record is one <em>period</em> during which a property carried an open Vacant Building Notice, with a start (<code>DateNotice</code>) and an end (<code>DateEnd</code>). Still-open notices carry a sentinel end date equal to the data snapshot. That structure is what makes a genuine trend possible: the stock of vacant buildings on <em>any</em> date is just the records where <code>DateNotice &le; date &lt; DateEnd</code>. So we can report a real baseline and a real change, not two unrelated snapshots. A property that cycled in and out of vacancy has several records, which is why a net change is <strong>not</strong> the same as a count of homes rehabbed.</p>
+
+    <h3>Validation against DHCD's own dashboard</h3>
+    <p>Computing the citywide stock at each fiscal-year boundary reproduces the figures DHCD publishes on its <a href="https://app.powerbigov.us/view?r=eyJrIjoiMDM2NDYwMTItYzUyOS00NmYzLWExNmUtYjZlMzc3MWM2ZTAwIiwidCI6IjMxMmNiMTI2LWM2YWUtNGZjMi04MDBkLTMxOGU2NzljZTZjNyJ9">Vacants Reinvestment Council dashboard</a> to within about 0.6%:</p>
+    <table class="field-table">
+        <thead><tr><th>Date</th><th>Computed here</th><th>DHCD dashboard</th></tr></thead>
+        <tbody>
+            <tr><td>2024-07-01 (FY25 start)</td><td>13,226</td><td>13,312</td></tr>
+            <tr><td>2025-07-01 (FY25 end)</td><td>12,593</td><td>12,589</td></tr>
+            <tr><td>2026-07-01 (FY26 end)</td><td>11,604</td><td>11,624</td></tr>
+            <tr><td>Current snapshot</td><td>11,523</td><td>11,448</td></tr>
+        </tbody>
+    </table>
+    <p>The residual gap is snapshot timing plus a small number of duplicate intervals on the same property. These figures should therefore be described as <em>closely tracking</em> DHCD, not as identical to it. Anything quoted externally as an official City number should be taken from DHCD's dashboard.</p>
+
+    <div class="meta">
+        <strong>Join:</strong> point-in-polygon into ENOUGH grantee tracts (Baltimore City only)<br>
+        <strong>Baseline:</strong> FY25 start, 2024-07-01 &mdash; the Vacants Reinvestment Council's own baseline for its 5,000-property goal<br>
+        <strong>Refresh cadence:</strong> <code>.venv-geo/bin/python scripts/fetch_vacants.py</code> (needs shapely)
+    </div>
+
+    <h3>Caveats</h3>
+    <ul>
+        <li><strong>Lots are a current snapshot only.</strong> The vacant-lot service carries no interval history, so lots are excluded from every change/trend column. Only buildings have a baseline.</li>
+        <li><strong>The lot service is still named <code>_Test</code>.</strong> It is the only vacant-lot layer the City publishes and is the one feeding its Tolemi integration, but the name is a standing risk. Re-verify before citing lot counts externally.</li>
+        <li><strong>Three Baltimore City grantee tracts are served by two grantees each</strong>, so the per-community rows on the crosswalk sum to more than the ENOUGH total. The total row is de-duplicated and is the figure to quote.</li>
+        <li>A net reduction reflects notices closing for any reason &mdash; rehab, demolition, or reclassification &mdash; not rehabilitation alone.</li>
+    </ul>
+</div>
+
 <h2>The ENOUGH Crosswalk page</h2>
 <p>The <a href="crosswalk.html">ENOUGH Crosswalk</a> page answers, for each non-grantee layer, how many ENOUGH communities and grantee tracts overlap it &mdash; plus a "stacking" view of how many statewide incentive programs coincide in each tract. All of its figures are precomputed at build time by <code>scripts/build_crosswalk.py</code> (Python + <a href="https://shapely.readthedocs.io/">Shapely</a>) and written to <code>docs/data/crosswalk.json</code>, which both the crosswalk page and the map read. Computing overlaps once, server-side, keeps every page consistent and avoids re-deriving geometry in the browser.</p>
 
@@ -489,6 +541,9 @@ python3 scripts/fetch_ez.py
 
 # Refresh Just Communities (MD DHCD via iMap)
 python3 scripts/fetch_jc.py
+
+# Refresh the Baltimore vacancy inventory (VBNs + lots) and the ENOUGH rollup
+.venv-geo/bin/python scripts/fetch_vacants.py
 
 # Refresh ENOUGH grantee tracts (after enough-eligibility-changes updates)
 # See CLAUDE.md for the inline Python snippet

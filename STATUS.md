@@ -1,8 +1,8 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
-_Last reviewed: 2026-09-23 (basemap swapped off CARTO — it now watermarks its tiles "API KEY REQUIRED" — to
-Esri's keyless Light Gray Canvas; Baltimore-City-only layers rescoped to a Baltimore City denominator;
-pushed)._ Living index of what's done, what's open, and what needs a decision.
+_Last reviewed: 2026-09-23 (Baltimore vacancy inventory + Vacants Reduction crosswalk added per Mihir;
+basemap swapped off CARTO — it now watermarks its tiles "API KEY REQUIRED" — to Esri's keyless Light Gray
+Canvas; Baltimore-City-only layers rescoped to a Baltimore City denominator; pushed)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -12,6 +12,35 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 **Live:** https://maryland-governors-office-for-children.github.io/enough-bvri-map/
 
 ## Workstream A — Map build & layers
+
+**Done (2026-09-23) — Baltimore vacancy inventory + "Vacants Reduction" crosswalk (Mihir's ask).** Mihir
+asked to (a) overlay the Power BI dashboard's *Vacants Reduction* section so it can be crosswalked with
+ENOUGH, and (b) show total vacants — standing buildings **and** lots — by grantee. Analysed DHCD's
+[Vacants Reinvestment Council dashboard](https://app.powerbigov.us/view?r=eyJrIjoiMDM2NDYwMTItYzUyOS00NmYzLWExNmUtYjZlMzc3MWM2ZTAwIiwidCI6IjMxMmNiMTI2LWM2YWUtNGZjMi04MDBkLTMxOGU2NzljZTZjNyJ9)
+(9 pages; its Vacants Reduction page filters by neighborhood / priority geography / council / legislative
+district — **no ENOUGH dimension**, which is exactly the gap) alongside the Baltimore Fishbowl top-5 piece.
+- **Key data finding:** the map's existing BVRI layer is DHCD **Layer 7, the Open Bid List** (~1,200
+  properties being marketed) — *not* the vacancy stock. The real universe is open **Vacant Building
+  Notices**: 11,523 citywide, plus 18,497 vacant lots. The map had been under-representing vacancy ~10×.
+  Sidebar now says "BVRI Open Bid List" to keep the two distinct.
+- **Method:** found `Housing/VacantsTimeSlider/MapServer/0`, an **interval** dataset (one row per period a
+  property held an open VBN, `DateNotice` → `DateEnd`, with a sentinel end date for still-open). That makes
+  the stock computable on *any* date, so there is a genuine baseline and trend rather than two snapshots.
+  Validated citywide against DHCD's own dashboard at every FY boundary — within ~0.6% (13,226 vs 13,312 at
+  FY25 start; 11,523 vs 11,448 now). Lots from `VacantLot_Test/MapServer/0` (snapshot only, no history).
+- **Results:** ENOUGH's 46 Baltimore tracts hold **4,108 vacant buildings + 5,362 lots = 9,470 total** —
+  **36% of the city's vacant buildings**, 32% of all vacants. Buildings fell **−685 (−14.3%)** since FY25
+  start vs citywide −1,703 (−12.9%), so ENOUGH communities account for ~**40% of the entire citywide
+  reduction**. Also reproduces the Fishbowl neighborhood table from source data (Harlem Park exact at
+  501→439).
+- **Shipped:** `scripts/fetch_vacants.py`; two map layers (vacant buildings near-black, vacant lots grey,
+  both off by default, in `pointPane`); a 7th stat tile "Total Vacants in Grantee Tracts" that recomputes
+  per grantee; and a **"Vacant housing in ENOUGH communities"** card on the crosswalk mirroring the
+  dashboard's Net-VBN-Change table by grantee, with a neighborhood view behind a toggle, plus
+  methodology Layer 9.
+- **Caught a double-count before shipping:** all 3 shared Baltimore tracts are served by two grantees, so
+  summing per-grantee rows overstated the ENOUGH baseline (5,054 vs true 4,793). `enough_totals` now carries
+  a de-duplicated baseline/change and the page uses it; the table notes why rows exceed the total.
 
 **Done (2026-09-23) — Baltimore-City-only layers now use a Baltimore City denominator (Nick's catch).**
 The crosswalk was scoring **BVRI** and the **DHCD Impact Areas** against the statewide roster (28

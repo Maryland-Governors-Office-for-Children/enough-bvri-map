@@ -119,6 +119,33 @@
         .gap-callout b { color: #7b341e; }
         .gap-callout ul { margin: 6px 0 0 18px; font-size: 0.86rem; }
 
+        /* --- vacancy / vacants-reduction section --- */
+        .vac-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 22px; margin: 26px 0 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .vac-card h2 { font-size: 1.12rem; color: #1a365d; }
+        .vac-card > p { font-size: 0.88rem; color: #4a5568; margin-top: 6px; }
+        .vac-hero { display: flex; gap: 26px; flex-wrap: wrap; margin: 16px 0 4px; }
+        .vac-hero .vh { flex: 1; min-width: 150px; background: #f7fafc; border: 1px solid #e6edf3; border-radius: 8px; padding: 12px 14px; }
+        .vac-hero .vh-num { font-size: 1.6rem; font-weight: 700; color: #1a365d; line-height: 1.1; }
+        .vac-hero .vh-num.down { color: #276749; }
+        .vac-hero .vh-lab { font-size: 0.74rem; color: #5a6678; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+        .vac-hero .vh-sub { font-size: 0.76rem; color: #718096; margin-top: 3px; }
+        .vac-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 14px; }
+        .vac-table th { text-align: right; padding: 8px 10px; background: #f7fafc; color: #5a6678; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
+        .vac-table th:first-child, .vac-table td:first-child { text-align: left; }
+        .vac-table td { padding: 7px 10px; border-bottom: 1px solid #f4f7fa; text-align: right; }
+        .vac-table tbody tr:hover { background: #f7fafc; }
+        .vac-table .tot td { font-weight: 700; background: #f7fafc; border-top: 2px solid #e2e8f0; }
+        .vac-table .down { color: #276749; font-weight: 600; }
+        .vac-table .up { color: #9b2c2c; font-weight: 600; }
+        .vac-note { font-size: 0.8rem; color: #5a6678; margin-top: 12px; line-height: 1.5; }
+        .vac-note code { background: #edf2f7; padding: 1px 5px; border-radius: 3px; }
+        details.vac-nb { margin-top: 14px; border-top: 1px solid #f0f4f8; padding-top: 10px; }
+        details.vac-nb summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: #2b6cb0; list-style: none; }
+        details.vac-nb summary::-webkit-details-marker { display: none; }
+        details.vac-nb summary::before { content: '▸ '; }
+        details.vac-nb[open] summary::before { content: '▾ '; }
+        @media (max-width: 640px) { .vac-table { font-size: 0.76rem; } .vac-table th, .vac-table td { padding: 5px 5px; } }
+
         .loading, .error { text-align: center; padding: 60px 20px; color: #5a6678; }
         .error { color: #c53030; }
 
@@ -164,6 +191,8 @@
     <div class="section-label">Program by program</div>
     <div id="cards"></div>
 
+    <div id="vacancy"></div>
+
     <div id="stacking"></div>
 
     <p style="font-size:0.82rem;color:#5a6678;margin-top:8px;">
@@ -207,6 +236,17 @@
 
     function pct(n, d) { return d ? Math.round((n / d) * 100) : 0; }
     function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
+
+    // The vacancy section is a separate build artifact (scripts/fetch_vacants.py),
+    // so it loads independently — a failure there must not blank the whole page.
+    fetch('data/vacants_enough.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (v) { document.getElementById('vacancy').appendChild(buildVacancy(v)); })
+        .catch(function (err) {
+            document.getElementById('vacancy').innerHTML =
+                '<div class="vac-card"><p style="color:#c53030;">Vacancy data unavailable: ' +
+                err.message + '</p></div>';
+        });
 
     fetch('data/crosswalk.json')
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -386,6 +426,136 @@
                 '<th>ENOUGH community</th><th class="num">' + tHead + '</th>' + propHead +
             '</tr></thead><tbody>' + rows + '</tbody></table>' +
         '</details>';
+    }
+
+    function buildVacancy(v) {
+        const T = v.enough_totals, C = v.citywide;
+        const base = v.baseline_label;
+        const n = function (x) { return (x == null ? '—' : x.toLocaleString()); };
+        const signed = function (x) {
+            if (x == null) return '—';
+            const cls = x < 0 ? 'down' : (x > 0 ? 'up' : '');
+            return '<span class="' + cls + '">' + (x > 0 ? '+' : '') + x.toLocaleString() + '</span>';
+        };
+        const shareB = pct(T.vacant_buildings, C.vacant_buildings);
+        const shareAll = pct(T.total_vacants, C.total_vacants);
+
+        const rows = v.by_grantee.map(function (r) {
+            return '<tr>' +
+                '<td>' + r.grantee + '</td>' +
+                '<td>' + n(r.baseline_buildings) + '</td>' +
+                '<td>' + signed(r.change_buildings) + '</td>' +
+                '<td>' + n(r.vacant_buildings) + '</td>' +
+                '<td>' + n(r.vacant_lots) + '</td>' +
+                '<td><b>' + n(r.total_vacants) + '</b></td>' +
+            '</tr>';
+        }).join('');
+
+        const totRow = '<tr class="tot">' +
+            '<td>ENOUGH communities in Baltimore City (' + v.by_grantee.length + ')</td>' +
+            '<td>' + n(T.baseline_buildings) + '</td>' +
+            '<td>' + signed(T.change_buildings) + '</td>' +
+            '<td>' + n(T.vacant_buildings) + '</td>' +
+            '<td>' + n(T.vacant_lots) + '</td>' +
+            '<td>' + n(T.total_vacants) + '</td>' +
+        '</tr>' +
+        '<tr class="tot" style="color:#5a6678;">' +
+            '<td>Baltimore City, all neighborhoods</td>' +
+            '<td>' + n(C.stock_by_mark[base]) + '</td>' +
+            '<td>' + signed(C.change_buildings) + '</td>' +
+            '<td>' + n(C.vacant_buildings) + '</td>' +
+            '<td>' + n(C.vacant_lots) + '</td>' +
+            '<td>' + n(C.total_vacants) + '</td>' +
+        '</tr>';
+
+        // Neighborhood view, for lining up against DHCD's own dashboard and press
+        // coverage, which both report by neighborhood rather than by grantee.
+        const nbRows = v.by_neighborhood
+            .filter(function (r) { return r.baseline >= 150; })
+            .slice(0, 15)
+            .map(function (r) {
+                return '<tr><td>' + r.neighborhood + '</td><td>' + n(r.baseline) +
+                    '</td><td>' + signed(r.change) + '</td><td>' + n(r.current) +
+                    '</td><td>' + (r.pct_change == null ? '—' : r.pct_change.toFixed(1) + '%') + '</td></tr>';
+            }).join('');
+
+        return el(
+            '<div class="vac-card">' +
+              '<h2>Vacant housing in ENOUGH communities</h2>' +
+              '<p>Baltimore DHCD and the Vacants Reinvestment Council track vacancy by neighborhood, ' +
+              'council district and DHCD priority geography &mdash; but not by ENOUGH community. ' +
+              'This is that same <b>Vacants Reduction</b> view, cut by ENOUGH grantee instead. ' +
+              '&ldquo;Vacants&rdquo; here means the full inventory: <b>standing vacant buildings</b> ' +
+              '(properties under an open Vacant Building Notice) plus <b>vacant lots</b>. ' +
+              'Baltimore City only.</p>' +
+
+              '<div class="vac-hero">' +
+                '<div class="vh"><div class="vh-num">' + n(T.total_vacants) + '</div>' +
+                  '<div class="vh-lab">Total vacants in ENOUGH tracts</div>' +
+                  '<div class="vh-sub">' + n(T.vacant_buildings) + ' buildings + ' + n(T.vacant_lots) + ' lots</div></div>' +
+                '<div class="vh"><div class="vh-num">' + shareB + '%</div>' +
+                  '<div class="vh-lab">Of the city&rsquo;s vacant buildings</div>' +
+                  '<div class="vh-sub">' + n(T.vacant_buildings) + ' of ' + n(C.vacant_buildings) + ' citywide</div></div>' +
+                '<div class="vh"><div class="vh-num down">' + signed(T.change_buildings) + '</div>' +
+                  '<div class="vh-lab">Vacant buildings since ' + base + '</div>' +
+                  '<div class="vh-sub">citywide ' + signed(C.change_buildings) + ' over the same period</div></div>' +
+                '<div class="vh"><div class="vh-num">' + T.tracts_with_vacants + ' of ' + T.baltimore_tracts + '</div>' +
+                  '<div class="vh-lab">City grantee tracts with vacants</div>' +
+                  '<div class="vh-sub">across ' + T.communities_with_vacants + ' ENOUGH communities</div></div>' +
+              '</div>' +
+
+              '<p style="margin-top:14px;"><b>Why this matters:</b> ENOUGH communities hold about ' +
+              shareAll + '% of all the vacant property in Baltimore City &mdash; and ' + shareB +
+              '% of its vacant <em>buildings</em> &mdash; inside just ' + T.baltimore_tracts +
+              ' census tracts. Vacancy there is also falling <b>faster</b> than the city as a whole (' +
+              (T.change_buildings / T.baseline_buildings * 100).toFixed(1) + '% vs ' +
+              (C.change_buildings / C.stock_by_mark[base] * 100).toFixed(1) +
+              '% since ' + base + '), and their ' + Math.abs(T.change_buildings).toLocaleString() +
+              '-building decline accounts for roughly <b>' +
+              pct(Math.abs(T.change_buildings), Math.abs(C.change_buildings)) +
+              '% of the entire citywide reduction</b>. The City&rsquo;s 5,000-property goal and ENOUGH&rsquo;s ' +
+              'footprint are working on substantially the same blocks, which makes these grantees natural ' +
+              'partners for BVRI targeting &mdash; and gives GOC a per-community baseline to hold the trend against.</p>' +
+
+              '<table class="vac-table"><thead><tr>' +
+                '<th>ENOUGH community</th>' +
+                '<th>Vacant bldgs<br>' + base + '</th>' +
+                '<th>Net change<br>since ' + base + '</th>' +
+                '<th>Vacant bldgs<br>now</th>' +
+                '<th>Vacant<br>lots</th>' +
+                '<th>Total<br>vacants</th>' +
+              '</tr></thead><tbody>' + rows + totRow + '</tbody></table>' +
+
+              '<details class="vac-nb"><summary>Neighborhood view &mdash; biggest vacancy declines since ' + base + '</summary>' +
+                '<p class="vac-note">DHCD&rsquo;s dashboard and local press report by neighborhood. This reproduces that ' +
+                'cut from the same source data, so the two can be reconciled. Neighborhoods with at least 150 ' +
+                'vacant buildings at baseline, biggest absolute decline first.</p>' +
+                '<table class="vac-table"><thead><tr><th>Neighborhood</th><th>' + base +
+                '</th><th>Net change</th><th>Now</th><th>% change</th></tr></thead><tbody>' +
+                nbRows + '</tbody></table></details>' +
+
+              (T.shared_tracts ? '<div class="vac-note">Note: ' + T.shared_tracts +
+                ' Baltimore City grantee tracts are served by <b>two</b> ENOUGH grantees each, so each ' +
+                'is counted in both of their rows. The per-community rows therefore add up to more than ' +
+                'the ENOUGH total &mdash; the total row is de-duplicated and is the figure to quote.</div>' : '') +
+
+              '<div class="vac-note"><b>Method and caveats.</b> Built by ' +
+              '<code>scripts/fetch_vacants.py</code> from Baltimore City DHCD&rsquo;s open ArcGIS services. ' +
+              'Vacant buildings come from the vacancy-interval dataset behind the City&rsquo;s vacants time ' +
+              'slider: each record is a period a property was under an open Vacant Building Notice, so the ' +
+              'stock can be counted on any date rather than only today. Counted at the ' + base +
+              ' baseline (' + v.baseline_date + ') and at the current snapshot (' + v.snapshot_date + '), ' +
+              'then assigned to grantee tracts by point-in-polygon. The citywide totals land within about 0.6% of ' +
+              'DHCD&rsquo;s own published figures at every fiscal-year boundary, so treat these as closely ' +
+              'tracking DHCD rather than identical to it. <b>Vacant lots are a current snapshot only</b> &mdash; ' +
+              'the lot layer carries no history, so lots are excluded from the change columns. Lots also come ' +
+              'from a service the City still labels <code>_Test</code>; re-verify lot counts before citing them ' +
+              'externally. A property can cycle on and off the vacancy list, so a net change is not the same as ' +
+              '&ldquo;homes rehabbed&rdquo;. This is a different and much larger universe than the ' +
+              '<b>BVRI open-bid list</b> elsewhere on this page, which is only the ~1,200 properties the City is ' +
+              'actively marketing for sale.</div>' +
+            '</div>'
+        );
     }
 
     function buildStacking(S, T, data) {

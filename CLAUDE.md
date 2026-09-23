@@ -30,12 +30,16 @@ docs/                    GitHub Pages site (index.html + data/)
     oz2_eligible_maryland.geojson  451 OZ 2.0-eligible tracts (2020–2024 ACS; OpportunityZones.com) w/ MFI ratio + poverty
     ez_maryland.geojson            34 Maryland Enterprise Zones + Focus Areas (MD Commerce via iMap)
     just_communities_maryland.geojson  419 designated Just Communities (MD DHCD via iMap; Just Communities Act of 2024)
+    vacant_buildings_enough.geojson    4,108 open Vacant Building Notices inside ENOUGH grantee tracts (Baltimore)
+    vacant_lots_enough.geojson         5,376 vacant lots inside ENOUGH grantee tracts (Baltimore)
+    vacants_enough.json                vacancy rollup: per-grantee/tract/neighborhood counts + reduction trend
     crosswalk.json                 Precomputed ENOUGH × layer overlap (built by build_crosswalk.py)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
   fetch_oz2.py           Refresh OZ 2.0-eligible tracts from opportunityzones.com + rural flag on designated OZs
   fetch_ez.py            Refresh Maryland Enterprise Zones from iMap MD_IncentiveZones
   fetch_jc.py            Refresh Just Communities from iMap MD_HousingDesignatedAreas Layer 9
+  fetch_vacants.py       Baltimore vacancy inventory (VBN intervals + lots) -> ENOUGH rollup (needs shapely)
   build_crosswalk.py     Compute ENOUGH × layer overlap (Shapely) -> docs/data/crosswalk.json
   requirements-crosswalk.txt  Pinned shapely for build_crosswalk.py
 ```
@@ -45,6 +49,7 @@ scripts/
 ```bash
 python3 scripts/fetch_bvri.py   # re-fetches bvri_vacants.geojson + bvri_investment_areas.geojson
 python3 scripts/fetch_jc.py     # re-fetches just_communities_maryland.geojson (419 tracts)
+.venv-geo/bin/python scripts/fetch_vacants.py   # vacancy inventory + ENOUGH rollup (~3 min)
 # then commit the refreshed docs/data/*.geojson
 ```
 
@@ -88,7 +93,17 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   Baltimore-City-only layers (BVRI, DHCD Impact Areas), not 28/111. All 11 serve only city tracts.
   `build_crosswalk.py` derives the set from `JURSCODE == 'BACI'` and exposes it as `totals.baltimore_city`
   plus a per-layer `universe` object
-- 1,192 BVRI Vacants to Value properties (Baltimore City only)
+- **Baltimore vacancy inventory (the real vacancy universe, added 2026-09-23).** Citywide **11,523 open
+  Vacant Building Notices + 18,497 vacant lots = 30,020 total vacants**. Inside ENOUGH grantee tracts:
+  **4,108 buildings + 5,362 lots = 9,470 total** — i.e. ENOUGH's 46 Baltimore tracts hold **36% of the
+  city's vacant buildings** and 32% of all vacants. Buildings fell from 4,793 at FY25 start to 4,108
+  (**−685, −14.3%**) vs citywide −1,703 (−12.9%) — so ENOUGH communities delivered ~40% of the entire
+  citywide reduction. Source: DHCD `VacantsTimeSlider` (interval data → stock computable at any date;
+  validated within 0.6% of DHCD's Power BI dashboard at every FY boundary) + `VacantLot_Test`.
+  **Do not confuse with the BVRI open-bid list below** — that is ~1,200 properties being marketed, not
+  the vacancy stock. Lots have no history, so they are excluded from all trend columns.
+- 1,192 BVRI **open-bid** properties (Baltimore City only; the slice DHCD is marketing for sale — a
+  ~10% subset of the vacant-building stock, not the vacancy measure)
 - 7 DHCD Impact Investment Areas (Baltimore City only)
 - 587 NMTC-eligible tracts statewide (350 Severe Distress, 237 Distressed)
 - 149 designated Opportunity Zones statewide (2018 TCJA, in effect through 2028; 47 rural)
