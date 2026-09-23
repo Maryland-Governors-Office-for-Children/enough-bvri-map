@@ -83,7 +83,11 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 
 ## Key Numbers (as of May 2026)
 
-- 28 active ENOUGH grantees, 111 grantee tracts statewide (40 in Baltimore City)
+- 28 active ENOUGH grantees, 111 grantee tracts statewide. **46** of those tracts, across **11**
+  grantee organizations, are in Baltimore City — that 11/46 is the denominator for the two
+  Baltimore-City-only layers (BVRI, DHCD Impact Areas), not 28/111. All 11 serve only city tracts.
+  `build_crosswalk.py` derives the set from `JURSCODE == 'BACI'` and exposes it as `totals.baltimore_city`
+  plus a per-layer `universe` object
 - 1,192 BVRI Vacants to Value properties (Baltimore City only)
 - 7 DHCD Impact Investment Areas (Baltimore City only)
 - 587 NMTC-eligible tracts statewide (350 Severe Distress, 237 Distressed)
@@ -110,7 +114,9 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
 - Just Communities: 26/28 communities, 81/111 tracts (exact GEOID; 19% of the 419 statewide). The 30
   non-designated grantee tracts cluster in Prince George's (10) + Anne Arundel (7); Caroline Human Services
   Council and One Annapolis have zero. Excluded from the stacking histogram (funding priority, not a tax credit)
-- BVRI Vacants: 10/28 communities, 33/111 tracts (565 of 1,192 properties inside a grantee tract)
-- DHCD Impact Areas: 6/28 communities, 21/111 tracts
+- BVRI Vacants: **10/11 Baltimore City communities, 33/46 Baltimore City tracts** (565 of 1,192
+  properties inside a grantee tract). Scored against the city footprint, not statewide — a grantee
+  outside Baltimore cannot contain a BVRI property, so a statewide denominator invents a gap
+- DHCD Impact Areas: **6/11 Baltimore City communities, 21/46 Baltimore City tracts** (same reason)
 - Stacking (statewide NMTC/OZ/EZ, EZ any-overlap): 6 tracts in zero program, 15 in one, 59 in two,
   31 in all three; all 28 communities are in at least one

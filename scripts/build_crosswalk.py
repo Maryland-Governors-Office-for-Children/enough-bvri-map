@@ -125,30 +125,68 @@ def compute():
     total_grantees = len(grantees)
     shared_tracts = sum(1 for t in tracts.values() if len(t["grantees"]) > 1)
 
-    def summarize(hit_geoids, label):
+    # --- Baltimore City universe -------------------------------------------
+    # BVRI and the DHCD Impact Investment Areas are Baltimore City programs, so a
+    # grantee tract outside the city *cannot* overlap them. Scoring those layers
+    # against the statewide 28-community / 111-tract totals understates them and
+    # implies a gap where there is only a jurisdiction boundary. For those layers
+    # the denominator is restricted to the grantee footprint inside the city.
+    baci_geoids = {g for g, t in tracts.items()
+                   if t["jurscode"] == "BACI" or g.startswith("24510")}
+    baci_communities = sorted({gn for g in baci_geoids for gn in tracts[g]["grantees"]})
+
+    def universe_tracts_for(gname, universe):
+        """How many of one grantee's tracts fall inside the eligible universe."""
+        if universe is None:
+            return grantee_total_tracts.get(gname)
+        return sum(1 for g in universe if gname in tracts[g]["grantees"])
+
+    def summarize(hit_geoids, label, universe=None, universe_label=None):
         """Roll a set of overlapping grantee-tract GEOIDs up to tract count,
         community count, and a per-grantee breakdown. NB: a tract shared by two
         grantees is attributed to both, so per-grantee tract counts can sum to
-        more than tracts_overlapping (see shared_tracts)."""
+        more than tracts_overlapping (see shared_tracts).
+
+        `universe` restricts the denominator to the set of grantee tracts that
+        could possibly overlap this layer (e.g. Baltimore City only). When given,
+        total_tracts/total_communities describe that universe, and the statewide
+        figures are still reported as statewide_* so nothing is hidden."""
         per_grantee = defaultdict(int)
         for geoid in hit_geoids:
             for gname in tracts[geoid]["grantees"]:
                 per_grantee[gname] += 1
         breakdown = sorted(
             ({"grantee": k, "tracts": v,
-              "grantee_total_tracts": grantee_total_tracts.get(k, v)}
+              "grantee_total_tracts": universe_tracts_for(k, universe) or v}
              for k, v in per_grantee.items()),
             key=lambda r: (-r["tracts"], r["grantee"]),
         )
-        return {
+        if universe is None:
+            denom_tracts, denom_communities = total_tracts, total_grantees
+        else:
+            denom_tracts = len(universe)
+            denom_communities = len({gn for g in universe
+                                     for gn in tracts[g]["grantees"]})
+        out = {
             "label": label,
             "tracts_overlapping": len(hit_geoids),
-            "total_tracts": total_tracts,
+            "total_tracts": denom_tracts,
             "communities_overlapping": len(per_grantee),
-            "total_communities": total_grantees,
+            "total_communities": denom_communities,
             "geoids": sorted(hit_geoids),
             "breakdown": breakdown,
         }
+        if universe is not None:
+            out["universe"] = {
+                "label": universe_label or "restricted",
+                "tracts": len(universe),
+                "communities": denom_communities,
+                "community_names": sorted({gn for g in universe
+                                           for gn in tracts[g]["grantees"]}),
+                "statewide_tracts": total_tracts,
+                "statewide_communities": total_grantees,
+            }
+        return out
 
     results = {}
 
@@ -235,7 +273,8 @@ def compute():
     }
 
     dhcd_hits = polygon_layer_hits(dhcd["features"])
-    results["dhcd"] = summarize(dhcd_hits, "DHCD Impact Investment Areas")
+    results["dhcd"] = summarize(dhcd_hits, "DHCD Impact Investment Areas",
+                                universe=baci_geoids, universe_label="Baltimore City")
     results["dhcd"]["join"] = f"geometric overlap ≥{int(MIN_OVERLAP_FRAC*100)}% of tract area (Baltimore City only)"
 
     # --- BVRI Vacants to Value: point-in-polygon ---
@@ -254,7 +293,8 @@ def compute():
                 bvri_points_in += 1
                 tract_bvri_pts[geoid] += 1
                 break
-    res = summarize(bvri_hits, "BVRI Vacants to Value")
+    res = summarize(bvri_hits, "BVRI Vacants to Value",
+                    universe=baci_geoids, universe_label="Baltimore City")
     res["properties_total"] = sum(
         1 for f in bvri["features"] if (f.get("geometry") or {}).get("type") == "Point")
     res["properties_in_grantee_tracts"] = bvri_points_in
@@ -312,7 +352,12 @@ def compute():
         "generated_note": "Built by scripts/build_crosswalk.py — do not edit by hand.",
         "source_hash": source_hash(),
         "totals": {"communities": total_grantees, "tracts": total_tracts,
-                   "shared_tracts": shared_tracts},
+                   "shared_tracts": shared_tracts,
+                   "baltimore_city": {
+                       "tracts": len(baci_geoids),
+                       "communities": len(baci_communities),
+                       "community_names": baci_communities,
+                   }},
         "min_overlap_frac": MIN_OVERLAP_FRAC,
         "layers": results,
         "stacking": stacking,
@@ -326,8 +371,10 @@ def print_summary(out):
     for key in ["bvri", "dhcd", "nmtc", "oz", "oz2", "ez", "jc"]:
         r = out["layers"][key]
         print(f"{r['label']}:")
-        print(f"  {r['communities_overlapping']}/{T['communities']} communities, "
-              f"{r['tracts_overlapping']}/{T['tracts']} tracts overlap")
+        u = r.get("universe")
+        scope = f" (of the {u['label']} footprint)" if u else ""
+        print(f"  {r['communities_overlapping']}/{r['total_communities']} communities, "
+              f"{r['tracts_overlapping']}/{r['total_tracts']} tracts overlap{scope}")
         if "tiers" in r:
             print(f"  tiers: {r['tiers']}")
         if "properties_in_grantee_tracts" in r:

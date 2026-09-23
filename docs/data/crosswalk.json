@@ -4,7 +4,24 @@
   "totals": {
     "communities": 28,
     "tracts": 111,
-    "shared_tracts": 3
+    "shared_tracts": 3,
+    "baltimore_city": {
+      "tracts": 46,
+      "communities": 11,
+      "community_names": [
+        "Cherry Hill Strong",
+        "Child First Authority",
+        "Elev8 Baltimore, Inc.",
+        "Greater Mondawmin Coordinating Council",
+        "Leaders Breeders Inc.",
+        "Park Heights Renaissance, Inc.",
+        "South Baltimore Community Land Trust",
+        "Tendea Family INC.",
+        "The Central Baltimore Partnership, Inc.",
+        "The Y in Central Maryland",
+        "Urban Strategies Inc"
+      ]
+    }
   },
   "min_overlap_frac": 0.05,
   "layers": {
@@ -1087,9 +1104,9 @@
     "dhcd": {
       "label": "DHCD Impact Investment Areas",
       "tracts_overlapping": 21,
-      "total_tracts": 111,
+      "total_tracts": 46,
       "communities_overlapping": 6,
-      "total_communities": 28,
+      "total_communities": 11,
       "geoids": [
         "24510090600",
         "24510090700",
@@ -1145,14 +1162,34 @@
           "grantee_total_tracts": 7
         }
       ],
+      "universe": {
+        "label": "Baltimore City",
+        "tracts": 46,
+        "communities": 11,
+        "community_names": [
+          "Cherry Hill Strong",
+          "Child First Authority",
+          "Elev8 Baltimore, Inc.",
+          "Greater Mondawmin Coordinating Council",
+          "Leaders Breeders Inc.",
+          "Park Heights Renaissance, Inc.",
+          "South Baltimore Community Land Trust",
+          "Tendea Family INC.",
+          "The Central Baltimore Partnership, Inc.",
+          "The Y in Central Maryland",
+          "Urban Strategies Inc"
+        ],
+        "statewide_tracts": 111,
+        "statewide_communities": 28
+      },
       "join": "geometric overlap \u22655% of tract area (Baltimore City only)"
     },
     "bvri": {
       "label": "BVRI Vacants to Value",
       "tracts_overlapping": 33,
-      "total_tracts": 111,
+      "total_tracts": 46,
       "communities_overlapping": 10,
-      "total_communities": 28,
+      "total_communities": 11,
       "geoids": [
         "24510070200",
         "24510070300",
@@ -1250,6 +1287,26 @@
           "properties": 1
         }
       ],
+      "universe": {
+        "label": "Baltimore City",
+        "tracts": 46,
+        "communities": 11,
+        "community_names": [
+          "Cherry Hill Strong",
+          "Child First Authority",
+          "Elev8 Baltimore, Inc.",
+          "Greater Mondawmin Coordinating Council",
+          "Leaders Breeders Inc.",
+          "Park Heights Renaissance, Inc.",
+          "South Baltimore Community Land Trust",
+          "Tendea Family INC.",
+          "The Central Baltimore Partnership, Inc.",
+          "The Y in Central Maryland",
+          "Urban Strategies Inc"
+        ],
+        "statewide_tracts": 111,
+        "statewide_communities": 28
+      },
       "properties_total": 1192,
       "properties_in_grantee_tracts": 565,
       "join": "point-in-polygon (Baltimore City only)"

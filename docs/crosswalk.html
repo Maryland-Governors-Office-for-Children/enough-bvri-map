@@ -69,6 +69,17 @@
         .extra-stat { padding: 0 22px 14px; font-size: 0.86rem; color: #4a5568; }
         .extra-stat b { color: #2d3748; }
 
+        .scope-note { margin: 0 22px 16px; background: #fffaf0; border: 1px solid #feebc8; border-radius: 6px; padding: 11px 13px; font-size: 0.85rem; color: #744210; line-height: 1.5; }
+        .scope-note b { color: #7b341e; }
+        .scope-note details { margin-top: 7px; }
+        .scope-note summary { cursor: pointer; color: #9c4221; font-weight: 600; font-size: 0.82rem; list-style: none; }
+        .scope-note summary::-webkit-details-marker { display: none; }
+        .scope-note summary::before { content: '▸ '; }
+        .scope-note details[open] summary::before { content: '▾ '; }
+        .scope-note ul { margin: 7px 0 0 18px; font-size: 0.82rem; columns: 2; column-gap: 24px; }
+        .scope-note li { margin-bottom: 2px; break-inside: avoid; }
+        @media (max-width: 640px) { .scope-note ul { columns: 1; } }
+
         .tiers { padding: 0 22px 14px; display: flex; gap: 10px; flex-wrap: wrap; }
         .tier-chip { font-size: 0.78rem; padding: 4px 10px; border-radius: 20px; background: #f0fff4; border: 1px solid #c6f6d5; color: #22543d; }
         .tier-chip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
@@ -142,6 +153,7 @@
             <dt>ENOUGH community</dt><dd>One active ENOUGH grantee organization and the set of neighborhoods it serves.</dd>
             <dt>Grantee tract</dt><dd>A census tract (a small, official neighborhood-sized geography) that a grantee serves. The 28 communities serve 111 tracts.</dd>
             <dt>&ldquo;Overlaps&rdquo;</dt><dd>A community overlaps a program if <em>any</em> of its tracts fall inside that program's geography. We also show the tract-level share, which is the stricter, more honest measure of reach.</dd>
+            <dt>Out of what?</dt><dd>Statewide programs are scored against all 28 communities and 111 tracts. The two <strong>Baltimore City</strong> programs (BVRI and the DHCD Impact Areas) are scored against only the <strong>11 communities and 46 tracts inside the city</strong> &mdash; a grantee in Frederick or Salisbury cannot contain a Baltimore City vacant property, so counting it as a miss would invent a gap that is really just a jurisdiction boundary. Each of those cards says so and lists the 11 communities.</dd>
         </dl>
     </div>
 
@@ -240,11 +252,36 @@
         const tShare = pct(L.tracts_overlapping, L.total_tracts);
         const fillColor = cfg.fill || cfg.color;
 
+        // For jurisdiction-limited layers, say so in the sentence itself — the
+        // numbers are out of that jurisdiction's footprint, not the statewide roster.
+        const sc = L.universe ? L.universe.label + ' ' : '';
         const headline = '<b>' + L.communities_overlapping + ' of ' + L.total_communities +
-            '</b> ENOUGH communities have at least one tract in this program' +
-            ' &mdash; reaching <b>' + L.tracts_overlapping + ' of ' + L.total_tracts + '</b> grantee tracts.';
+            '</b> ' + sc + 'ENOUGH communities have at least one tract in this program' +
+            ' &mdash; reaching <b>' + L.tracts_overlapping + ' of ' + L.total_tracts + '</b> ' +
+            sc + 'grantee tracts.';
 
         const means = '<div class="means"><b>Why it matters:</b> ' + cfg.means(L) + '</div>';
+
+        // Layers restricted to one jurisdiction are scored against the grantee
+        // footprint inside that jurisdiction, not the statewide roster — a grantee
+        // in Frederick cannot have a Baltimore City vacant property in its tract,
+        // so counting it in the denominator would invent a gap.
+        let scope = '';
+        if (L.universe) {
+            const u = L.universe;
+            scope = '<div class="scope-note">' +
+                '<b>Why the denominator is smaller here:</b> this is a <b>' + u.label +
+                '</b> program, so an ENOUGH tract outside the city <em>cannot</em> overlap it — ' +
+                'no matter how well the program is working. The figures above are therefore out of the <b>' +
+                u.communities + ' ENOUGH communities</b> and <b>' + u.tracts +
+                ' grantee tracts</b> that are actually in ' + u.label + ', not the statewide ' +
+                u.statewide_communities + ' communities / ' + u.statewide_tracts + ' tracts. ' +
+                'Scoring it statewide would understate the program by counting ' +
+                (u.statewide_communities - u.communities) + ' communities that were never eligible.' +
+                '<details><summary>Which ' + u.communities + ' ENOUGH communities are in ' + u.label + '?</summary>' +
+                '<ul>' + u.community_names.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
+                '</ul></details></div>';
+        }
 
         let extra = '';
         if (cfg.key === 'bvri') {
@@ -304,9 +341,10 @@
                 '</div>' +
               '</div>' +
               '<div class="answer"><div class="headline">' + headline + '</div>' + means + '</div>' +
+              scope +
               '<div class="bars">' +
-                barBlock('Communities reached', L.communities_overlapping, L.total_communities, cShare, cfg.color) +
-                barBlock('Grantee tracts reached', L.tracts_overlapping, L.total_tracts, tShare, cfg.color) +
+                barBlock(sc + 'Communities reached', L.communities_overlapping, L.total_communities, cShare, cfg.color) +
+                barBlock(sc + 'Grantee tracts reached', L.tracts_overlapping, L.total_tracts, tShare, cfg.color) +
               '</div>' +
               extra + tiers +
               breakdownEl(L, cfg) +

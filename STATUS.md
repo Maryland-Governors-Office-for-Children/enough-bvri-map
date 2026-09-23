@@ -1,7 +1,8 @@
 # ENOUGH × BVRI Map — Status & Open Steps
 
 _Last reviewed: 2026-09-23 (basemap swapped off CARTO — it now watermarks its tiles "API KEY REQUIRED" — to
-Esri's keyless Light Gray Canvas; pushed)._ Living index of what's done, what's open, and what needs a decision.
+Esri's keyless Light Gray Canvas; Baltimore-City-only layers rescoped to a Baltimore City denominator;
+pushed)._ Living index of what's done, what's open, and what needs a decision.
 See `CLAUDE.md` for project context; `docs/methodology.html` for the per-layer data-source documentation.
 
 A GitHub-Pages site (`docs/`) with three pages: a Leaflet **map** showing where active ENOUGH grantee
@@ -11,6 +12,22 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 **Live:** https://maryland-governors-office-for-children.github.io/enough-bvri-map/
 
 ## Workstream A — Map build & layers
+
+**Done (2026-09-23) — Baltimore-City-only layers now use a Baltimore City denominator (Nick's catch).**
+The crosswalk was scoring **BVRI** and the **DHCD Impact Areas** against the statewide roster (28
+communities / 111 tracts), which is misleading: those are Baltimore City programs, so a grantee tract in
+Frederick or Salisbury *cannot* overlap them, and counting it as a miss reports a jurisdiction boundary as
+a program gap. `build_crosswalk.py` now derives the Baltimore City grantee footprint from
+`JURSCODE == 'BACI'` — **46 tracts across 11 organizations**, all of which serve only city tracts — and
+`summarize()` takes an optional `universe` that rescopes `total_tracts` / `total_communities` and each
+grantee's in-universe tract count. Exposed as `totals.baltimore_city` plus a per-layer `universe` object
+(which also carries `statewide_tracts`/`statewide_communities`, so nothing is hidden). Restated:
+**BVRI 10/11 communities + 33/46 tracts** (was 10/28 + 33/111) and **DHCD 6/11 + 21/46** (was 6/28 + 21/111)
+— i.e. the correction is substantially *in the programs' favour*. The crosswalk cards now say "Baltimore
+City ENOUGH communities" in the headline and bar labels, carry an amber "why the denominator is smaller
+here" note, and list the 11 communities behind a disclosure toggle; the page explainer gained an "Out of
+what?" definition, and `methodology.html` a "What each layer is scored out of" section. Statewide layers
+are untouched. **Also corrected a stale figure:** `CLAUDE.md` said 40 Baltimore City grantee tracts; it is 46.
 
 **Done (2026-09-23) — basemap moved off CARTO.** CARTO put its hosted basemaps behind an API key and
 started rendering an "API KEY REQUIRED / carto.com/basemaps/apikey" watermark diagonally across the
