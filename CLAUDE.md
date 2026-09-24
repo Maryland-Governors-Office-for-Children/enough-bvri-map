@@ -47,6 +47,8 @@ scripts/
   fetch_jc.py            Refresh Just Communities from iMap MD_HousingDesignatedAreas Layer 9
   fetch_vacants.py       Baltimore vacancy inventory (VBN intervals + lots) -> ENOUGH rollup (needs shapely)
   build_crosswalk.py     Compute ENOUGH × layer overlap (Shapely) -> docs/data/crosswalk.json
+  fetch_priority_areas.py  DHCD vacancy-reduction priority geographies (31 areas, dmxFocusAreas 1+2)
+  fetch_sdat_ownership.py  SDAT parcel join -> owner-occupancy of vacant vs resolved properties
   validate_outputs.py    Cross-artifact sanity checks on docs/data/ — RUN BEFORE ANY PUSH
   requirements-crosswalk.txt  Pinned shapely for build_crosswalk.py
 ```
@@ -167,6 +169,25 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   15-tract gap is boundary slivers). EZ uses any-overlap because it has no tract-based ground truth to
   validate a threshold against; OZ keeps 5% because that reproduces its exact-GEOID count. Map reads both
   from `crosswalk.json`.
+
+### What happens to resolved vacants (from `vacancy_ownership_sdat.json`)
+SDAT parcel join, ENOUGH Baltimore tracts. **Only 17.2% of durably resolved vacants are owner-occupied**,
+vs **32.3%** for all parcels in the same tracts — and **51.1% sold since FY25** (vs 13.1% of parcels),
+with out-of-state ownership at 14.3% (vs 8.8%). So a resolved vacant most often becomes a tenanted or
+investor-held property, not an owner-occupied home. **A falling vacancy count is not rising homeownership.**
+~20% of properties fail the block/lot join and are excluded — percentages describe the matched majority.
+
+### DHCD vacancy-reduction priority areas (from `crosswalk.json` layer `prio`)
+31 designated areas. 8/11 communities and 23/46 ENOUGH Baltimore tracts fall inside one — so **23 of 46
+sit in NO City priority area**, holding 1,509 vacant buildings (~37% of ENOUGH's Baltimore vacancy).
+`uncovered_by_grantee` is the advocacy list (Park Heights 7, The Y 6, CBP 5, Cherry Hill 3, +3 others).
+
+### Ownership & market of the current vacant stock (from `vacants_enough.json`)
+ENOUGH tracts: **13.1% publicly owned** (482 MCC + 45 HABC) vs 8.3% citywide — more directly actionable
+inventory. Market typology: 77% of vacancy is in weak bands I/J both inside and outside ENOUGH, but the mix
+differs — rest of city is **J-dominant (56%)**, ENOUGH is **I-dominant (54%)**, so rehab is somewhat likelier
+to pencil in ENOUGH tracts. Child poverty × vacancy: median vacant buildings/tract rises 5.0 → 43.5 across
+poverty bands (~9×) but r is only 0.2 — 66 low-poverty tracts still hold 2,793 vacants.
 
 ### ENOUGH Crosswalk overlap (from `crosswalk.json`)
 - NMTC: 28/28 communities, 102/111 tracts (86 Severe Distress, 16 Distressed) — every community is NMTC-eligible

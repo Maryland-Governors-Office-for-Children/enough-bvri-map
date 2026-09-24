@@ -157,11 +157,29 @@ def check_vacants():
                  f"{T['gross_resolved'] - T['cycled_properties']}")
 
 
+def check_sdat():
+    d = load("vacancy_ownership_sdat.json")
+    if not d:
+        return
+    for key in ("all_enough_parcels", "currently_vacant", "durably_resolved"):
+        b = d[key]
+        for pct in ("pct_owner_occupied", "pct_owner_outside_maryland",
+                    "pct_sold_since_fy25"):
+            if not 0 <= b[pct] <= 100:
+                fail(f"sdat {key}: {pct} outside 0-100")
+        if sum(b["owner_occupancy"].values()) != b["parcels"]:
+            fail(f"sdat {key}: owner_occupancy buckets do not sum to parcels")
+    notes.append(f"vacancy_ownership_sdat.json: resolved "
+                 f"{d['durably_resolved']['pct_owner_occupied']}% owner-occupied vs "
+                 f"{d['all_enough_parcels']['pct_owner_occupied']}% baseline")
+
+
 def main():
     quiet = "-q" in sys.argv
     check_layers()
     check_crosswalk()
     check_vacants()
+    check_sdat()
     if not quiet:
         for n in notes:
             print(f"  ok  {n}")

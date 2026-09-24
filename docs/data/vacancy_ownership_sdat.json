@@ -1,0 +1,77 @@
+{
+  "generated_note": "Built by scripts/fetch_sdat_ownership.py \u2014 do not edit by hand.",
+  "source": "MD SDAT parcel points via MD iMap PlanningCadastre/MD_PropertyData/MapServer/0",
+  "enough_tracts": 46,
+  "parcels_fetched": 54602,
+  "join_note": "Joined on the block/lot tail of SDAT ACCTID. Unmatched properties are excluded from the profiles below rather than assumed.",
+  "all_enough_parcels": {
+    "label": "All parcels in ENOUGH tracts",
+    "parcels": 41090,
+    "owner_occupancy": {
+      "not owner-occupied": 27750,
+      "owner-occupied": 13252,
+      "partial/other": 87,
+      "unknown": 1
+    },
+    "pct_owner_occupied": 32.3,
+    "owner_outside_maryland": 3634,
+    "pct_owner_outside_maryland": 8.8,
+    "owner_in_baltimore": 31504,
+    "sold_since_fy25": 5391,
+    "pct_sold_since_fy25": 13.1,
+    "median_year_built": 1920,
+    "top_land_uses": {
+      "Residential": 32838,
+      "Exempt": 4608,
+      "Commercial": 1734,
+      "Exempt Commercial": 887,
+      "Apartments": 519
+    }
+  },
+  "currently_vacant": {
+    "label": "Currently vacant buildings",
+    "parcels": 3233,
+    "owner_occupancy": {
+      "not owner-occupied": 3157,
+      "owner-occupied": 76
+    },
+    "pct_owner_occupied": 2.4,
+    "owner_outside_maryland": 481,
+    "pct_owner_outside_maryland": 14.9,
+    "owner_in_baltimore": 2096,
+    "sold_since_fy25": 771,
+    "pct_sold_since_fy25": 23.8,
+    "median_year_built": 1920,
+    "top_land_uses": {
+      "Residential": 2615,
+      "Exempt": 470,
+      "Commercial": 110,
+      "Exempt Commercial": 18,
+      "Apartments": 10
+    },
+    "unmatched": 874
+  },
+  "durably_resolved": {
+    "label": "Left the vacancy list and stayed off",
+    "parcels": 1001,
+    "owner_occupancy": {
+      "not owner-occupied": 829,
+      "owner-occupied": 172
+    },
+    "pct_owner_occupied": 17.2,
+    "owner_outside_maryland": 143,
+    "pct_owner_outside_maryland": 14.3,
+    "owner_in_baltimore": 640,
+    "sold_since_fy25": 512,
+    "pct_sold_since_fy25": 51.1,
+    "median_year_built": 1920,
+    "top_land_uses": {
+      "Residential": 934,
+      "Exempt": 43,
+      "Commercial": 15,
+      "Exempt Commercial": 6,
+      "Apartments": 3
+    },
+    "unmatched": 282
+  }
+}

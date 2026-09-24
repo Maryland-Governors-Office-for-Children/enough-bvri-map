@@ -224,6 +224,8 @@
 
     <div id="conditions"></div>
 
+    <div id="outcomes"></div>
+
     <div id="stacking"></div>
 
     <p style="font-size:0.82rem;color:#5a6678;margin-top:8px;">
@@ -282,6 +284,12 @@
             });
             const cond = buildConditions(v);
             if (cond) document.getElementById('conditions').appendChild(cond);
+            fetch('data/vacancy_ownership_sdat.json')
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (o) {
+                    if (o) document.getElementById('outcomes').appendChild(buildOutcomes(o));
+                })
+                .catch(function () { /* optional layer; silent */ });
         })
         .catch(function (err) {
             document.getElementById('vacancy').innerHTML =
@@ -492,6 +500,79 @@
 
     // Ownership, market strength and the poverty overlap. These decide what can
     // actually be DONE with a vacant building, which the counts alone don't say.
+    // The payoff question: when a vacant building leaves the list, does it become
+    // somebody's home? Vacancy data cannot answer that; SDAT's owner-occupancy
+    // indicator can.
+    function buildOutcomes(o) {
+        const A = o.all_enough_parcels, V = o.currently_vacant, R = o.durably_resolved;
+        const n = function (x) { return x == null ? '—' : x.toLocaleString(); };
+        const row = function (b, note) {
+            return '<tr><td>' + b.label + (note ? ' <span style="color:#a0aec0;">' + note + '</span>' : '') +
+                '</td><td>' + n(b.parcels) + '</td><td>' + b.pct_owner_occupied + '%</td>' +
+                '<td>' + b.pct_owner_outside_maryland + '%</td>' +
+                '<td>' + b.pct_sold_since_fy25 + '%</td></tr>';
+        };
+        const gap = (A.pct_owner_occupied - R.pct_owner_occupied).toFixed(1);
+        return el(
+            '<div class="vac-card">' +
+              '<h2>When a vacant building comes off the list, does it become a home?</h2>' +
+              '<p>Everything above counts notices. A closed notice is not the same as a family living ' +
+              'there. Joining Maryland <b>SDAT</b> parcel records to the vacancy layers gives the ' +
+              'owner-occupancy status, the owner&rsquo;s mailing address and the last sale, so the ' +
+              'question can actually be answered for properties that left the list and stayed off.</p>' +
+
+              '<div class="vac-hero">' +
+                '<div class="vh"><div class="vh-num">' + R.pct_owner_occupied + '%</div>' +
+                  '<div class="vh-lab">Of resolved vacants now owner-occupied</div>' +
+                  '<div class="vh-sub">against ' + A.pct_owner_occupied +
+                  '% for all parcels in the same tracts</div></div>' +
+                '<div class="vh"><div class="vh-num">' + R.pct_sold_since_fy25 + '%</div>' +
+                  '<div class="vh-lab">Sold since July 2024</div>' +
+                  '<div class="vh-sub">against ' + A.pct_sold_since_fy25 +
+                  '% of all parcels &mdash; nearly 4&times;</div></div>' +
+                '<div class="vh"><div class="vh-num">' + R.pct_owner_outside_maryland + '%</div>' +
+                  '<div class="vh-lab">Owner based outside Maryland</div>' +
+                  '<div class="vh-sub">against ' + A.pct_owner_outside_maryland +
+                  '% of all parcels</div></div>' +
+              '</div>' +
+
+              '<p><b>The answer is a qualified no.</b> About one in six formerly vacant properties is now ' +
+              'owner-occupied &mdash; real, and better than the ' + V.pct_owner_occupied +
+              '% among buildings still vacant. But ' + R.pct_owner_occupied + '% sits roughly <b>' + gap +
+              ' points below</b> the ' + A.pct_owner_occupied + '% owner-occupancy rate of the surrounding ' +
+              'housing stock in the same tracts, while <b>' + R.pct_sold_since_fy25 +
+              '% changed hands</b> since the baseline against ' + A.pct_sold_since_fy25 +
+              '% of parcels generally, and out-of-state ownership runs above the local norm. The pattern ' +
+              'is that a resolved vacant most often becomes a <b>tenanted or investor-held property</b> ' +
+              'rather than an owner-occupied home. That is not an argument against reducing vacancy &mdash; ' +
+              'an occupied rental beats a vacant shell &mdash; but it does mean a falling vacancy count ' +
+              'should not be read as rising homeownership, which is the outcome the Just Communities ' +
+              'framing and ENOUGH&rsquo;s own wealth-building goals actually care about.</p>' +
+
+              '<table class="lead-table"><thead><tr>' +
+                '<th>Properties</th><th>Matched</th><th>Owner-occupied</th>' +
+                '<th>Owner outside MD</th><th>Sold since FY25</th>' +
+              '</tr></thead><tbody>' +
+                row(A) + row(V, '(' + n(V.unmatched) + ' unmatched)') +
+                row(R, '(' + n(R.unmatched) + ' unmatched)') +
+              '</tbody></table>' +
+
+              '<div class="vac-note"><b>Method and limits.</b> ' + o.source +
+              ', restricted to the ' + o.enough_tracts + ' ENOUGH tracts in Baltimore City via the ' +
+              'parcel record&rsquo;s own 2020 census-tract field (' + n(o.parcels_fetched) +
+              ' parcels), then joined property-by-property on the block/lot tail of the SDAT account ' +
+              'number. <b>The join is not complete:</b> ' + n(V.unmatched) + ' currently vacant and ' +
+              n(R.unmatched) + ' resolved properties find no parcel match and are excluded rather than ' +
+              'assumed &mdash; roughly a fifth in each case, so treat these percentages as indicative of ' +
+              'the matched majority, not exact. &ldquo;Owner-occupied&rdquo; is SDAT&rsquo;s own indicator ' +
+              '(H); &ldquo;owner outside Maryland&rdquo; uses the owner&rsquo;s mailing state, which flags ' +
+              'absentee ownership but will also catch a Maryland family with an out-of-state mailing ' +
+              'address. Sale dates are last-transfer dates and include non-arm&rsquo;s-length transfers. ' +
+              'Baltimore City only.</div>' +
+            '</div>'
+        );
+    }
+
     function buildConditions(v) {
         const OW = v.ownership_and_market, PV = v.poverty_vacancy;
         if (!OW || !PV) return null;
