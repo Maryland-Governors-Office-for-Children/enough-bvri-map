@@ -405,23 +405,65 @@
         });
     }
 
+    function vacancyLayer(fc, color, label, radius) {
+            return L.geoJSON(fc, {
+                pane: 'pointPane',
+                renderer: vacancyCanvas,
+                pointToLayer: function (feature, latlng) {
+                    // Inside an ENOUGH tract: full size and opacity. Outside:
+                    // smaller and faded, so citywide vacancy reads as context
+                    // rather than competing with the grantee footprint.
+                    const inEnough = feature.properties.in_enough === 1;
+                    return L.circleMarker(latlng, {
+                        radius: inEnough ? radius : radius * 0.62,
+                        fillColor: color.fill,
+                        color: inEnough ? color.stroke : color.fill,
+                        weight: inEnough ? 0.6 : 0,
+                        fillOpacity: inEnough ? 0.85 : 0.3,
+                        renderer: vacancyCanvas,
+                    });
+                },
+                onEachFeature: function (feature, layer) {
+                    const p = feature.properties;
+                    const who = (p.grantees || []).join(', ');
+                    const outside = p.in_enough !== 1;
+                    let since = '';
+                    if (p.date_notice) {
+                        const d = new Date(p.date_notice);
+                        if (!isNaN(d)) since = '<div>Vacant notice issued: <strong>' +
+                            d.toLocaleDateString('en-US', {month:'short', year:'numeric'}) + '</strong></div>';
+                    }
+                    layer.bindPopup(
+                        '<div style="min-width:210px;">' +
+                          '<strong style="color:' + color.stroke + ';">' + label + '</strong>' +
+                          '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
+                            (p.address || p.blocklot || '—') + '</strong></div>' +
+                          (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
+                          '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                          '<div style="font-size:0.82em;">' + since +
+                            '<div>Block/Lot: ' + (p.blocklot || '—') + '</div>' +
+                            (p.GEOID ? '<div>Tract ' + p.GEOID + '</div>' : '') +
+                            (who ? '<div style="margin-top:3px;">ENOUGH: <strong>' + who + '</strong></div>' : '') +
+                            (outside ? '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>' : '') +
+                          '</div>' +
+                          '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: Baltimore City DHCD via Open Baltimore ArcGIS.</div>' +
+                        '</div>'
+                    );
+                }
+            });
+        }
+
+    // Only what the first paint needs. Every other layer is off by default and is
+    // fetched the first time it is switched on — see DEFERRED below. Loading all of
+    // them up front meant ~34 MB of geojson on page load for layers most visitors
+    // never open.
     Promise.all([
         fetchJSON('data/grantee_tracts.geojson'),
         fetchJSON('data/grantees.json'),
         fetchJSON('data/bvri_vacants.geojson'),
-        fetchJSON('data/bvri_investment_areas.geojson'),
-        fetchJSON('data/nmtc_maryland.geojson'),
-        fetchJSON('data/oz_designated_maryland.geojson'),
-        fetchJSON('data/oz2_eligible_maryland.geojson'),
-        fetchJSON('data/ez_maryland.geojson'),
-        fetchJSON('data/just_communities_maryland.geojson'),
         fetchJSON('data/crosswalk.json'),
-        fetchJSON('data/vacant_buildings_baltimore.geojson'),
-        fetchJSON('data/vacant_lots_baltimore.geojson'),
         fetchJSON('data/vacants_enough.json'),
-        fetchJSON('data/vacancy_reductions_baltimore.geojson'),
-        fetchJSON('data/vacancy_change_tracts.geojson'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk, vbn, lots, vacStats, reductions, changeTracts]) {
+    ]).then(function ([granteeTracts, granteeMeta, vacants, crosswalk, vacStats]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -545,144 +587,48 @@
         // These are the *whole* vacancy stock — open Vacant Building Notices and
         // vacant lots — not the BVRI open-bid list, which is only the slice the
         // City is currently marketing for sale.
-        function vacancyLayer(fc, color, label, radius) {
-            return L.geoJSON(fc, {
-                pane: 'pointPane',
-                renderer: vacancyCanvas,
-                pointToLayer: function (feature, latlng) {
-                    // Inside an ENOUGH tract: full size and opacity. Outside:
-                    // smaller and faded, so citywide vacancy reads as context
-                    // rather than competing with the grantee footprint.
-                    const inEnough = feature.properties.in_enough === 1;
-                    return L.circleMarker(latlng, {
-                        radius: inEnough ? radius : radius * 0.62,
-                        fillColor: color.fill,
-                        color: inEnough ? color.stroke : color.fill,
-                        weight: inEnough ? 0.6 : 0,
-                        fillOpacity: inEnough ? 0.85 : 0.3,
-                        renderer: vacancyCanvas,
-                    });
-                },
-                onEachFeature: function (feature, layer) {
-                    const p = feature.properties;
-                    const who = (p.grantees || []).join(', ');
-                    const outside = p.in_enough !== 1;
-                    let since = '';
-                    if (p.date_notice) {
-                        const d = new Date(p.date_notice);
-                        if (!isNaN(d)) since = '<div>Vacant notice issued: <strong>' +
-                            d.toLocaleDateString('en-US', {month:'short', year:'numeric'}) + '</strong></div>';
-                    }
-                    layer.bindPopup(
-                        '<div style="min-width:210px;">' +
-                          '<strong style="color:' + color.stroke + ';">' + label + '</strong>' +
-                          '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
-                            (p.address || p.blocklot || '—') + '</strong></div>' +
-                          (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
-                          '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
-                          '<div style="font-size:0.82em;">' + since +
-                            '<div>Block/Lot: ' + (p.blocklot || '—') + '</div>' +
-                            (p.GEOID ? '<div>Tract ' + p.GEOID + '</div>' : '') +
-                            (who ? '<div style="margin-top:3px;">ENOUGH: <strong>' + who + '</strong></div>' : '') +
-                            (outside ? '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>' : '') +
-                          '</div>' +
-                          '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: Baltimore City DHCD via Open Baltimore ArcGIS.</div>' +
-                        '</div>'
-                    );
-                }
-            });
-        }
-        vacancyLayer(vbn, VBN_COLOR, 'Vacant Building (open VBN)', 3).addTo(lgVbn);
-        vacancyLayer(lots, LOT_COLOR, 'Vacant Lot', 2.5).addTo(lgLots);
+
 
         // Vacancy reductions as individual points: every VBN that closed since
         // the FY25 baseline, where it happened.
-        L.geoJSON(reductions, {
-            pane: 'pointPane',
-            renderer: vacancyCanvas,
-            pointToLayer: function (feature, latlng) {
-                const p = feature.properties;
-                const durable = p.durable === 1;
-                return L.circleMarker(latlng, {
-                    radius: durable ? 3 : 2.2,
-                    fillColor: durable ? RED_COLOR.fill : '#ffffff',
-                    color: RED_COLOR.stroke,
-                    weight: durable ? 0.5 : 0.7,
-                    fillOpacity: durable ? 0.85 : 0.5,
-                    renderer: vacancyCanvas,
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                const p = feature.properties;
-                let when = '';
-                if (p.date_resolved) {
-                    const d = new Date(p.date_resolved);
-                    if (!isNaN(d)) when = d.toLocaleDateString('en-US', {month:'short', year:'numeric'});
-                }
-                layer.bindPopup(
-                    '<div style="min-width:215px;">' +
-                      '<strong style="color:' + RED_COLOR.stroke + ';">Vacancy removed</strong>' +
-                      '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
-                        (p.address || p.blocklot || '—') + '</strong></div>' +
-                      (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
-                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
-                      '<div style="font-size:0.82em;">' +
-                        (when ? '<div>Notice closed: <strong>' + when + '</strong></div>' : '') +
-                        (p.years_vacant != null ? '<div>Vacant for ' + p.years_vacant + ' years first</div>' : '') +
-                        '<div style="margin-top:4px;">' + (p.durable === 1
-                          ? '<span style="color:#276749;font-weight:600;">Stayed off the vacancy list</span>'
-                          : '<span style="color:#9c4221;font-weight:600;">Re-noticed later</span> &mdash; renewal churn, not a durable fix') +
-                        '</div>' +
-                        ((p.grantees || []).length ? '<div style="margin-top:3px;">ENOUGH: <strong>' + p.grantees.join(', ') + '</strong></div>'
-                          : '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>') +
-                      '</div>' +
-                    '</div>'
-                );
-            }
-        }).addTo(lgRed);
+        
 
         // Per-tract change in vacant buildings, every Baltimore City tract.
-        L.geoJSON(changeTracts, {
-            pane: 'ctxPane',
-            style: function (feature) {
-                const p = feature.properties;
-                return {
-                    fillColor: changeColor(p.pct_change),
-                    fillOpacity: 0.7,
-                    color: p.in_enough ? '#1a365d' : '#a0aec0',
-                    weight: p.in_enough ? 1.6 : 0.4,
-                    dashArray: p.in_enough ? null : '2,2',
-                };
-            },
-            onEachFeature: function (feature, layer) {
-                const p = feature.properties;
-                const pc = p.pct_change == null ? 'n/a' : p.pct_change.toFixed(1) + '%';
-                layer.bindTooltip('Tract ' + p.GEOID + ': ' + pc, { sticky: true });
-                layer.bindPopup(
-                    '<div style="min-width:225px;">' +
-                      '<strong style="color:#1a365d;">Tract ' + p.GEOID + '</strong>' +
-                      (p.in_enough ? '<div style="font-size:0.8em;color:#2b6cb0;font-weight:600;">ENOUGH grantee tract</div>'
-                                   : '<div style="font-size:0.8em;color:#718096;">Not an ENOUGH tract</div>') +
-                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
-                      '<table style="font-size:0.83em;width:100%;">' +
-                        '<tr><td>Vacant buildings, FY25 start:</td><td><strong>' + p.baseline_buildings + '</strong></td></tr>' +
-                        '<tr><td>Vacant buildings now:</td><td><strong>' + p.vacant_buildings + '</strong></td></tr>' +
-                        '<tr><td>Change:</td><td><strong style="color:' +
-                          (p.change_buildings < 0 ? '#276749' : (p.change_buildings > 0 ? '#9b2c2c' : '#4a5568')) + ';">' +
-                          (p.change_buildings > 0 ? '+' : '') + p.change_buildings + ' (' + pc + ')</strong></td></tr>' +
-                        '<tr><td>Notices closed:</td><td>' + p.gross_resolved + '</td></tr>' +
-                        '<tr><td>Rehab permits / demolitions:</td><td>' + p.rehabs + ' / ' + p.demolitions + '</td></tr>' +
-                        (p.child_poverty_pct != null ? '<tr><td>Child poverty:</td><td>' +
-                          parseFloat(p.child_poverty_pct).toFixed(1) + '%</td></tr>' : '') +
-                      '</table>' +
-                      ((p.grantees || []).length ? '<div style="font-size:0.8em;margin-top:5px;">' + p.grantees.join(', ') + '</div>' : '') +
-                    '</div>'
-                );
-            }
-        }).addTo(lgChange);
+        
 
         // DHCD Impact Investment Areas (off by default)
-        L.geoJSON(investAreas, {
+        
+
+        // Designated Opportunity Zones (2018 TCJA, off by default).
+        // Rural tracts get a dashed yellow outline to distinguish them.
+        
+
+        // OZ 2.0-eligible tracts (candidate tracts for the 2026-27 designation
+        // round; off by default). 451 tracts statewide; MD may nominate up to 113.
+        
+
+        // Just Communities (Just Communities Act of 2024; off by default).
+        // 419 designated tracts statewide.
+        
+
+        // Maryland Enterprise Zones (off by default)
+        
+
+        // NMTC eligibility (off by default — adds beneath grantee tracts)
+        
+
+        document.getElementById('loading').classList.add('hidden');
+
+    }).catch(function (err) {
+        document.getElementById('loading').innerHTML =
+            '<div style="color:#c53030;padding:20px;text-align:center;">Failed to load map data:<br>' + err.message + '</div>';
+    });
+
+    const DEFERRED = {
+        'layer-invest': {
+            url: 'data/bvri_investment_areas.geojson', label: 'DHCD Impact Areas',
+            render: function (D) {
+                L.geoJSON(D, {
             pane: 'ctxPane',
             style: { color: '#b7791f', weight: 2, fillColor: '#f6e05e', fillOpacity: 0.18, dashArray: '6,3' },
             onEachFeature: function (feature, layer) {
@@ -690,10 +636,49 @@
                 layer.bindTooltip(feature.properties.Name || '', { sticky: true });
             }
         }).addTo(lgInvest);
-
-        // Designated Opportunity Zones (2018 TCJA, off by default).
-        // Rural tracts get a dashed yellow outline to distinguish them.
-        L.geoJSON(oz, {
+            }
+        },
+        'layer-nmtc': {
+            url: 'data/nmtc_maryland.geojson', label: 'NMTC eligibility',
+            render: function (D) {
+                L.geoJSON(D, {
+            pane: 'ctxPane',
+            style: function (feature) {
+                const c = NMTC_COLORS[feature.properties.nmtc_class] || NMTC_COLORS['Not Eligible'];
+                return { color: c.stroke, weight: 0.8, fillColor: c.fill, fillOpacity: 0.45 };
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const pov = p.poverty_pct != null ? p.poverty_pct.toFixed(1) + '%' : 'N/A';
+                const inc = p.income_pct_benchmark != null
+                    ? (p.income_pct_benchmark <= 1.5
+                        ? (p.income_pct_benchmark * 100).toFixed(1)
+                        : p.income_pct_benchmark.toFixed(1)) + '%'
+                    : 'N/A';
+                const unemp = p.unemployment_ratio != null ? p.unemployment_ratio.toFixed(2) + '×' : 'N/A';
+                const c = NMTC_COLORS[p.nmtc_class] || NMTC_COLORS['Not Eligible'];
+                layer.bindPopup(
+                    '<div style="min-width:220px;">' +
+                      '<strong style="color:' + c.stroke + ';">NMTC: ' + p.nmtc_class + '</strong>' +
+                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">Tract ' + p.FIPS + '</div>' +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>Poverty Rate:</td><td><strong>' + pov + '</strong></td></tr>' +
+                        '<tr><td>Income vs. Benchmark:</td><td>' + inc + '</td></tr>' +
+                        '<tr><td>Unemployment Ratio:</td><td>' + unemp + ' national</td></tr>' +
+                        '<tr><td>OMB:</td><td>' + (p.metro || '—') + '</td></tr>' +
+                      '</table>' +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: CDFI Fund (2016-2020 ACS, 2020 tracts)</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgNmtc);
+            }
+        },
+        'layer-oz': {
+            url: 'data/oz_designated_maryland.geojson', label: 'Opportunity Zones',
+            render: function (D) {
+                L.geoJSON(D, {
             pane: 'ctxPane',
             style: function (feature) {
                 const rural = feature.properties.rural === true;
@@ -724,10 +709,12 @@
                 );
             }
         }).addTo(lgOz);
-
-        // OZ 2.0-eligible tracts (candidate tracts for the 2026-27 designation
-        // round; off by default). 451 tracts statewide; MD may nominate up to 113.
-        L.geoJSON(oz2, {
+            }
+        },
+        'layer-oz2': {
+            url: 'data/oz2_eligible_maryland.geojson', label: 'OZ 2.0-eligible tracts',
+            render: function (D) {
+                L.geoJSON(D, {
             pane: 'ctxPane',
             style: {
                 color: OZ2_COLOR.stroke,
@@ -754,10 +741,51 @@
                 );
             }
         }).addTo(lgOz2);
-
-        // Just Communities (Just Communities Act of 2024; off by default).
-        // 419 designated tracts statewide.
-        L.geoJSON(jc, {
+            }
+        },
+        'layer-ez': {
+            url: 'data/ez_maryland.geojson', label: 'Enterprise Zones',
+            render: function (D) {
+                L.geoJSON(D, {
+            pane: 'ctxPane',
+            style: function (feature) {
+                const c = feature.properties.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
+                return { color: c.stroke, weight: 1.2, fillColor: c.fill, fillOpacity: feature.properties.focus_area ? 0.5 : 0.3 };
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const c = p.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
+                const label = p.focus_area ? 'Enterprise Zone Focus Area' : 'Enterprise Zone';
+                let expYear = '';
+                if (p.expiration != null) {
+                    const d = new Date(p.expiration);
+                    if (!isNaN(d)) expYear = String(d.getUTCFullYear());
+                }
+                const site = p.sitename || 'Enterprise Zone';
+                layer.bindTooltip(site, { sticky: true });
+                layer.bindPopup(
+                    '<div style="min-width:220px;">' +
+                      '<strong style="color:' + c.stroke + ';">' + label + '</strong>' +
+                      '<div style="font-size:0.92em;font-weight:600;margin-top:2px;">' + site + '</div>' +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>Administered by:</td><td>' + (p.orgname || '—') + '</td></tr>' +
+                        '<tr><td>County:</td><td>' + (p.county || '—') + '</td></tr>' +
+                        (p.extent ? '<tr><td>Extent:</td><td>' + p.extent + '</td></tr>' : '') +
+                        (expYear ? '<tr><td>Expires:</td><td>' + expYear + '</td></tr>' : '') +
+                      '</table>' +
+                      (p.website ? '<div style="margin-top:6px;"><a href="' + p.website + '" target="_blank" rel="noopener">Program website &rarr;</a></div>' : '') +
+                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: MD Dept. of Commerce via Maryland iMap</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgEz);
+            }
+        },
+        'layer-jc': {
+            url: 'data/just_communities_maryland.geojson', label: 'Just Communities',
+            render: function (D) {
+                L.geoJSON(D, {
             pane: 'ctxPane',
             // Lower fill opacity than the other designation layers on purpose:
             // Just Communities covers 167 tracts in Baltimore City alone, so a
@@ -815,83 +843,142 @@
                 );
             }
         }).addTo(lgJc);
-
-        // Maryland Enterprise Zones (off by default)
-        L.geoJSON(ez, {
-            pane: 'ctxPane',
-            style: function (feature) {
-                const c = feature.properties.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
-                return { color: c.stroke, weight: 1.2, fillColor: c.fill, fillOpacity: feature.properties.focus_area ? 0.5 : 0.3 };
+            }
+        },
+        'layer-red': {
+            url: 'data/vacancy_reductions_baltimore.geojson', label: 'Vacancy reductions',
+            render: function (D) {
+                L.geoJSON(D, {
+            pane: 'pointPane',
+            renderer: vacancyCanvas,
+            pointToLayer: function (feature, latlng) {
+                const p = feature.properties;
+                const durable = p.durable === 1;
+                return L.circleMarker(latlng, {
+                    radius: durable ? 3 : 2.2,
+                    fillColor: durable ? RED_COLOR.fill : '#ffffff',
+                    color: RED_COLOR.stroke,
+                    weight: durable ? 0.5 : 0.7,
+                    fillOpacity: durable ? 0.85 : 0.5,
+                    renderer: vacancyCanvas,
+                });
             },
             onEachFeature: function (feature, layer) {
                 const p = feature.properties;
-                const c = p.focus_area ? EZ_FOCUS_COLOR : EZ_COLOR;
-                const label = p.focus_area ? 'Enterprise Zone Focus Area' : 'Enterprise Zone';
-                let expYear = '';
-                if (p.expiration != null) {
-                    const d = new Date(p.expiration);
-                    if (!isNaN(d)) expYear = String(d.getUTCFullYear());
+                let when = '';
+                if (p.date_resolved) {
+                    const d = new Date(p.date_resolved);
+                    if (!isNaN(d)) when = d.toLocaleDateString('en-US', {month:'short', year:'numeric'});
                 }
-                const site = p.sitename || 'Enterprise Zone';
-                layer.bindTooltip(site, { sticky: true });
                 layer.bindPopup(
-                    '<div style="min-width:220px;">' +
-                      '<strong style="color:' + c.stroke + ';">' + label + '</strong>' +
-                      '<div style="font-size:0.92em;font-weight:600;margin-top:2px;">' + site + '</div>' +
+                    '<div style="min-width:215px;">' +
+                      '<strong style="color:' + RED_COLOR.stroke + ';">Vacancy removed</strong>' +
+                      '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
+                        (p.address || p.blocklot || '—') + '</strong></div>' +
+                      (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
                       '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
-                      '<table style="font-size:0.83em;width:100%;">' +
-                        '<tr><td>Administered by:</td><td>' + (p.orgname || '—') + '</td></tr>' +
-                        '<tr><td>County:</td><td>' + (p.county || '—') + '</td></tr>' +
-                        (p.extent ? '<tr><td>Extent:</td><td>' + p.extent + '</td></tr>' : '') +
-                        (expYear ? '<tr><td>Expires:</td><td>' + expYear + '</td></tr>' : '') +
-                      '</table>' +
-                      (p.website ? '<div style="margin-top:6px;"><a href="' + p.website + '" target="_blank" rel="noopener">Program website &rarr;</a></div>' : '') +
-                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: MD Dept. of Commerce via Maryland iMap</div>' +
+                      '<div style="font-size:0.82em;">' +
+                        (when ? '<div>Notice closed: <strong>' + when + '</strong></div>' : '') +
+                        (p.years_vacant != null ? '<div>Vacant for ' + p.years_vacant + ' years first</div>' : '') +
+                        '<div style="margin-top:4px;">' + (p.durable === 1
+                          ? '<span style="color:#276749;font-weight:600;">Stayed off the vacancy list</span>'
+                          : '<span style="color:#9c4221;font-weight:600;">Re-noticed later</span> &mdash; renewal churn, not a durable fix') +
+                        '</div>' +
+                        ((p.grantees || []).length ? '<div style="margin-top:3px;">ENOUGH: <strong>' + p.grantees.join(', ') + '</strong></div>'
+                          : '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>') +
+                      '</div>' +
                     '</div>'
                 );
             }
-        }).addTo(lgEz);
-
-        // NMTC eligibility (off by default — adds beneath grantee tracts)
-        L.geoJSON(nmtc, {
+        }).addTo(lgRed);
+            }
+        },
+        'layer-change': {
+            url: 'data/vacancy_change_tracts.geojson', label: 'Vacancy change by tract',
+            render: function (D) {
+                L.geoJSON(D, {
             pane: 'ctxPane',
             style: function (feature) {
-                const c = NMTC_COLORS[feature.properties.nmtc_class] || NMTC_COLORS['Not Eligible'];
-                return { color: c.stroke, weight: 0.8, fillColor: c.fill, fillOpacity: 0.45 };
+                const p = feature.properties;
+                return {
+                    fillColor: changeColor(p.pct_change),
+                    fillOpacity: 0.7,
+                    color: p.in_enough ? '#1a365d' : '#a0aec0',
+                    weight: p.in_enough ? 1.6 : 0.4,
+                    dashArray: p.in_enough ? null : '2,2',
+                };
             },
             onEachFeature: function (feature, layer) {
                 const p = feature.properties;
-                const pov = p.poverty_pct != null ? p.poverty_pct.toFixed(1) + '%' : 'N/A';
-                const inc = p.income_pct_benchmark != null
-                    ? (p.income_pct_benchmark <= 1.5
-                        ? (p.income_pct_benchmark * 100).toFixed(1)
-                        : p.income_pct_benchmark.toFixed(1)) + '%'
-                    : 'N/A';
-                const unemp = p.unemployment_ratio != null ? p.unemployment_ratio.toFixed(2) + '×' : 'N/A';
-                const c = NMTC_COLORS[p.nmtc_class] || NMTC_COLORS['Not Eligible'];
+                const pc = p.pct_change == null ? 'n/a' : p.pct_change.toFixed(1) + '%';
+                layer.bindTooltip('Tract ' + p.GEOID + ': ' + pc, { sticky: true });
                 layer.bindPopup(
-                    '<div style="min-width:220px;">' +
-                      '<strong style="color:' + c.stroke + ';">NMTC: ' + p.nmtc_class + '</strong>' +
-                      '<div style="font-size:0.78em;color:#666;margin-top:2px;">Tract ' + p.FIPS + '</div>' +
+                    '<div style="min-width:225px;">' +
+                      '<strong style="color:#1a365d;">Tract ' + p.GEOID + '</strong>' +
+                      (p.in_enough ? '<div style="font-size:0.8em;color:#2b6cb0;font-weight:600;">ENOUGH grantee tract</div>'
+                                   : '<div style="font-size:0.8em;color:#718096;">Not an ENOUGH tract</div>') +
                       '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
                       '<table style="font-size:0.83em;width:100%;">' +
-                        '<tr><td>Poverty Rate:</td><td><strong>' + pov + '</strong></td></tr>' +
-                        '<tr><td>Income vs. Benchmark:</td><td>' + inc + '</td></tr>' +
-                        '<tr><td>Unemployment Ratio:</td><td>' + unemp + ' national</td></tr>' +
-                        '<tr><td>OMB:</td><td>' + (p.metro || '—') + '</td></tr>' +
+                        '<tr><td>Vacant buildings, FY25 start:</td><td><strong>' + p.baseline_buildings + '</strong></td></tr>' +
+                        '<tr><td>Vacant buildings now:</td><td><strong>' + p.vacant_buildings + '</strong></td></tr>' +
+                        '<tr><td>Change:</td><td><strong style="color:' +
+                          (p.change_buildings < 0 ? '#276749' : (p.change_buildings > 0 ? '#9b2c2c' : '#4a5568')) + ';">' +
+                          (p.change_buildings > 0 ? '+' : '') + p.change_buildings + ' (' + pc + ')</strong></td></tr>' +
+                        '<tr><td>Notices closed:</td><td>' + p.gross_resolved + '</td></tr>' +
+                        '<tr><td>Rehab permits / demolitions:</td><td>' + p.rehabs + ' / ' + p.demolitions + '</td></tr>' +
+                        (p.child_poverty_pct != null ? '<tr><td>Child poverty:</td><td>' +
+                          parseFloat(p.child_poverty_pct).toFixed(1) + '%</td></tr>' : '') +
                       '</table>' +
-                      '<div style="font-size:0.72em;color:#888;margin-top:6px;">Source: CDFI Fund (2016-2020 ACS, 2020 tracts)</div>' +
+                      ((p.grantees || []).length ? '<div style="font-size:0.8em;margin-top:5px;">' + p.grantees.join(', ') + '</div>' : '') +
                     '</div>'
                 );
             }
-        }).addTo(lgNmtc);
+        }).addTo(lgChange);
+            }
+        },
+        'layer-vbn': {
+            url: 'data/vacant_buildings_baltimore.geojson', label: 'Vacant buildings',
+            render: function (D) {
+                vacancyLayer(D, VBN_COLOR, 'Vacant Building (open VBN)', 3).addTo(lgVbn);
+            }
+        },
+        'layer-lots': {
+            url: 'data/vacant_lots_baltimore.geojson', label: 'Vacant lots',
+            render: function (D) {
+                vacancyLayer(D, LOT_COLOR, 'Vacant Lot', 2.5).addTo(lgLots);
+            }
+        }
+    };
 
-        document.getElementById('loading').classList.add('hidden');
-
-    }).catch(function (err) {
-        document.getElementById('loading').innerHTML =
-            '<div style="color:#c53030;padding:20px;text-align:center;">Failed to load map data:<br>' + err.message + '</div>';
-    });
+    // Fetch-on-first-toggle. Each layer is loaded once and cached; the checkbox is
+    // disabled while in flight so a double-click cannot start two fetches.
+    const loaded = {};
+    function ensureLoaded(id, cb) {
+        if (loaded[id] === 'done') { cb(); return; }
+        const spec = DEFERRED[id];
+        if (!spec) { cb(); return; }
+        const box = document.getElementById(id);
+        const label = box.parentElement;
+        loaded[id] = 'loading';
+        box.disabled = true;
+        label.style.opacity = '0.55';
+        fetchJSON(spec.url)
+            .then(function (D) {
+                spec.render(D);
+                loaded[id] = 'done';
+                box.disabled = false;
+                label.style.opacity = '';
+                cb();
+            })
+            .catch(function (err) {
+                loaded[id] = undefined;
+                box.checked = false;
+                box.disabled = false;
+                label.style.opacity = '';
+                label.title = 'Failed to load ' + spec.label + ': ' + err.message;
+                label.style.color = '#c53030';
+            });
+    }
 
     // Layer toggles
     [
@@ -909,7 +996,8 @@
         ['layer-change',  lgChange],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
-            this.checked ? map.addLayer(lg) : map.removeLayer(lg);
+            if (!this.checked) { map.removeLayer(lg); return; }
+            ensureLoaded(id, function () { map.addLayer(lg); });
         });
     });
 

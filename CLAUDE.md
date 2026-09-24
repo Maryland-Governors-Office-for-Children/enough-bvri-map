@@ -47,6 +47,7 @@ scripts/
   fetch_jc.py            Refresh Just Communities from iMap MD_HousingDesignatedAreas Layer 9
   fetch_vacants.py       Baltimore vacancy inventory (VBN intervals + lots) -> ENOUGH rollup (needs shapely)
   build_crosswalk.py     Compute ENOUGH × layer overlap (Shapely) -> docs/data/crosswalk.json
+  validate_outputs.py    Cross-artifact sanity checks on docs/data/ — RUN BEFORE ANY PUSH
   requirements-crosswalk.txt  Pinned shapely for build_crosswalk.py
 ```
 
@@ -89,6 +90,20 @@ python3 -m venv .venv-geo && .venv-geo/bin/pip install -r scripts/requirements-c
 committed `crosswalk.json` is stale vs. the source geojson. Run it before any external share.
 
 ## Deploy
+
+**Before pushing, always run:**
+```bash
+python3 scripts/validate_outputs.py                       # impossible-value checks across docs/data/
+.venv-geo/bin/python scripts/build_crosswalk.py --check    # crosswalk.json vs its sources
+```
+`validate_outputs.py` exists because an impossible figure ("−1,130 properties left the vacancy list")
+reached the live site on 2026-09-24. It catches subsets exceeding supersets, negative derived counts,
+percentages outside 0–100, layer/rollup disagreement, and missing fields. It found a second live bug on
+its first run (`in_enough` flagged on all 11,040 in-city points instead of the 4,107 ENOUGH ones).
+
+**The map lazy-loads.** `index.html` fetches only 5 files on first paint (~800 KB); the 10 off-by-default
+layers are fetched on first toggle via the `DEFERRED` registry and cached. Do not add a layer to
+`Promise.all` — add it to `DEFERRED`. First paint went from ~34.7 MB to ~800 KB.
 
 Push to `main` → GitHub Pages auto-deploys from `docs/`.
 

@@ -716,10 +716,13 @@ def main():
             p = f["properties"]
             keep = {k: p.get(src) for k, src in props.items()}
             if geoid:
-                keep["in_enough"] = 1
                 keep["GEOID"] = geoid
-                keep["grantees"] = tract_grantees.get(geoid, [])
-                n_in += 1
+                # in_enough must test the ENOUGH subset, not merely "landed in
+                # some Baltimore City tract" — `geoid` now spans all 199 tracts.
+                if geoid in enough_geoids:
+                    keep["in_enough"] = 1
+                    keep["grantees"] = tract_grantees.get(geoid, [])
+                    n_in += 1
             coords = [round(c, 5) for c in f["geometry"]["coordinates"]]
             feats.append({"type": "Feature",
                           "geometry": {"type": "Point", "coordinates": coords},
