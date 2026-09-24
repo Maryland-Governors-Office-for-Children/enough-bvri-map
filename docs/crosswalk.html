@@ -222,6 +222,8 @@
 
     <div id="reduction"></div>
 
+    <div id="conditions"></div>
+
     <div id="stacking"></div>
 
     <p style="font-size:0.82rem;color:#5a6678;margin-top:8px;">
@@ -275,6 +277,8 @@
             buildReduction(v).forEach(function (node) {
                 document.getElementById('reduction').appendChild(node);
             });
+            const cond = buildConditions(v);
+            if (cond) document.getElementById('conditions').appendChild(cond);
         })
         .catch(function (err) {
             document.getElementById('vacancy').innerHTML =
@@ -469,6 +473,100 @@
 
     function ranked_guard(v) {
         return v && v.reduction_comparison && v.by_grantee && v.by_grantee.length;
+    }
+
+    // Ownership, market strength and the poverty overlap. These decide what can
+    // actually be DONE with a vacant building, which the counts alone don't say.
+    function buildConditions(v) {
+        const OW = v.ownership_and_market, PV = v.poverty_vacancy;
+        if (!OW || !PV) return null;
+        const n = function (x) { return x == null ? '—' : x.toLocaleString(); };
+        const oe = OW.enough.owner, oo = OW.rest_of_city.owner;
+        const eTot = (oe.public || 0) + (oe.private || 0);
+        const oTot = (oo.public || 0) + (oo.private || 0);
+        const ePub = eTot ? (oe.public / eTot * 100).toFixed(1) : '—';
+        const oPub = oTot ? (oo.public / oTot * 100).toFixed(1) : '—';
+
+        const weak = function (t) {
+            const tot = Object.entries(t).reduce(function (a, [k, x]) {
+                return a + (k === 'NA' ? 0 : x); }, 0);
+            const ij = (t.I || 0) + (t.J || 0);
+            return { tot: tot, ij: ij, pct: tot ? (ij / tot * 100).toFixed(0) : '—',
+                     j: tot ? ((t.J || 0) / tot * 100).toFixed(0) : '—',
+                     i: tot ? ((t.I || 0) / tot * 100).toFixed(0) : '—' };
+        };
+        const we = weak(OW.enough.typology), wo = weak(OW.rest_of_city.typology);
+
+        const povRows = PV.bands.map(function (b) {
+            return '<tr><td>' + b.child_poverty_band + '</td><td>' + b.tracts +
+                '</td><td>' + b.enough_tracts + '</td><td>' + n(b.vacant_buildings) +
+                '</td><td>' + b.median_vacant_buildings + '</td><td>' +
+                (b.median_pct_change == null ? '—' : b.median_pct_change + '%') + '</td></tr>';
+        }).join('');
+
+        return el(
+            '<div class="vac-card">' +
+              '<h2>What could actually be done with these buildings</h2>' +
+              '<p>Counts say how much vacancy there is. Two other fields say what can be ' +
+              'done about it: <b>who owns it</b> &mdash; the City can put its own property out for ' +
+              'disposition, while a privately held vacant needs code enforcement, receivership or a ' +
+              'willing seller &mdash; and <b>how strong the housing market is</b>, which decides whether ' +
+              'a rehab can pencil without subsidy.</p>' +
+
+              '<div class="vac-hero">' +
+                '<div class="vh"><div class="vh-num">' + ePub + '%</div>' +
+                  '<div class="vh-lab">Publicly owned, ENOUGH tracts</div>' +
+                  '<div class="vh-sub">' + n(oe.public) + ' of ' + n(eTot) + ' &middot; vs ' +
+                  oPub + '% in the rest of the city</div></div>' +
+                '<div class="vh"><div class="vh-num">' + n(oe.owner_MCC || 0) + '</div>' +
+                  '<div class="vh-lab">City-owned (Mayor &amp; City Council)</div>' +
+                  '<div class="vh-sub">plus ' + n(oe.owner_HABC || 0) + ' Housing Authority</div></div>' +
+                '<div class="vh"><div class="vh-num">' + we.pct + '%</div>' +
+                  '<div class="vh-lab">In the two weakest markets (I&ndash;J)</div>' +
+                  '<div class="vh-sub">' + wo.pct + '% in the rest of the city</div></div>' +
+              '</div>' +
+
+              '<p><b>Two findings worth acting on.</b> ENOUGH tracts hold a <b>markedly higher share of ' +
+              'publicly owned vacants</b> &mdash; ' + ePub + '% against ' + oPub +
+              '% elsewhere &mdash; which matters because those are the properties the City can move ' +
+              'directly, without enforcement or acquisition. And although vacancy sits in weak markets ' +
+              'almost everywhere (' + we.pct + '% of ENOUGH vacants and ' + wo.pct +
+              '% of the rest are in bands I or J), the mix differs: the rest of the city&rsquo;s vacancy is ' +
+              'concentrated in <b>J, the weakest band</b> (' + wo.j + '% vs ' + we.j +
+              '% in ENOUGH tracts), while ENOUGH&rsquo;s sits mostly one band up in <b>I</b> (' + we.i +
+              '% vs ' + wo.i + '%). On DHCD&rsquo;s own market reading, rehab in ENOUGH neighborhoods is ' +
+              'somewhat more likely to be financially viable than in the city&rsquo;s worst-market vacancy.</p>' +
+
+              '<div class="section-label" style="margin-top:20px;">Child poverty and vacancy, all city tracts</div>' +
+              '<table class="lead-table"><thead><tr>' +
+                '<th>Child poverty</th><th>Tracts</th><th>ENOUGH</th>' +
+                '<th>Vacant bldgs</th><th>Median per tract</th><th>Median change</th>' +
+              '</tr></thead><tbody>' + povRows + '</tbody></table>' +
+
+              '<div class="vac-note"><b>Reading the poverty table.</b> Median vacant buildings per tract ' +
+              'climbs steadily with child poverty &mdash; from ' + PV.bands[0].median_vacant_buildings +
+              ' in the lowest band to ' + PV.bands[PV.bands.length - 1].median_vacant_buildings +
+              ' in the highest, roughly a ninefold difference. But the straight-line correlation is weak ' +
+              '(r&nbsp;=&nbsp;' + PV.pearson_r_poverty_vs_vacant_buildings + '), because plenty of ' +
+              'low-poverty tracts still carry vacancy: the ' + PV.bands[0].tracts +
+              ' tracts under 10% child poverty hold ' + n(PV.bands[0].vacant_buildings) +
+              ' vacant buildings between them. Vacancy is strongly associated with poverty without being ' +
+              'exclusive to it. <b>' + PV.double_burden_tracts + '</b> city tracts sit at or above the ' +
+              'citywide median on both measures, <b>' + PV.double_burden_enough + '</b> of them ENOUGH ' +
+              'tracts &mdash; expected, since ENOUGH selects on child poverty, so treat that as a measure ' +
+              'of overlap rather than of effect.</div>' +
+
+              '<div class="vac-note"><b>Sources and limits.</b> Ownership and market typology are joined ' +
+              'from DHCD\'s open vacant-notice layer by block/lot; ' +
+              n(OW.enough.unmatched + OW.rest_of_city.unmatched) + ' of about ' +
+              n(eTot + oTot) + ' properties do not match and are excluded. ' +
+              '<code>OWNER_ABBR</code> is only populated for public owners, so &ldquo;private&rdquo; means ' +
+              '&ldquo;no public owner recorded&rdquo; rather than confirmed private title. Market typology ' +
+              'is DHCD&rsquo;s 2023 A&ndash;J cluster model, a market classification rather than a ' +
+              'condition assessment. Child poverty is the 2024 ACS 5-year estimate used for ENOUGH ' +
+              'eligibility. Baltimore City only.</div>' +
+            '</div>'
+        );
     }
 
     function buildReduction(v) {

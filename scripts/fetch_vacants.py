@@ -95,6 +95,11 @@ LOTS = ("https://egisdata.baltimorecity.gov/egis/rest/services/Housing/"
 # the vacancy net-change number hides, so both flows are counted separately.
 DHCD = ("https://egisdata.baltimorecity.gov/egis/rest/services/Housing/"
         "DHCD_Open_Baltimore_Datasets/FeatureServer")
+# Ownership + market strength for currently-open notices. These two fields decide
+# what can actually be done with a vacant building: a City-owned property can be
+# dispositioned directly, a privately-owned one needs code enforcement or
+# receivership; and a weak-market tract needs subsidy for rehab to pencil at all.
+VBN_ATTRS = f"{DHCD}/1/query"   # "Vacant Building Notice - Open"
 REHABS = f"{DHCD}/2/query"   # "Rehabs of Vacant Buildings"  (DateIssue)
 DEMOS = f"{DHCD}/0/query"    # "Completed City Demo"         (DateDemoFinished)
 
@@ -229,6 +234,10 @@ def main():
 
     print("Fetching vacant lots (VacantLot_Test Layer 0)...")
     lots = fetch_all(LOTS, ["BLOCKLOT", "FULLADDR", "NO_IMPRV"], page=5000)
+
+    print("Fetching ownership + market typology for open VBNs (DHCD Layer 1)...")
+    vbn_attrs = fetch_all(VBN_ATTRS, ["BLOCKLOT", "OWNER_ABBR",
+                                      "HousingMarketTypology2023"])
 
     print("Fetching rehabs of vacant buildings (DHCD Layer 2)...")
     rehabs = fetch_all(REHABS, ["BLOCKLOT", "DateIssue", "Neighborhood"])
@@ -387,6 +396,52 @@ def main():
         if geoid:
             cur_lots[geoid].add(bl)
 
+    # --- ownership + market typology of the current vacant-building stock ---
+    # OWNER_ABBR names a public owner; it is absent for privately held property, so
+    # "private" here means "not one of the listed public owners" rather than a
+    # positively confirmed private title.
+    PUBLIC = {"MCC": "Baltimore City (Mayor & City Council)",
+              "HABC": "Housing Authority of Baltimore City",
+              "USA": "Federal", "HUD": "Federal (HUD)", "VA": "Federal (VA)"}
+    owner_by_bl, typ_by_bl = {}, {}
+    for f in vbn_attrs:
+        pr = f["properties"]
+        bl = pr.get("BLOCKLOT")
+        owner_by_bl[bl] = pr.get("OWNER_ABBR")
+        typ_by_bl[bl] = pr.get("HousingMarketTypology2023")
+
+    def profile(geoid_filter):
+        own = defaultdict(int)
+        typ = defaultdict(int)
+        matched = unmatched = 0
+        for geoid, bls in cur_buildings.items():
+            if not geoid_filter(geoid):
+                continue
+            for bl in bls:
+                if bl in owner_by_bl:
+                    matched += 1
+                    o = owner_by_bl[bl]
+                    own["public" if o in PUBLIC else "private"] += 1
+                    if o in PUBLIC:
+                        own["owner_" + o] += 1
+                    t = typ_by_bl.get(bl)
+                    if t:
+                        typ[t] += 1
+                else:
+                    unmatched += 1
+        return {"owner": dict(own), "typology": dict(sorted(typ.items())),
+                "matched": matched, "unmatched": unmatched}
+
+    ownership = {
+        "enough": profile(lambda g: g in enough_geoids),
+        "rest_of_city": profile(lambda g: g not in enough_geoids),
+        "note": ("Joined from DHCD Layer 1 by block/lot. OWNER_ABBR is only "
+                 "populated for public owners, so 'private' means 'no public "
+                 "owner recorded'. Market typology is DHCD's 2023 A-J cluster; "
+                 "J and I are the weakest markets, where rehab rarely pencils "
+                 "without subsidy."),
+    }
+
     # --- roll up by grantee ------------------------------------------------
     def rollup(per_tract):
         """Per-tract sets -> per-grantee counts. Only ENOUGH tracts map to a
@@ -499,6 +554,63 @@ def main():
             "demolitions": len(tract_demos.get(geoid, ())),
             "child_poverty_pct": child_pov.get(geoid),
         }
+
+    # --- child poverty x vacancy, all city tracts ---------------------------
+    # ENOUGH tracts are selected on child poverty, so the interesting question is
+    # not whether the two correlate but how much vacancy sits at each poverty level
+    # and where the double burden is worst.
+    pov_rows = [t for t in tract_stats.values()
+                if t["child_poverty_pct"] is not None
+                and (t["baseline_buildings"] > 0 or t["vacant_buildings"] > 0)]
+    for t in pov_rows:
+        t["_pov"] = float(t["child_poverty_pct"])
+    pov_bands = []
+    for lo, hi, lab in ((0, 10, "under 10%"), (10, 20, "10-19%"),
+                        (20, 30, "20-29%"), (30, 100.1, "30% or more")):
+        grp = [t for t in pov_rows if lo <= t["_pov"] < hi]
+        if not grp:
+            continue
+        pov_bands.append({
+            "child_poverty_band": lab,
+            "tracts": len(grp),
+            "enough_tracts": sum(1 for t in grp if t["in_enough"]),
+            "vacant_buildings": sum(t["vacant_buildings"] for t in grp),
+            "median_vacant_buildings": round(statistics.median(
+                [t["vacant_buildings"] for t in grp]), 1),
+            "median_pct_change": (round(statistics.median(
+                [t["pct_change"] for t in grp if t["pct_change"] is not None]), 1)
+                if any(t["pct_change"] is not None for t in grp) else None),
+        })
+    povs = [t["_pov"] for t in pov_rows]
+    vacs = [t["vacant_buildings"] for t in pov_rows]
+    try:
+        corr = round(statistics.correlation(povs, vacs), 3)
+    except Exception:
+        corr = None
+    # Worst double burden: high child poverty AND high vacancy.
+    hi_pov = statistics.median(povs)
+    hi_vac = statistics.median(vacs)
+    double = sorted(
+        ({"GEOID": t["GEOID"], "in_enough": t["in_enough"],
+          "grantees": t["grantees"], "child_poverty_pct": round(t["_pov"], 1),
+          "vacant_buildings": t["vacant_buildings"],
+          "pct_change": t["pct_change"]}
+         for t in pov_rows
+         if t["_pov"] >= hi_pov and t["vacant_buildings"] >= hi_vac),
+        key=lambda r: (-r["vacant_buildings"], -r["child_poverty_pct"]))
+    poverty_vacancy = {
+        "bands": pov_bands,
+        "pearson_r_poverty_vs_vacant_buildings": corr,
+        "median_child_poverty_pct": round(hi_pov, 1),
+        "median_vacant_buildings": hi_vac,
+        "double_burden_tracts": len(double),
+        "double_burden_enough": sum(1 for r in double if r["in_enough"]),
+        "double_burden_top": double[:15],
+        "note": ("Tracts at or above the citywide median on BOTH child poverty "
+                 "and vacant buildings. ENOUGH tracts are selected on child "
+                 "poverty, so their presence here is expected; the count is a "
+                 "measure of overlap, not of ENOUGH's effect."),
+    }
 
     def reduction_rate(group):
         """Share of tracts in `group` whose vacant-building count fell."""
@@ -669,6 +781,8 @@ def main():
         "by_grantee": grantee_rows,
         "by_tract": tract_rows,
         "by_neighborhood": neighborhoods,
+        "ownership_and_market": ownership,
+        "poverty_vacancy": poverty_vacancy,
     }
     out["enough_totals"]["total_vacants"] = (
         out["enough_totals"]["vacant_buildings"] + out["enough_totals"]["vacant_lots"])
@@ -828,6 +942,22 @@ def main():
     if C['demolitions']:
         print(f"  rehab:demolition ratio — ENOUGH "
               f"{T['rehabs']/max(T['demolitions'],1):.1f}:1, citywide {C['rehabs']/C['demolitions']:.1f}:1")
+    OW = out["ownership_and_market"]
+    print(f"\nOwnership of the current vacant-building stock:")
+    for k, lab in (("enough", "ENOUGH tracts"), ("rest_of_city", "Rest of city")):
+        o = OW[k]["owner"]
+        tot = o.get("public", 0) + o.get("private", 0)
+        if tot:
+            print(f"  {lab:<15} public {o.get('public',0):>5} "
+                  f"({o.get('public',0)/tot*100:.1f}%) | private {o.get('private',0):>6}")
+    PV = out["poverty_vacancy"]
+    print(f"\nChild poverty x vacancy: r = {PV['pearson_r_poverty_vs_vacant_buildings']}, "
+          f"{PV['double_burden_tracts']} double-burden tracts "
+          f"({PV['double_burden_enough']} of them ENOUGH)")
+    for b in PV["bands"]:
+        print(f"  poverty {b['child_poverty_band']:<12} {b['tracts']:>3} tracts "
+              f"({b['enough_tracts']:>2} ENOUGH) | {b['vacant_buildings']:>5} vacant bldgs "
+              f"| median {b['median_vacant_buildings']}")
     print("\nTop ENOUGH communities by total vacants:")
     for r in grantee_rows[:12]:
         pct = f"{r['pct_change_buildings']:+.1f}%" if r["pct_change_buildings"] is not None else "  n/a"
