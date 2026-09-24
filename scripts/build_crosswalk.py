@@ -63,6 +63,7 @@ SOURCE_FILES = [
     "ez_maryland.geojson",
     "just_communities_maryland.geojson",
     "bvri_investment_areas.geojson",
+    "priority_areas_baltimore.geojson",
     "bvri_vacants.geojson",
 ]
 
@@ -95,6 +96,7 @@ def compute():
     ez = load("ez_maryland.geojson")
     jc = load("just_communities_maryland.geojson")
     dhcd = load("bvri_investment_areas.geojson")
+    prio = load("priority_areas_baltimore.geojson")
     bvri = load("bvri_vacants.geojson")
 
     # --- tract -> grantee(s) map (grantees.json is the source of truth; a few
@@ -205,7 +207,8 @@ def compute():
     # --- helper: geometric intersection with area-fraction threshold ---
     # min_frac=0 counts any overlap (tract touches the layer at all); a positive
     # value requires that fraction of the tract's area to fall inside the layer.
-    def polygon_layer_hits(features, filt=None, min_frac=MIN_OVERLAP_FRAC):
+    def polygon_layer_hits(features, filt=None, min_frac=MIN_OVERLAP_FRAC,
+                           universe=None):
         polys = []
         for f in features:
             if filt and not filt(f):
@@ -222,6 +225,8 @@ def compute():
         pmerged = prep(merged)
         hits = set()
         for geoid, t in tracts.items():
+            if universe is not None and geoid not in universe:
+                continue
             if not pmerged.intersects(t["geom"]):
                 continue
             if min_frac <= 0:
@@ -276,6 +281,29 @@ def compute():
     results["dhcd"] = summarize(dhcd_hits, "DHCD Impact Investment Areas",
                                 universe=baci_geoids, universe_label="Baltimore City")
     results["dhcd"]["join"] = f"geometric overlap ≥{int(MIN_OVERLAP_FRAC*100)}% of tract area (Baltimore City only)"
+
+    # DHCD vacancy-reduction priority geographies. Baltimore City program, so
+    # scored against the city footprint. The valuable output is the inverse: which
+    # ENOUGH tracts the City's own targeting does NOT reach.
+    prio_hits = polygon_layer_hits(prio["features"], universe=baci_geoids)
+    results["prio"] = summarize(prio_hits, "DHCD Vacancy-Reduction Priority Areas",
+                                universe=baci_geoids, universe_label="Baltimore City")
+    results["prio"]["join"] = (f"geometric overlap ≥{int(MIN_OVERLAP_FRAC*100)}% of "
+                               f"tract area (Baltimore City only)")
+    results["prio"]["areas_total"] = len(prio["features"])
+    results["prio"]["categories"] = sorted({
+        f["properties"].get("category") for f in prio["features"]})
+    # The advocacy list: ENOUGH city tracts in no priority area at all.
+    uncovered = sorted(baci_geoids - prio_hits)
+    unc_by_grantee = defaultdict(int)
+    for g in uncovered:
+        for gname in tracts[g]["grantees"]:
+            unc_by_grantee[gname] += 1
+    results["prio"]["enough_tracts_not_covered"] = len(uncovered)
+    results["prio"]["uncovered_geoids"] = uncovered
+    results["prio"]["uncovered_by_grantee"] = sorted(
+        ({"grantee": k, "tracts": v} for k, v in unc_by_grantee.items()),
+        key=lambda r: (-r["tracts"], r["grantee"]))
 
     # --- BVRI Vacants to Value: point-in-polygon ---
     prepared_tracts = [(geoid, prep(t["geom"])) for geoid, t in tracts.items()]
@@ -368,7 +396,7 @@ def print_summary(out):
     T = out["totals"]
     print(f"ENOUGH: {T['communities']} communities, {T['tracts']} tracts "
           f"({T['shared_tracts']} shared by two grantees)\n")
-    for key in ["bvri", "dhcd", "nmtc", "oz", "oz2", "ez", "jc"]:
+    for key in ["bvri", "dhcd", "prio", "nmtc", "oz", "oz2", "ez", "jc"]:
         r = out["layers"][key]
         print(f"{r['label']}:")
         u = r.get("universe")

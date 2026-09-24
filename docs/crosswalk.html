@@ -254,6 +254,9 @@
         { key: 'jc', color: '#97266d', fill: '#d53f8c', shape: 'square', coverage: 'Statewide',
           blurb: '&ldquo;Just Communities&rdquo; is the official name of a Maryland designation created by the <b>Just Communities Act of 2024</b> &mdash; not a judgment about the places named. MD DHCD scored every census tract on conditions tied to past disinvestment (history of redlining, concentrated poverty, vacancy, lead-paint exposure, imprisonment rate, Superfund proximity) and designated the 419 highest-scoring tracts for priority State reinvestment.',
           means: function (L) { return 'This is the State’s own definition of where past disinvestment must be repaired &mdash; and it lands on the same neighborhoods ENOUGH serves. It is a state funding-priority lever rather than a tax credit, so it complements the incentive programs above.'; } },
+        { key: 'prio', color: '#319795', fill: '#4fd1c5', shape: 'square', coverage: 'Baltimore City only',
+          blurb: 'DHCD vacancy-reduction priority areas &mdash; the 31 places Baltimore City has designated for concentrated vacant-property work, and the geography its own Vacants Reinvestment Council dashboard filters by.',
+          means: function (L) { return 'This is the City&rsquo;s own targeting map. Where it overlaps an ENOUGH tract, City vacancy work and ENOUGH programming are already pointed at the same blocks; where it does not, ENOUGH neighborhoods carry vacancy that is outside the City&rsquo;s stated priority footprint.'; } },
         { key: 'bvri', color: '#e53e3e', shape: 'circle', coverage: 'Baltimore City only',
           blurb: 'Baltimore City DHCD "Vacants to Value" &mdash; vacant properties on the open-bid list, being marketed for rehab and reinvestment.',
           means: function (L) { return 'These are concrete, parcel-level rehab opportunities inside ENOUGH neighborhoods &mdash; where housing revitalization and ENOUGH services can reinforce each other.'; } },
@@ -367,6 +370,18 @@
                 '</b> of ' + L.properties_total.toLocaleString() +
                 ' Vacants to Value properties (' + pct(L.properties_in_grantee_tracts, L.properties_total) +
                 '%) sit inside an ENOUGH grantee tract.</div>';
+        }
+        if (cfg.key === 'prio' && L.enough_tracts_not_covered != null) {
+            const unc = (L.uncovered_by_grantee || []).map(function (r) {
+                return '<li>' + r.grantee + ' &mdash; ' + r.tracts + '</li>'; }).join('');
+            extra = '<div class="extra-stat">Across ' + L.areas_total + ' designated areas. ' +
+                'The useful half is the inverse: <b>' + L.enough_tracts_not_covered + ' of ' +
+                L.total_tracts + '</b> ENOUGH tracts in Baltimore City sit in <b>no</b> DHCD ' +
+                'vacancy-reduction priority area.' +
+                (unc ? '<details style="margin-top:6px;"><summary style="cursor:pointer;color:#2b6cb0;font-weight:600;">' +
+                  'Which groupings have tracts outside the City&rsquo;s priority footprint?</summary>' +
+                  '<ul style="margin:6px 0 0 18px;">' + unc + '</ul></details>' : '') +
+                '</div>';
         }
         if (cfg.key === 'jc' && L.layer_total_tracts != null) {
             const m = L.markers || {};

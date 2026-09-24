@@ -1,6 +1,6 @@
 {
   "generated_note": "Built by scripts/build_crosswalk.py \u2014 do not edit by hand.",
-  "source_hash": "48c15864619571c817cdf5b51c434fc935ed1d6b3b439c961d60b1a9564315ab",
+  "source_hash": "51c7c7f2f48c5dc427109599049b170ede9956dd69898ac1d912e555cb9bc2e8",
   "totals": {
     "communities": 28,
     "tracts": 111,
@@ -1183,6 +1183,162 @@
         "statewide_communities": 28
       },
       "join": "geometric overlap \u22655% of tract area (Baltimore City only)"
+    },
+    "prio": {
+      "label": "DHCD Vacancy-Reduction Priority Areas",
+      "tracts_overlapping": 23,
+      "total_tracts": 46,
+      "communities_overlapping": 8,
+      "total_communities": 11,
+      "geoids": [
+        "24510030100",
+        "24510070100",
+        "24510070200",
+        "24510070300",
+        "24510090600",
+        "24510130200",
+        "24510130300",
+        "24510140200",
+        "24510140300",
+        "24510150100",
+        "24510150400",
+        "24510150500",
+        "24510150600",
+        "24510150702",
+        "24510160100",
+        "24510160200",
+        "24510160300",
+        "24510170200",
+        "24510170300",
+        "24510250402",
+        "24510271600",
+        "24510271802",
+        "24510280500"
+      ],
+      "breakdown": [
+        {
+          "grantee": "Child First Authority",
+          "tracts": 6,
+          "grantee_total_tracts": 6
+        },
+        {
+          "grantee": "Elev8 Baltimore, Inc.",
+          "tracts": 5,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 4,
+          "grantee_total_tracts": 5
+        },
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 3,
+          "grantee_total_tracts": 10
+        },
+        {
+          "grantee": "Tendea Family INC.",
+          "tracts": 3,
+          "grantee_total_tracts": 3
+        },
+        {
+          "grantee": "Urban Strategies Inc",
+          "tracts": 2,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 1,
+          "grantee_total_tracts": 2
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 1,
+          "grantee_total_tracts": 7
+        }
+      ],
+      "universe": {
+        "label": "Baltimore City",
+        "tracts": 46,
+        "communities": 11,
+        "community_names": [
+          "Cherry Hill Strong",
+          "Child First Authority",
+          "Elev8 Baltimore, Inc.",
+          "Greater Mondawmin Coordinating Council",
+          "Leaders Breeders Inc.",
+          "Park Heights Renaissance, Inc.",
+          "South Baltimore Community Land Trust",
+          "Tendea Family INC.",
+          "The Central Baltimore Partnership, Inc.",
+          "The Y in Central Maryland",
+          "Urban Strategies Inc"
+        ],
+        "statewide_tracts": 111,
+        "statewide_communities": 28
+      },
+      "join": "geometric overlap \u22655% of tract area (Baltimore City only)",
+      "areas_total": 31,
+      "categories": [
+        "Major Redevelopment",
+        "Vacancy Reduction Priority Geography"
+      ],
+      "enough_tracts_not_covered": 23,
+      "uncovered_geoids": [
+        "24510090100",
+        "24510090200",
+        "24510090300",
+        "24510090400",
+        "24510090700",
+        "24510090800",
+        "24510120300",
+        "24510120400",
+        "24510120500",
+        "24510130400",
+        "24510151100",
+        "24510151200",
+        "24510151300",
+        "24510250203",
+        "24510250204",
+        "24510250207",
+        "24510250500",
+        "24510260301",
+        "24510271001",
+        "24510271700",
+        "24510271801",
+        "24510280101",
+        "24510280102"
+      ],
+      "uncovered_by_grantee": [
+        {
+          "grantee": "Park Heights Renaissance, Inc.",
+          "tracts": 7
+        },
+        {
+          "grantee": "The Y in Central Maryland",
+          "tracts": 6
+        },
+        {
+          "grantee": "The Central Baltimore Partnership, Inc.",
+          "tracts": 5
+        },
+        {
+          "grantee": "Cherry Hill Strong",
+          "tracts": 3
+        },
+        {
+          "grantee": "Greater Mondawmin Coordinating Council",
+          "tracts": 1
+        },
+        {
+          "grantee": "Leaders Breeders Inc.",
+          "tracts": 1
+        },
+        {
+          "grantee": "South Baltimore Community Land Trust",
+          "tracts": 1
+        }
+      ]
     },
     "bvri": {
       "label": "BVRI Vacants to Value",
