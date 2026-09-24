@@ -189,7 +189,7 @@
 
 <header>
     <h1>ENOUGH Crosswalk</h1>
-    <p>A crosswalk &mdash; a side-by-side comparison &mdash; of where Maryland's ENOUGH grantee communities sit inside other public investment programs. It answers, program by program: <strong>how many ENOUGH communities could also tap this funding tool?</strong></p>
+    <p>All 28 ENOUGH communities sit inside at least one other public investment program. This page shows which ones, program by program, so grantees and the State can stack funding in the same neighborhoods. It also tracks vacant housing in the Baltimore ENOUGH neighborhoods.</p>
 </header>
 
 <nav>
@@ -201,13 +201,16 @@
 <div class="container">
 
     <div class="explainer">
-        <h2>What this page shows &mdash; in plain language</h2>
+        <h2>What this page shows</h2>
         <p>The <strong>ENOUGH Act</strong> is a Maryland grant program that funds local organizations to serve neighborhoods with high child poverty. Several <em>other</em> federal and state programs also steer investment into distressed places &mdash; through tax credits and reinvestment dollars. This page checks how much those programs and ENOUGH's grantee communities cover the same ground, so grantees and the state can see where funding tools can be <strong>braided together</strong>.</p>
         <dl>
-            <dt>ENOUGH community</dt><dd>One active ENOUGH grantee organization and the set of neighborhoods it serves.</dd>
-            <dt>Grantee tract</dt><dd>A census tract (a small, official neighborhood-sized geography) that a grantee serves. The 28 communities serve 111 tracts.</dd>
-            <dt>&ldquo;Overlaps&rdquo;</dt><dd>A community overlaps a program if <em>any</em> of its tracts fall inside that program's geography. We also show the tract-level share, which is the stricter, more honest measure of reach.</dd>
-            <dt>Out of what?</dt><dd>Statewide programs are scored against all 28 communities and 111 tracts. The two <strong>Baltimore City</strong> programs (BVRI and the DHCD Impact Areas) are scored against only the <strong>11 communities and 46 tracts inside the city</strong> &mdash; a grantee in Frederick or Salisbury cannot contain a Baltimore City vacant property, so counting it as a miss would invent a gap that is really just a jurisdiction boundary. Each of those cards says so and lists the 11 communities.</dd>
+            <dt>Grantee</dt><dd>An organization that gets ENOUGH money to work in a set of neighborhoods. There are 28.</dd>
+            <dt>Census tract</dt><dd>A small official geography, roughly neighborhood-sized. Each grantee serves a group of tracts. The 28 grantees cover 111 tracts statewide, 46 of them in Baltimore City.</dd>
+            <dt>ENOUGH community</dt><dd>One grantee and the tracts it serves. This page uses &ldquo;community,&rdquo; &ldquo;grantee&rdquo; and &ldquo;tract grouping&rdquo; to mean the same thing.</dd>
+            <dt>Overlaps</dt><dd>A community overlaps a program if any of its tracts sit inside that program's geography. We show the tract count too, which is the stricter measure.</dd>
+            <dt>DHCD</dt><dd>A department of housing and community development. Two appear here: <strong>Baltimore City DHCD</strong> runs the city's vacant-property work, and <strong>Maryland DHCD</strong> runs Just Communities.</dd>
+            <dt>BVRI</dt><dd>The Baltimore Vacants Reinvestment Initiative. The City and State effort to move 5,000 vacant buildings to new use by 2029.</dd>
+            <dt>Vacant building notice</dt><dd>A citation Baltimore City issues when a building is not fit to live in. An open notice is the City's official record that a building is vacant, so we count open notices to measure vacancy.</dd>
         </dl>
     </div>
 
@@ -242,28 +245,28 @@
     // Layer display config keyed to the crosswalk.json layer keys.
     const LAYERS = [
         { key: 'nmtc', color: '#1c4532', shape: 'square', coverage: 'Statewide',
-          blurb: 'Federal New Markets Tax Credit &mdash; a tax incentive that channels private investment into low-income census tracts.',
+          blurb: 'The federal New Markets Tax Credit. A tax break that pulls private investment into low-income census tracts.',
           means: function (L) { return 'Every ENOUGH community sits in NMTC-eligible territory &mdash; investors backing projects there can claim federal credits.'; } },
         { key: 'oz', color: '#3182ce', shape: 'square', coverage: 'Statewide',
-          blurb: 'Federal Opportunity Zones (2017 Tax Cuts and Jobs Act) &mdash; investors who put capital gains into these tracts get federal tax breaks, in effect through 2028.',
+          blurb: 'Federal Opportunity Zones, created by the 2017 Tax Cuts and Jobs Act. Investors who put capital gains into these tracts get a federal tax break. In effect through 2028.',
           means: function (L) { return 'Projects in these tracts can attract Opportunity Fund capital alongside ENOUGH programming.'; } },
         { key: 'oz2', color: '#553c9a', fill: '#9f7aea', shape: 'square', coverage: 'Statewide',
-          blurb: 'OZ 2.0-eligible tracts &mdash; census tracts that meet the next-round Opportunity Zone income/poverty thresholds (2020&ndash;2024 ACS). Maryland may nominate up to 113 of the 451 eligible tracts, with designations effective 2027.',
-          means: function (L) { return 'These are the neighborhoods most likely to become the <em>next</em> Opportunity Zones &mdash; strong candidates for the state to prioritize when it nominates, so ENOUGH communities keep a federal capital-gains incentive after the 2018 zones lapse in 2028.'; } },
+          blurb: 'Tracts that meet the income and poverty thresholds for the next round of Opportunity Zones, using 2020 to 2024 census survey data. Maryland may nominate up to 113 of the 451 eligible tracts. New designations take effect in 2027.',
+          means: function (L) { return 'These are the likeliest next Opportunity Zones. Nominating them would keep a federal investment incentive in ENOUGH neighborhoods after the 2018 zones lapse in 2028.'; } },
         { key: 'ez', color: '#dd6b20', shape: 'square', coverage: 'Statewide',
-          blurb: 'Maryland Enterprise Zones &mdash; a state program giving businesses that locate or expand in a zone real-property and income tax credits.',
-          means: function (L) { return 'Businesses and employers inside these tracts qualify for state tax credits &mdash; a workforce and economic-development lever for ENOUGH neighborhoods.'; } },
+          blurb: 'A Maryland program that gives businesses locating or expanding in a zone property and income tax credits.',
+          means: function (L) { return 'A business hiring or expanding in one of these tracts qualifies for state tax credits.'; } },
         { key: 'jc', color: '#97266d', fill: '#d53f8c', shape: 'square', coverage: 'Statewide',
           blurb: '&ldquo;Just Communities&rdquo; is the official name of a Maryland designation created by the <b>Just Communities Act of 2024</b> &mdash; not a judgment about the places named. MD DHCD scored every census tract on conditions tied to past disinvestment (history of redlining, concentrated poverty, vacancy, lead-paint exposure, imprisonment rate, Superfund proximity) and designated the 419 highest-scoring tracts for priority State reinvestment.',
-          means: function (L) { return 'This is the State’s own definition of where past disinvestment must be repaired &mdash; and it lands on the same neighborhoods ENOUGH serves. It is a state funding-priority lever rather than a tax credit, so it complements the incentive programs above.'; } },
+          means: function (L) { return 'This is the State’s own list of places owed repair for past disinvestment, and it lands on the same neighborhoods ENOUGH serves. It steers State funding instead of giving a tax credit, so it stacks with the programs above.'; } },
         { key: 'prio', color: '#319795', fill: '#4fd1c5', shape: 'square', coverage: 'Baltimore City only',
-          blurb: 'DHCD vacancy-reduction priority areas &mdash; the 31 places Baltimore City has designated for concentrated vacant-property work, and the geography its own Vacants Reinvestment Council dashboard filters by.',
+          blurb: 'The 31 places Baltimore City has picked for concentrated vacant-property work. This is the geography the City&rsquo;s own public dashboard filters by.',
           means: function (L) { return 'This is the City&rsquo;s own targeting map. Where it overlaps an ENOUGH tract, City vacancy work and ENOUGH programming are already pointed at the same blocks; where it does not, ENOUGH neighborhoods carry vacancy that is outside the City&rsquo;s stated priority footprint.'; } },
         { key: 'bvri', color: '#e53e3e', shape: 'circle', coverage: 'Baltimore City only',
-          blurb: 'Baltimore City DHCD "Vacants to Value" &mdash; vacant properties on the open-bid list, being marketed for rehab and reinvestment.',
+          blurb: 'Vacant properties Baltimore City is actively marketing for sale, through its "Vacants to Value" open-bid list. Anyone can bid on these.',
           means: function (L) { return 'These are concrete, parcel-level rehab opportunities inside ENOUGH neighborhoods &mdash; where housing revitalization and ENOUGH services can reinforce each other.'; } },
         { key: 'dhcd', color: '#b7791f', shape: 'square', fill: '#f6e05e', coverage: 'Baltimore City only',
-          blurb: 'Baltimore DHCD Impact Investment Areas &mdash; neighborhoods the City has prioritized for concentrated reinvestment.',
+          blurb: 'Neighborhoods Baltimore City has prioritized for concentrated reinvestment.',
           means: function (L) { return 'Where an ENOUGH community shares ground with a City reinvestment priority, the two efforts can be aligned.'; } },
     ];
 
@@ -336,6 +339,9 @@
                 '<div class="error">Failed to load crosswalk data: ' + err.message + '</div>';
         });
 
+    // Show the 11-community list once, not on all three Baltimore City cards.
+    let scopeListShown = false;
+
     function buildCard(L, cfg, T) {
         const cShare = pct(L.communities_overlapping, L.total_communities);
         const tShare = pct(L.tracts_overlapping, L.total_tracts);
@@ -346,10 +352,10 @@
         const sc = L.universe ? L.universe.label + ' ' : '';
         const headline = '<b>' + L.communities_overlapping + ' of ' + L.total_communities +
             '</b> ' + sc + 'ENOUGH communities have at least one tract in this program' +
-            ' &mdash; reaching <b>' + L.tracts_overlapping + ' of ' + L.total_tracts + '</b> ' +
+            '. That reaches <b>' + L.tracts_overlapping + ' of ' + L.total_tracts + '</b> ' +
             sc + 'grantee tracts.';
 
-        const means = '<div class="means"><b>Why it matters:</b> ' + cfg.means(L) + '</div>';
+        const means = '<div class="means"><b>For grantees:</b> ' + cfg.means(L) + '</div>';
 
         // Layers restricted to one jurisdiction are scored against the grantee
         // footprint inside that jurisdiction, not the statewide roster — a grantee
@@ -358,18 +364,16 @@
         let scope = '';
         if (L.universe) {
             const u = L.universe;
-            scope = '<div class="scope-note">' +
-                '<b>Why the denominator is smaller here:</b> this is a <b>' + u.label +
-                '</b> program, so an ENOUGH tract outside the city <em>cannot</em> overlap it — ' +
-                'no matter how well the program is working. The figures above are therefore out of the <b>' +
-                u.communities + ' ENOUGH communities</b> and <b>' + u.tracts +
-                ' grantee tracts</b> that are actually in ' + u.label + ', not the statewide ' +
-                u.statewide_communities + ' communities / ' + u.statewide_tracts + ' tracts. ' +
-                'Scoring it statewide would understate the program by counting ' +
-                (u.statewide_communities - u.communities) + ' communities that were never eligible.' +
-                '<details><summary>Which ' + u.communities + ' ENOUGH communities are in ' + u.label + '?</summary>' +
-                '<ul>' + u.community_names.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-                '</ul></details></div>';
+            scope = '<div class="scope-note"><b>' + u.label + ' program.</b> ' +
+                'Counted against the <b>' + u.communities + ' ENOUGH communities</b> and <b>' + u.tracts +
+                ' tracts</b> inside the city, not the statewide ' + u.statewide_communities + ' and ' +
+                u.statewide_tracts + '. A grantee outside Baltimore cannot overlap a city program.' +
+                (scopeListShown ? '' :
+                  '<details><summary>Which ' + u.communities + ' communities are in ' + u.label + '?</summary>' +
+                  '<ul>' + u.community_names.map(function (nm) { return '<li>' + nm + '</li>'; }).join('') +
+                  '</ul></details>') +
+                '</div>';
+            scopeListShown = true;
         }
 
         let extra = '';
@@ -381,11 +385,11 @@
         }
         if (cfg.key === 'prio' && L.enough_tracts_not_covered != null) {
             const unc = (L.uncovered_by_grantee || []).map(function (r) {
-                return '<li>' + r.grantee + ' &mdash; ' + r.tracts + '</li>'; }).join('');
-            extra = '<div class="extra-stat">Across ' + L.areas_total + ' designated areas. ' +
-                'The useful half is the inverse: <b>' + L.enough_tracts_not_covered + ' of ' +
-                L.total_tracts + '</b> ENOUGH tracts in Baltimore City sit in <b>no</b> DHCD ' +
-                'vacancy-reduction priority area.' +
+                return '<li>' + r.grantee + ': ' + r.tracts + ' tracts</li>'; }).join('');
+            extra = '<div class="extra-stat">The City has designated ' + L.areas_total +
+                ' priority areas. Exactly half the ENOUGH city tracts fall inside one, which means the ' +
+                'other half do not: <b>' + L.enough_tracts_not_covered +
+                ' tracts sit outside every City priority area.</b>' +
                 (unc ? '<details style="margin-top:6px;"><summary style="cursor:pointer;color:#2b6cb0;font-weight:600;">' +
                   'Which groupings have tracts outside the City&rsquo;s priority footprint?</summary>' +
                   '<ul style="margin:6px 0 0 18px;">' + unc + '</ul></details>' : '') +
@@ -409,7 +413,7 @@
             extra = '<div class="extra-stat">Statewide, <b>' + L.layer_total_tracts +
                 '</b> tracts are OZ 2.0-eligible; Maryland may nominate up to <b>113</b> (a 25% cap). ' +
                 'ENOUGH grantee tracts are ' + pct(L.tracts_overlapping, L.layer_total_tracts) +
-                '% of the eligible pool &mdash; a ready-made case for prioritizing them in the nomination round.</div>';
+                '% of the eligible pool. That is the case for prioritizing them when Maryland nominates.</div>';
         }
 
         let tiers = '';
@@ -427,9 +431,9 @@
         if (cfg.key === 'ez' && L.strict_5pct_tracts != null) {
             methodExtra = ' Under a stricter test that requires at least 5% of a tract’s area to fall inside a zone, <b>' +
                 L.strict_5pct_tracts + ' of ' + L.total_tracts + '</b> grantee tracts (' +
-                L.strict_5pct_communities + ' communities) count — the difference is tracts that only clip a zone’s edge.';
+                L.strict_5pct_communities + ' communities) count. The difference is tracts that only clip a zone’s edge.';
         }
-        const method = L.join ? '<div class="method-note">How overlap is measured for this layer: <b>' + L.join + '</b>.' + methodExtra + '</div>' : '';
+        const method = L.join ? '<div class="method-note">How we measured this: <b>' + L.join + '</b>.' + methodExtra + '</div>' : '';
 
         return el(
             '<div class="layer-card">' +
@@ -481,7 +485,7 @@
         const propHead = hasProps ? '<th class="num">Properties</th>' : '';
         const tHead = hasProps ? 'Tracts w/ properties' : 'Tracts in program';
         return '<details class="breakdown">' +
-            '<summary><span class="chev">&#9654;</span>Which communities&nbsp;&mdash;&nbsp;' +
+            '<summary><span class="chev">&#9654;</span>Which communities? ' +
                 L.communities_overlapping + ' with tracts in this program</summary>' +
             '<table class="bk-table"><thead><tr>' +
                 '<th>ENOUGH community</th><th class="num">' + tHead + '</th>' + propHead +
@@ -516,10 +520,11 @@
         return el(
             '<div class="vac-card">' +
               '<h2>When a vacant building comes off the list, does it become a home?</h2>' +
-              '<p>Everything above counts notices. A closed notice is not the same as a family living ' +
-              'there. Joining Maryland <b>SDAT</b> parcel records to the vacancy layers gives the ' +
-              'owner-occupancy status, the owner&rsquo;s mailing address and the last sale, so the ' +
-              'question can actually be answered for properties that left the list and stayed off.</p>' +
+              '<p>Everything above counts notices. A closed notice is not a family living there. ' +
+              'Maryland&rsquo;s State Department of Assessments and Taxation (SDAT) records who owns each ' +
+              'parcel, whether the owner lives in it, where their mail goes, and when it last sold. ' +
+              'Joining those records to the vacancy data answers the question for properties that left the ' +
+              'list and stayed off.</p>' +
 
               '<div class="vac-hero">' +
                 '<div class="vh"><div class="vh-num">' + R.pct_owner_occupied + '%</div>' +
@@ -529,29 +534,30 @@
                 '<div class="vh"><div class="vh-num">' + R.pct_sold_since_fy25 + '%</div>' +
                   '<div class="vh-lab">Sold since July 2024</div>' +
                   '<div class="vh-sub">against ' + A.pct_sold_since_fy25 +
-                  '% of all parcels &mdash; nearly 4&times;</div></div>' +
+                  '% of all parcels, nearly 4 times as often</div></div>' +
                 '<div class="vh"><div class="vh-num">' + R.pct_owner_outside_maryland + '%</div>' +
                   '<div class="vh-lab">Owner based outside Maryland</div>' +
                   '<div class="vh-sub">against ' + A.pct_owner_outside_maryland +
                   '% of all parcels</div></div>' +
               '</div>' +
 
-              '<p><b>The answer is a qualified no.</b> About one in six formerly vacant properties is now ' +
-              'owner-occupied &mdash; real, and better than the ' + V.pct_owner_occupied +
-              '% among buildings still vacant. But ' + R.pct_owner_occupied + '% sits roughly <b>' + gap +
-              ' points below</b> the ' + A.pct_owner_occupied + '% owner-occupancy rate of the surrounding ' +
-              'housing stock in the same tracts, while <b>' + R.pct_sold_since_fy25 +
-              '% changed hands</b> since the baseline against ' + A.pct_sold_since_fy25 +
-              '% of parcels generally, and out-of-state ownership runs above the local norm. The pattern ' +
-              'is that a resolved vacant most often becomes a <b>tenanted or investor-held property</b> ' +
-              'rather than an owner-occupied home. That is not an argument against reducing vacancy &mdash; ' +
-              'an occupied rental beats a vacant shell &mdash; but it does mean a falling vacancy count ' +
-              'should not be read as rising homeownership, which is the outcome the Just Communities ' +
-              'framing and ENOUGH&rsquo;s own wealth-building goals actually care about.</p>' +
+              '<p><b>Mostly no.</b> About one in six formerly vacant properties now has an owner living ' +
+              'in it. That is real, and far better than the ' + V.pct_owner_occupied +
+              '% among buildings still vacant. But ' + R.pct_owner_occupied + '% is about <b>' +
+              Math.round(gap) + ' points below</b> the ' + A.pct_owner_occupied +
+              '% rate for all housing in the same tracts. Meanwhile <b>' + R.pct_sold_since_fy25 +
+              '% changed hands</b> since July 2024, against ' + A.pct_sold_since_fy25 +
+              '% of parcels generally, and ' + R.pct_owner_outside_maryland +
+              '% now have an owner who mails out of state, against ' + A.pct_owner_outside_maryland + '%.</p>' +
+
+              '<p>So a building that leaves the vacancy list usually becomes <b>a rental or an ' +
+              'investor&rsquo;s property, not a home its owner lives in</b>. An occupied rental still beats ' +
+              'a vacant shell. But a falling vacancy count is not rising homeownership, and homeownership is ' +
+              'what ENOUGH&rsquo;s wealth-building goals and the Just Communities law are aimed at.</p>' +
 
               '<table class="lead-table"><thead><tr>' +
-                '<th>Properties</th><th>Matched</th><th>Owner-occupied</th>' +
-                '<th>Owner outside MD</th><th>Sold since FY25</th>' +
+                '<th>Property group</th><th>Parcels<br>matched</th><th>Owner lives<br>there</th>' +
+                '<th>Owner mails<br>out of state</th><th>Sold since<br>Jul 2024</th>' +
               '</tr></thead><tbody>' +
                 row(A) + row(V, '(' + n(V.unmatched) + ' unmatched)') +
                 row(R, '(' + n(R.unmatched) + ' unmatched)') +
@@ -563,7 +569,7 @@
               ' parcels), then joined property-by-property on the block/lot tail of the SDAT account ' +
               'number. <b>The join is not complete:</b> ' + n(V.unmatched) + ' currently vacant and ' +
               n(R.unmatched) + ' resolved properties find no parcel match and are excluded rather than ' +
-              'assumed &mdash; roughly a fifth in each case, so treat these percentages as indicative of ' +
+              'assumed. That is roughly a fifth in each case, so read these percentages as describing ' +
               'the matched majority, not exact. &ldquo;Owner-occupied&rdquo; is SDAT&rsquo;s own indicator ' +
               '(H); &ldquo;owner outside Maryland&rdquo; uses the owner&rsquo;s mailing state, which flags ' +
               'absentee ownership but will also catch a Maryland family with an out-of-state mailing ' +
@@ -602,11 +608,11 @@
 
         return el(
             '<div class="vac-card">' +
-              '<h2>What could actually be done with these buildings</h2>' +
+              '<h2>Who owns these buildings, and can they be fixed?</h2>' +
               '<p>Counts say how much vacancy there is. Two other fields say what can be ' +
-              'done about it: <b>who owns it</b> &mdash; the City can put its own property out for ' +
+              'done about it. First, <b>who owns it</b>. The City can put its own property out for ' +
               'disposition, while a privately held vacant needs code enforcement, receivership or a ' +
-              'willing seller &mdash; and <b>how strong the housing market is</b>, which decides whether ' +
+              'willing seller. Second, <b>how strong the local housing market is</b>, which decides whether ' +
               'a rehab can pencil without subsidy.</p>' +
 
               '<div class="vac-hero">' +
@@ -617,30 +623,32 @@
                 '<div class="vh"><div class="vh-num">' + n(oe.owner_MCC || 0) + '</div>' +
                   '<div class="vh-lab">City-owned (Mayor &amp; City Council)</div>' +
                   '<div class="vh-sub">plus ' + n(oe.owner_HABC || 0) + ' Housing Authority</div></div>' +
-                '<div class="vh"><div class="vh-num">' + we.pct + '%</div>' +
-                  '<div class="vh-lab">In the two weakest markets (I&ndash;J)</div>' +
+                '<div class="vh" title="DHCD grades housing markets A (strongest) to J (weakest)."><div class="vh-num">' + we.pct + '%</div>' +
+                  '<div class="vh-lab">In the 2 weakest housing markets</div>' +
                   '<div class="vh-sub">' + wo.pct + '% in the rest of the city</div></div>' +
               '</div>' +
 
-              '<p><b>Two findings worth acting on.</b> ENOUGH tracts hold a <b>markedly higher share of ' +
-              'publicly owned vacants</b> &mdash; ' + ePub + '% against ' + oPub +
-              '% elsewhere &mdash; which matters because those are the properties the City can move ' +
-              'directly, without enforcement or acquisition. And although vacancy sits in weak markets ' +
-              'almost everywhere (' + we.pct + '% of ENOUGH vacants and ' + wo.pct +
-              '% of the rest are in bands I or J), the mix differs: the rest of the city&rsquo;s vacancy is ' +
-              'concentrated in <b>J, the weakest band</b> (' + wo.j + '% vs ' + we.j +
-              '% in ENOUGH tracts), while ENOUGH&rsquo;s sits mostly one band up in <b>I</b> (' + we.i +
-              '% vs ' + wo.i + '%). On DHCD&rsquo;s own market reading, rehab in ENOUGH neighborhoods is ' +
-              'somewhat more likely to be financially viable than in the city&rsquo;s worst-market vacancy.</p>' +
+              '<p>ENOUGH tracts hold a higher share of publicly owned vacants: <b>' + ePub +
+              '%</b> against ' + oPub + '% in the rest of the city. Those are the ones the City can put ' +
+              'out for disposition directly, with no enforcement case and nothing to buy first.</p>' +
 
-              '<div class="section-label" style="margin-top:20px;">Child poverty and vacancy, all city tracts</div>' +
+              '<p>Vacancy sits in weak markets nearly everywhere. ' + we.pct + '% of ENOUGH vacants and ' +
+              wo.pct + '% of the rest are in DHCD&rsquo;s two weakest market grades, I and J, on a scale ' +
+              'where A is strongest. But the mix differs. The rest of the city&rsquo;s vacancy is mostly in ' +
+              '<b>J, the weakest grade</b> (' + wo.j + '% against ' + we.j + '% in ENOUGH tracts). ' +
+              'ENOUGH&rsquo;s sits one grade up in <b>I</b> (' + we.i + '% against ' + wo.i +
+              '%). By the City&rsquo;s own grading, a rehab in an ENOUGH neighborhood is more likely to pay ' +
+              'for itself than one in the city&rsquo;s weakest-market vacancy.</p>' +
+
+              '<div class="section-label" style="margin-top:20px;">Child poverty and vacancy across all 199 city tracts</div>' +
               '<table class="lead-table"><thead><tr>' +
-                '<th>Child poverty</th><th>Tracts</th><th>ENOUGH</th>' +
-                '<th>Vacant bldgs</th><th>Median per tract</th><th>Median change</th>' +
+                '<th>Child poverty rate</th><th>Tracts</th><th>Of those,<br>ENOUGH</th>' +
+                '<th>Vacant bldgs<br>(total)</th><th>Median per<br>tract</th>' +
+                '<th>Median tract<br>% change</th>' +
               '</tr></thead><tbody>' + povRows + '</tbody></table>' +
 
               '<div class="vac-note"><b>Reading the poverty table.</b> Median vacant buildings per tract ' +
-              'climbs steadily with child poverty &mdash; from ' + PV.bands[0].median_vacant_buildings +
+              'climbs steadily with child poverty, from ' + PV.bands[0].median_vacant_buildings +
               ' in the lowest band to ' + PV.bands[PV.bands.length - 1].median_vacant_buildings +
               ' in the highest, roughly a ninefold difference. But the straight-line correlation is weak ' +
               '(r&nbsp;=&nbsp;' + PV.pearson_r_poverty_vs_vacant_buildings + '), because plenty of ' +
@@ -649,7 +657,7 @@
               ' vacant buildings between them. Vacancy is strongly associated with poverty without being ' +
               'exclusive to it. <b>' + PV.double_burden_tracts + '</b> city tracts sit at or above the ' +
               'citywide median on both measures, <b>' + PV.double_burden_enough + '</b> of them ENOUGH ' +
-              'tracts &mdash; expected, since ENOUGH selects on child poverty, so treat that as a measure ' +
+              'tracts. That is expected, since ENOUGH selects on child poverty, so read it as a measure ' +
               'of overlap rather than of effect.</div>' +
 
               '<div class="vac-note"><b>Sources and limits.</b> Ownership and market typology are joined ' +
@@ -698,7 +706,7 @@
               '<div class="kicker">Topline</div>' +
               '<div class="line">ENOUGH&rsquo;s ' + T.baltimore_tracts +
               ' Baltimore tracts hold about <b>' + shareStock +
-              '%</b> of the city&rsquo;s vacant buildings &mdash; and account for roughly <b>' +
+              '%</b> of the city&rsquo;s vacant buildings, and account for roughly <b>' +
               shareRed + '%</b> of its net reduction since July 2024. The work there is overwhelmingly ' +
               'repair, not demolition: about <b>' + ratio + ' rehab permits for every City demolition</b>. ' +
               'The steepest declines are in the neighborhoods served by ' + leaders + '.</div>' +
@@ -733,15 +741,12 @@
               v.city_tracts_analyzed + '</b> Baltimore City census tracts. So the same measure can be read ' +
               'inside ENOUGH tracts and across the rest of the city.</p>' +
 
-              '<p><b>What this is measuring.</b> Each ENOUGH grantee serves a <em>grouping of census tracts</em>. ' +
-              'Everything below reports what is happening to vacant housing <em>inside those tracts</em> &mdash; ' +
-              'it is neighborhood monitoring, not a measure of grantee activity. ENOUGH funds work on child ' +
-              'poverty and does not fund vacant-housing work at all; Baltimore City DHCD and the Baltimore ' +
-              'Vacants Reinvestment Council drive that, alongside private owners and developers. So when a ' +
-              'grouping&rsquo;s vacancy falls, the credit belongs to whoever did the work on those blocks, ' +
-              'which is usually not the ENOUGH grantee. The reason to watch it is simply that child poverty ' +
-              'and vacant housing sit on the same ground, and a grantee working there has a material interest ' +
-              'in which way it is moving.</p>' +
+              '<p><b>What this measures.</b> Each grantee serves a group of census tracts. Everything below ' +
+              'reports vacant housing inside those tracts. It monitors neighborhoods, not grantees. ' +
+              'ENOUGH funds child-poverty work and does not fund vacant-housing work at all. Baltimore City ' +
+              'DHCD and the Baltimore Vacants Reinvestment Initiative do that, along with private owners and ' +
+              'developers. When a grouping&rsquo;s vacancy falls, the credit belongs to whoever did the work ' +
+              'on those blocks, and that is usually not the grantee.</p>' +
 
               '<div class="vs">' +
                 '<div class="side en"><div class="lab">ENOUGH tracts (all groupings)</div>' +
@@ -761,8 +766,9 @@
               'The share of tracts that fall is largely a function of how much vacancy a tract began with, ' +
               'not of how well anyone performed:</p>' +
               '<table class="lead-table" style="margin-top:10px;"><thead><tr>' +
-                '<th>Vacant buildings at baseline</th><th>Tracts</th><th>Share that fell</th>' +
-                '<th>Median change</th><th>Share that are ENOUGH</th>' +
+                '<th>Vacant bldgs in Jul 2024</th><th>Tracts</th>' +
+                '<th>% with fewer vacants now</th><th>Median tract % change</th>' +
+                '<th>% of band in ENOUGH tracts</th>' +
               '</tr></thead><tbody>' + sizeRows + '</tbody></table>' +
               '<div style="margin-top:9px;">Every tract with 150 or more vacant buildings fell; only about ' +
               'six in ten of the smallest tracts did. A tract holding 200 properties will almost certainly ' +
@@ -773,21 +779,22 @@
               abspc(E.median_tract_pct_change) + ' inside, for the same reason in reverse.</div>' +
               (ST.ratio_observed_expected != null ?
                 '<div style="margin-top:10px;padding-top:9px;border-top:1px solid #feebc8;">' +
-                '<b>Correcting for it.</b> Applying each size band&rsquo;s citywide reduction rate to the ' +
-                'ENOUGH tracts in that band, we would expect <b>' + ST.expected_reductions +
-                '</b> of the ' + ST.enough_tracts_used + ' to fall. <b>' + ST.observed_reductions +
-                '</b> did &mdash; a ratio of <b>' + ST.ratio_observed_expected + '</b>. In other words, once ' +
-                'starting size is accounted for, ENOUGH tracts performed almost exactly as the rest of the city ' +
-                'did, not better. <b>The honest reading is that vacancy is falling broadly across Baltimore and ' +
-                'ENOUGH neighborhoods are moving with it</b> &mdash; which is still worth knowing, because that ' +
-                'is where most of the volume sits. We report no p-value: ENOUGH tracts are selected on child ' +
-                'poverty rather than sampled, so significance testing has no null to test against.</div>' : '') +
+                '<b>Correcting for it.</b> Apply each band&rsquo;s citywide rate to the ENOUGH tracts in ' +
+                'that band and you would expect <b>' + ST.expected_reductions + '</b> of ' +
+                ST.enough_tracts_used + ' to fall. <b>' + ST.observed_reductions + '</b> did. That is a ratio ' +
+                'of <b>' + ST.ratio_observed_expected + '</b>, where 1.0 means exactly as expected. ' +
+                'Once starting size is accounted for, ENOUGH tracts did about what the rest of the city did. ' +
+                'Vacancy is falling across Baltimore and ENOUGH neighborhoods are falling with it. That still ' +
+                'matters, because most of the city&rsquo;s vacancy is there. We publish no p-value: ENOUGH ' +
+                'tracts are picked for child poverty, not sampled at random, so a significance test has ' +
+                'nothing to test.</div>' : '') +
               '</div>' +
 
-              '<div class="section-label" style="margin-top:22px;">By ENOUGH tract grouping &mdash; change in vacant buildings</div>' +
+              '<div class="section-label" style="margin-top:22px;">Change in vacant buildings, by tract grouping</div>' +
               '<table class="lead-table"><thead><tr>' +
-                '<th class="rank"></th><th>Tracts served by</th>' +
-                '<th>Baseline</th><th>Now</th><th>% change</th><th>Buildings</th><th>Tracts<br>that fell</th>' +
+                '<th class="rank">#</th><th>Tracts served by</th>' +
+                '<th>Vacant bldgs<br>Jul 2024</th><th>Sep 2026</th><th>% change</th>' +
+                '<th>Buildings<br>removed</th><th>Tracts with<br>fewer vacants</th>' +
               '</tr></thead><tbody>' + full + '</tbody></table>' +
 
               '<div class="caution"><b>This table is not a grantee ranking.</b> ' +
@@ -846,10 +853,13 @@
         const shareB = pct(T.vacant_buildings, C.vacant_buildings);
         const shareAll = pct(T.total_vacants, C.total_vacants);
 
+        // "34:0" is not a ratio, and "132.0:1" dresses a single demolition as
+        // precision. Say it in words when the denominator is 0 or 1.
         const ratio = function (a, b) {
-            if (!a && !b) return '&mdash;';
-            if (!b) return n(a) + ':0';
-            return (a / b).toFixed(1) + ':1';
+            if (!a && !b) return 'none';
+            if (!b) return n(a) + ' rehabs, no demos';
+            if (b === 1) return n(a) + ' rehabs, 1 demo';
+            return (a / b).toFixed(1) + ' to 1';
         };
         const rows = v.by_grantee.map(function (r) {
             return '<tr>' +
@@ -901,13 +911,11 @@
 
         return el(
             '<div class="vac-card">' +
-              '<h2>Vacant housing in ENOUGH communities</h2>' +
-              '<p>Baltimore DHCD and the Vacants Reinvestment Council track vacancy by neighborhood, ' +
-              'council district and DHCD priority geography &mdash; but not by ENOUGH community. ' +
-              'This is that same <b>Vacants Reduction</b> view, cut by ENOUGH grantee instead. ' +
-              '&ldquo;Vacants&rdquo; here means the full inventory: <b>standing vacant buildings</b> ' +
-              '(properties under an open Vacant Building Notice) plus <b>vacant lots</b>. ' +
-              'Baltimore City only.</p>' +
+              '<h2>How much vacant housing is in ENOUGH neighborhoods?</h2>' +
+              '<p>Baltimore City DHCD tracks vacancy by neighborhood, council district and its own ' +
+              'priority areas, but not by ENOUGH community. This is the same view, cut by ENOUGH grantee. ' +
+              '&ldquo;Vacants&rdquo; means the whole inventory: <b>standing vacant buildings</b> (those under ' +
+              'an open city vacant-building notice) plus <b>vacant lots</b>. Baltimore City only.</p>' +
 
               '<div class="vac-hero">' +
                 '<div class="vh"><div class="vh-num">' + n(T.total_vacants) + '</div>' +
@@ -928,7 +936,7 @@
                   '<div class="vh-sub">' + n(T.rehabs) + ' rehab permits vs ' + n(T.demolitions) + ' demolitions</div></div>' +
               '</div>' +
 
-              '<p style="margin-top:14px;"><b>Why this matters:</b> ENOUGH communities hold about ' +
+              '<p style="margin-top:14px;"><b>The finding.</b> ENOUGH communities hold about ' +
               shareAll + '% of all the vacant property in Baltimore City &mdash; and ' + shareB +
               '% of its vacant <em>buildings</em> &mdash; inside just ' + T.baltimore_tracts +
               ' census tracts. Vacancy there is also falling <b>faster</b> than the city as a whole (' +
@@ -941,40 +949,37 @@
               'footprint are working on substantially the same blocks, which makes these grantees natural ' +
               'partners for BVRI targeting &mdash; and gives GOC a per-community baseline to hold the trend against.</p>' +
 
-              '<p><b>Net change hides both the volume of work and what kind of work it was.</b> ' +
-              '<b>' + n(T.gross_resolved) + '</b> vacant-building notices closed in ENOUGH tracts over this period ' +
-              'and <b>' + n(T.new_issued) + '</b> new ones were issued. But those two figures should not be read as ' +
-              '&ldquo;properties fixed&rdquo; versus &ldquo;properties newly abandoned&rdquo;: <b>' +
-              n(T.cycled_properties) + '</b> of the closures were properties that received another notice inside ' +
-              'the same window &mdash; notice renewal and re-inspection churn, not rehabilitation. Netting that ' +
-              'out, roughly <b>' + n(T.gross_resolved - T.cycled_properties) + ' properties left the vacancy list ' +
-              'and stayed off it</b>. That is the honest gross figure, and it is the one to quote. ' +
-              'Critically, the resolutions are overwhelmingly <b>preservation rather than clearance</b>: ' +
-              n(T.rehabs) + ' rehab permits against ' + n(T.demolitions) + ' completed demolitions, a ratio of <b>' +
-              (T.demolitions ? (T.rehabs/T.demolitions).toFixed(1)+':1' : 'n/a') +
-              '</b>, slightly better than the citywide ' +
-              (C.demolitions ? (C.rehabs/C.demolitions).toFixed(1)+':1' : 'n/a') +
-              '. Housing units in ENOUGH communities are mostly being <em>repaired and returned to use</em>, ' +
-              'not demolished &mdash; which matters directly for whether ENOUGH families can eventually own them.</p>' +
+              '<p><b>The net figure hides how much work happened, and what kind.</b> ' +
+              n(T.gross_resolved) + ' vacant-building notices closed in ENOUGH tracts over this period, and ' +
+              n(T.new_issued) + ' new ones opened. Do not read those as &ldquo;fixed&rdquo; against ' +
+              '&ldquo;newly abandoned.&rdquo; ' + n(T.cycled_properties) + ' of the closures were properties ' +
+              'that picked up another notice in the same window. That is paperwork, not repair. Take those out ' +
+              'and about <b>' + n(T.gross_resolved - T.cycled_properties) + ' properties left the list and ' +
+              'stayed off</b>. Quote that figure, not the larger one. ' +
+              'These buildings are mostly being repaired, not torn down: ' + n(T.rehabs) +
+              ' rehab permits against ' + n(T.demolitions) + ' City demolitions, or about ' +
+              (T.demolitions ? (T.rehabs/T.demolitions).toFixed(0) : 'n/a') +
+              ' rehabs for every demolition. The citywide figure is about ' +
+              (C.demolitions ? (C.rehabs/C.demolitions).toFixed(0) : 'n/a') + '.</p>' +
 
               '<table class="vac-table"><thead><tr>' +
-                '<th>ENOUGH community</th>' +
-                '<th>Vacant bldgs<br>' + base + '</th>' +
-                '<th>VBNs<br>resolved</th>' +
-                '<th>New VBNs<br>issued</th>' +
-                '<th>Net<br>change</th>' +
-                '<th>Vacant bldgs<br>now</th>' +
+                '<th>Tracts served by</th>' +
+                '<th>Vacant bldgs<br>Jul 2024</th>' +
+                '<th>Notices<br>closed</th>' +
+                '<th>Newly<br>noticed</th>' +
+                '<th>Change in<br>vacant bldgs</th>' +
+                '<th>Vacant bldgs<br>Sep 2026</th>' +
                 '<th>Rehab<br>permits</th>' +
                 '<th>Demo-<br>litions</th>' +
-                '<th>Rehab :<br>demo</th>' +
+                '<th>Rehabs per<br>demolition</th>' +
               '</tr></thead><tbody>' + rows + totRow + '</tbody></table>' +
 
-              '<details class="vac-nb"><summary>Neighborhood view &mdash; biggest vacancy declines since ' + base + '</summary>' +
+              '<details class="vac-nb"><summary>Which neighborhoods lost the most vacant buildings?</summary>' +
                 '<p class="vac-note">DHCD&rsquo;s dashboard and local press report by neighborhood. This reproduces that ' +
                 'cut from the same source data, so the two can be reconciled. Neighborhoods with at least 150 ' +
                 'vacant buildings at baseline, biggest absolute decline first.</p>' +
-                '<table class="vac-table"><thead><tr><th>Neighborhood</th><th>' + base +
-                '</th><th>Net change</th><th>Now</th><th>% change</th></tr></thead><tbody>' +
+                '<table class="vac-table"><thead><tr><th>Neighborhood</th><th>Vacant bldgs<br>Jul 2024</th>' +
+                '<th>Change</th><th>Sep 2026</th><th>% change</th></tr></thead><tbody>' +
                 nbRows + '</tbody></table></details>' +
 
               (T.shared_tracts ? '<div class="vac-note">Note: ' + T.shared_tracts +
@@ -1065,7 +1070,7 @@
 
         return el(
             '<div class="stack-card">' +
-              '<h2>How many programs stack in the same tract?</h2>' +
+              '<h2>How many programs reach the same neighborhood?</h2>' +
               '<p>Counting the three <b>statewide</b> tax-incentive programs (NMTC, Opportunity Zones, Enterprise Zones), this shows how many overlap each grantee tract. More overlapping programs means more tools a grantee could braid in the same neighborhood. (Baltimore-only layers are excluded here so rural tracts aren’t penalized. OZ 2.0 is excluded because it is future eligibility, not a live designation, and Just Communities because it directs State funding rather than a tax credit &mdash; both are reported as their own cards above.)</p>' +
               '<div class="stack-hist">' + cols + '</div>' +
               gap +
