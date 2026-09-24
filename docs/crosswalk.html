@@ -467,10 +467,16 @@
     // table on a 3-property change, which is not a finding.
     const MIN_BASELINE = 50;
 
+    function ranked_guard(v) {
+        return v && v.reduction_comparison && v.by_grantee && v.by_grantee.length;
+    }
+
     function buildReduction(v) {
         const RC = v.reduction_comparison, base = v.baseline_label;
         const E = RC.enough, O = RC.rest_of_city, T = v.enough_totals, C = v.citywide;
-        const SIG = RC.significance || {};
+        const ST = RC.standardized || {};
+        if (!ranked_guard(v)) { return [el('<div class="red-card"><p>Reduction data unavailable.</p></div>')]; }
+        const RP = v.renotice_profile || {};
         const n = function (x) { return x == null ? '—' : x.toLocaleString(); };
         const abspc = function (x) { return Math.abs(x) + '%'; };
 
@@ -501,7 +507,7 @@
               '%</b> of the city&rsquo;s vacant buildings &mdash; and account for roughly <b>' +
               shareRed + '%</b> of its net reduction since July 2024. The work there is overwhelmingly ' +
               'repair, not demolition: about <b>' + ratio + ' rehab permits for every City demolition</b>. ' +
-              'Steepest declines: ' + leaders + '.</div>' +
+              'The steepest declines are in the neighborhoods served by ' + leaders + '.</div>' +
             '</div>'
         );
 
@@ -533,14 +539,18 @@
               v.city_tracts_analyzed + '</b> Baltimore City census tracts. So the same measure can be read ' +
               'inside ENOUGH tracts and across the rest of the city.</p>' +
 
-              '<p><b>What ENOUGH is, and is not, doing here.</b> ENOUGH funds organizations working on child ' +
-              'poverty; it does not fund vacant-housing work. Baltimore City DHCD and the Baltimore Vacants ' +
-              'Reinvestment Council do that. These figures describe <em>the places</em> ENOUGH grantees serve, ' +
-              'not the performance of the grantees, and nothing here should be read as ENOUGH having caused ' +
-              'the change. The reason to track it is that child poverty and vacant housing sit on the same blocks.</p>' +
+              '<p><b>What this is measuring.</b> Each ENOUGH grantee serves a <em>grouping of census tracts</em>. ' +
+              'Everything below reports what is happening to vacant housing <em>inside those tracts</em> &mdash; ' +
+              'it is neighborhood monitoring, not a measure of grantee activity. ENOUGH funds work on child ' +
+              'poverty and does not fund vacant-housing work at all; Baltimore City DHCD and the Baltimore ' +
+              'Vacants Reinvestment Council drive that, alongside private owners and developers. So when a ' +
+              'grouping&rsquo;s vacancy falls, the credit belongs to whoever did the work on those blocks, ' +
+              'which is usually not the ENOUGH grantee. The reason to watch it is simply that child poverty ' +
+              'and vacant housing sit on the same ground, and a grantee working there has a material interest ' +
+              'in which way it is moving.</p>' +
 
               '<div class="vs">' +
-                '<div class="side en"><div class="lab">ENOUGH grantee tracts</div>' +
+                '<div class="side en"><div class="lab">ENOUGH tracts (all groupings)</div>' +
                   '<div class="big">' + E.pct_tracts_reduced + '%</div>' +
                   '<div class="sub">' + E.tracts_reduced + ' of ' + E.tracts_with_vacancy +
                   ' tracts saw vacant buildings fall<br>Stock down ' + abspc(E.pct_change_buildings) +
@@ -552,36 +562,46 @@
                   ' &middot; median tract ' + abspc(O.median_tract_pct_change) + '</div></div>' +
               '</div>' +
 
-              '<div class="caution"><b>Do not lean on that ' + E.pct_tracts_reduced + '% figure.</b> ' +
-              'Two things undercut it, and both are in our own data. ' +
-              'First, the gap is <b>not statistically significant</b> &mdash; ' +
-              SIG.gap_pp + ' percentage points, z&nbsp;=&nbsp;' + SIG.z + ', p&nbsp;=&nbsp;' + SIG.p_two_sided +
-              '. Two tracts landing the other way would close most of it. ' +
-              'Second, and more important, <b>the share of tracts that fall is mostly a function of how much ' +
-              'vacancy a tract started with</b>, not of how well anyone performed:</p>' +
+              '<div class="caution"><b>That ' + E.pct_tracts_reduced + '% gap disappears once you ' +
+              'correct for starting size, so do not use it.</b> ' +
+              'The share of tracts that fall is largely a function of how much vacancy a tract began with, ' +
+              'not of how well anyone performed:</p>' +
               '<table class="lead-table" style="margin-top:10px;"><thead><tr>' +
                 '<th>Vacant buildings at baseline</th><th>Tracts</th><th>Share that fell</th>' +
                 '<th>Median change</th><th>Share that are ENOUGH</th>' +
               '</tr></thead><tbody>' + sizeRows + '</tbody></table>' +
               '<div style="margin-top:9px;">Every tract with 150 or more vacant buildings fell; only about ' +
               'six in ten of the smallest tracts did. A tract holding 200 properties will almost certainly ' +
-              'lose one; a tract holding three can easily stay flat. ENOUGH tracts are concentrated in the ' +
-              'large-stock bands, so they clear that bar mechanically. The mirror image is the median: the ' +
+              'lose one; a tract holding three can easily stay flat. ENOUGH tracts hold <b>none</b> of the ' +
+              'smallest band and <b>' + (RC.size_bins[RC.size_bins.length-1] || {}).enough_share +
+              '%</b> of the largest, so they clear that bar mechanically. The mirror image is the median: the ' +
               'typical tract outside ENOUGH fell ' + abspc(O.median_tract_pct_change) + ' against ' +
-              abspc(E.median_tract_pct_change) + ' inside, for the same reason in reverse. ' +
-              '<b>Neither number is evidence of relative performance.</b> The defensible claims are the ' +
-              'concentration and contribution figures in the topline.</div></div>' +
+              abspc(E.median_tract_pct_change) + ' inside, for the same reason in reverse.</div>' +
+              (ST.ratio_observed_expected != null ?
+                '<div style="margin-top:10px;padding-top:9px;border-top:1px solid #feebc8;">' +
+                '<b>Correcting for it.</b> Applying each size band&rsquo;s citywide reduction rate to the ' +
+                'ENOUGH tracts in that band, we would expect <b>' + ST.expected_reductions +
+                '</b> of the ' + ST.enough_tracts_used + ' to fall. <b>' + ST.observed_reductions +
+                '</b> did &mdash; a ratio of <b>' + ST.ratio_observed_expected + '</b>. In other words, once ' +
+                'starting size is accounted for, ENOUGH tracts performed almost exactly as the rest of the city ' +
+                'did, not better. <b>The honest reading is that vacancy is falling broadly across Baltimore and ' +
+                'ENOUGH neighborhoods are moving with it</b> &mdash; which is still worth knowing, because that ' +
+                'is where most of the volume sits. We report no p-value: ENOUGH tracts are selected on child ' +
+                'poverty rather than sampled, so significance testing has no null to test against.</div>' : '') +
+              '</div>' +
 
-              '<div class="section-label" style="margin-top:22px;">By community &mdash; change in vacant buildings</div>' +
+              '<div class="section-label" style="margin-top:22px;">By ENOUGH tract grouping &mdash; change in vacant buildings</div>' +
               '<table class="lead-table"><thead><tr>' +
-                '<th class="rank"></th><th>ENOUGH community</th>' +
+                '<th class="rank"></th><th>Tracts served by</th>' +
                 '<th>Baseline</th><th>Now</th><th>% change</th><th>Buildings</th><th>Tracts<br>that fell</th>' +
               '</tr></thead><tbody>' + full + '</tbody></table>' +
 
-              '<div class="caution"><b>How to read the table.</b> ' +
-              'These are <em>place</em> measures, not grantee scorecards &mdash; no ENOUGH grantee is ' +
-              'contracted to reduce vacancy, and a community can move in either direction for reasons ' +
-              'entirely outside its work. ' +
+              '<div class="caution"><b>This table is not a grantee ranking.</b> ' +
+              'It reports vacancy in each grantee&rsquo;s <em>tract grouping</em>, and those tracts move for ' +
+              'reasons almost entirely outside the grantee&rsquo;s control &mdash; City acquisition and ' +
+              'disposition, code enforcement, receivership, private sales and developer activity. No ENOUGH ' +
+              'grantee is contracted to reduce vacancy, so a grouping near the bottom is a signal about ' +
+              'conditions on that ground, not about the organization working there. ' +
               'Percentages are not volumes: ' + ranked[0].grantee.replace(/,? (Inc|INC)\.?$/, '') +
               ' leads on rate, while Park Heights and Elev8 removed the most buildings outright. ' +
               'Communities with fewer than ' + MIN_BASELINE + ' vacant buildings at baseline are left out' +
@@ -601,10 +621,20 @@
               '. A further ' + n(RC.vbns_outside_any_tract) + ' citywide notices (about ' +
               pct(RC.vbns_outside_any_tract, C.vacant_buildings) + '%) sit outside every tract polygon under ' +
               'a strict point-in-polygon test and are absent from the tract figures. ' +
+              (v.excluded_bad_intervals ? '<b>' + v.excluded_bad_intervals + '</b> source rows are dropped as ' +
+                'unusable (a null issue date, or an end date before the start date); left in, they would show ' +
+                'up as phantom closures and phantom new notices. ' : '') +
+              'The median is taken over tracts that had at least one vacant building at baseline (' +
+              E.median_basis_tracts + ' ENOUGH, ' + O.median_basis_tracts + ' other), a slightly narrower ' +
+              'base than the share-of-tracts figure, which also counts tracts that had none then and do now. ' +
               '<b>Reduction points are notice closures, not repairs:</b> only ' +
               n(T.gross_resolved - T.cycled_properties) + ' of ' + n(T.gross_resolved) +
-              ' ENOUGH closures were durable &mdash; the map draws the rest hollow, and the layer name is a ' +
-              'convenience, not a claim about every point. Baltimore City only.</div>' +
+              ' ENOUGH closures were durable, meaning the property did not pick up another notice afterwards; ' +
+              'the map draws the rest hollow. ' +
+              (RP.median_gap_days != null ? 'Those re-notices are administrative rather than a house going ' +
+                'vacant again: the median gap from closure to the next notice is <b>' + RP.median_gap_days +
+                ' days</b>, and ' + RP.pct_within_30_days + '% land within 30 days. ' : '') +
+              'Baltimore City only.</div>' +
             '</div>'
         );
         return [topline, card];

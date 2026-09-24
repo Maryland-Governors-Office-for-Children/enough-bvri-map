@@ -113,18 +113,21 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   `VacantsTimeSlider`. Three "current" numbers exist (11,448 baltegis / 11,481 egisdata / 11,523 ours from
   intervals); ~0.65% snapshot drift, not a definitional gap. We stay on `egisdata` because it is the only host
   that also publishes the vacant-lot layer. Quote DHCD's dashboard for official figures.
-  **Flows since FY25 start (ENOUGH):** 2,211 VBNs closed and 1,793 newly issued — but **1,378 of the closures
-  were re-noticed in the same window** (renewal/re-inspection churn), so only **~833 properties left vacancy and
-  stayed off**. Quote 833, not 2,211 — a raw closed-notice count overstates progress ~2.7×. Resolution is
+  **Flows since FY25 start (ENOUGH):** 2,201 VBNs closed and 1,789 newly issued — but **1,370 closures were
+  followed by a new notice**, so only **~831 were durable**. Quote 831, not 2,201 — a raw closed-notice count
+  overstates progress ~2.6×. Re-noticing is **administrative, not re-vacancy**: median gap closure→next notice
+  is **5 days**, 89.8% within 30 days, 0.2% beyond a year (audited 2026-09-24). Resolution is
   overwhelmingly preservation: **1,062 rehab permits vs 97 City demolitions (10.9:1**, vs citywide 9.9:1).
   Rehab permits ≠ completions; demolitions are City-funded only. Per-grantee ratio varies a lot
   (Park Heights 13.4:1, Elev8 4.0:1).
-  **⚠ Do NOT headline "% of tracts where vacancy fell" (ENOUGH 88.9% vs rest-of-city 77.6%).** The LLM council
-  killed this and the data proves them right: the measure tracks *starting stock*, not performance. Tracts with
-  150+ vacants fell 100% of the time; tracts with 1–10 fell 62.7%. ENOUGH holds **0%** of the smallest band and
-  **40%** of the 150+ band, so it clears a one-building bar mechanically. The gap is also not significant
-  (z=1.66, p=0.097; 2 tracts flipping closes most of it). The median per-tract change is *better* outside
-  ENOUGH (−19.6% vs −14.3%) for the mirror-image reason. **Defensible topline instead:** 36% of the city's
+  **⚠ Do NOT headline "% of tracts where vacancy fell" (ENOUGH 88.9% vs rest-of-city 77.6%).** The measure
+  tracks *starting stock*, not performance: tracts with 150+ vacants fell 100% of the time, tracts with 1–10
+  fell 62.7%, and ENOUGH holds **0%** of the smallest band vs **40%** of the largest — it clears a one-building
+  bar mechanically. **Indirect standardization settles it:** applying citywide band-specific rates, expected
+  41.0 of 45 ENOUGH tracts to fall; 40 did → **ratio 0.975**. Corrected for size, ENOUGH performed *as the rest
+  of the city did, not better.* Median per-tract change is *better* outside ENOUGH (−19.8% vs −14.3%), same
+  reason in reverse. **No p-value is published** — ENOUGH tracts are purposively selected (poverty ≥30%), not
+  sampled, so there is no null to test. **Defensible topline instead:** 36% of the city's
   vacant buildings + ~40% of its net reduction + 10.9:1 repair-to-demolition. Both measures are published
   with the size-bin table so the confound is visible.
   **Never imply ENOUGH caused the reduction** — DHCD and the Vacants Reinvestment Council drive vacancy work;

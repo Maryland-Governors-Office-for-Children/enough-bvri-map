@@ -13,6 +13,32 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 
 ## Workstream A — Map build & layers
 
+**Done (2026-09-24) — methodology audit + council re-review; FIXED A LIVE NEGATIVE NUMBER.** A second council
+round reviewed my own audit and found three live errors I had missed:
+1. **`cycled_properties` was still summing over all 199 tracts** (the same 46→199 universe bug I thought I'd
+   fixed in one field), making it larger than `gross_resolved`. The live site was publishing
+   **"−1,130 properties left the vacancy list and stayed off it."** Now scoped to ENOUGH (831 of 2,201), and
+   **invariant assertions** added so the build *refuses to write output* if a derived count goes negative,
+   cycled > gross, ENOUGH > citywide, or the tract counts stop reconciling. That absence is why it shipped.
+2. **`durable` was self-referential** — it flagged a closure as "re-noticed" if the property had *any* notice
+   starting in the window, including the closure's own opening notice. Rewritten with an ordering test (durable
+   iff no notice starts on/after the closure).
+3. **Window boundary + units artifact** fully explained the 45-unit residual I had waved off as "snapshot
+   effects": 39 intervals end exactly on the baseline (counted as closures though never in baseline stock),
+   1 starts exactly on it (counted in stock *and* as new), 39−1=38, plus the 7 overlapping baseline intervals
+   = 45 exactly. Boundaries are now strict (`end > baseline`, `start > baseline`).
+Also fixed: **`Address` was never in the spells `outFields`**, so `address` was null on all ~18.7k published
+points; and stale docstring validation figures (13,233 → the deduplicated 13,226).
+- **Dropped the p-value.** ENOUGH tracts are purposively selected (poverty ≥30%), not sampled, so there is no
+  null distribution; tracts are also non-independent. Replaced with **indirect standardization**: expected 41.0
+  of 45 ENOUGH tracts to fall given citywide band-specific rates, observed 40 → **ratio 0.975**. Corrected for
+  starting size, ENOUGH tracts performed *as the rest of the city did, not better*. The page now says so plainly.
+- **Tested the "churn" interpretation instead of asserting it** (council's ask): median gap from closure to next
+  notice is **5 days**, 89.8% within 30 days, 0.2% beyond a year. Administrative re-issue confirmed.
+- **Verified the error class I most suspected was absent:** 7 properties hold overlapping open intervals at
+  baseline (13,233 rows vs 13,226 properties) — the pipeline already counts into per-tract sets, so no
+  double-count. Documented.
+
 **Done (2026-09-24) — vacancy-reduction layers + citywide tract comparison (Mihir/comms ask).** Two new map
 layers: **Vacancy Reductions** (7,199 VBN closures since FY25 as individual points; solid = property stayed
 off, hollow = re-noticed — only 2,356 citywide / 833 in ENOUGH are durable) and **Vacancy Change by Tract**

@@ -35,13 +35,19 @@ Vacancy spells (the important one):
   is simply the rows where DateNotice <= D < DateEnd. That is what makes a real
   reduction trend possible instead of a single snapshot. Validated against the
   City's own dashboard figures (within ~0.6% at every fiscal-year boundary):
-      2024-07-01 (FY25 start)  computed 13,233   dashboard 13,312
-      2025-07-01 (FY25 end)    computed 12,599   dashboard 12,589
+      2024-07-01 (FY25 start)  computed 13,226   dashboard 13,312
+      2025-07-01 (FY25 end)    computed 12,593   dashboard 12,589
       2026-07-01 (FY26 end)    computed 11,604   dashboard 11,624
       snapshot (current)       computed 11,523   dashboard 11,448
-  The residual gap is snapshot timing plus a handful of same-property duplicate
-  intervals; it is not material at community scale, but it does mean these
-  numbers should be described as "closely tracks DHCD", not "equals DHCD".
+  The residual gap is snapshot timing; it is not material at community scale, but
+  it does mean these numbers should be described as "closely tracks DHCD", not
+  "equals DHCD".
+
+  Note the figures above are DISTINCT PROPERTIES, not interval rows. A raw row
+  count at the baseline returns 13,233 because 7 properties carry two overlapping
+  open intervals on that date. Every stock figure here counts blocklots into a set
+  per tract, so those 7 are counted once. Audited 2026-09-24: no overlapping
+  intervals exist at the current snapshot (11,523 rows = 11,523 properties).
 
 Vacant lots:
   https://egisdata.baltimorecity.gov/egis/rest/services/Housing/VacantLot_Test/MapServer/0
@@ -64,6 +70,7 @@ Needs shapely; run from the repo-local venv:
 
 import json
 import math
+import statistics
 import urllib.parse
 import urllib.request
 from collections import defaultdict
@@ -218,7 +225,7 @@ def main():
           f"({len(enough_geoids)} ENOUGH, {len(geoids) - len(enough_geoids)} other)")
 
     print("\nFetching vacancy spells (VacantsTimeSlider Layer 0)...")
-    spells = fetch_all(SPELLS, ["blocklot", "DateNotice", "DateEnd", "NEIGHBOR"])
+    spells = fetch_all(SPELLS, ["blocklot", "DateNotice", "DateEnd", "NEIGHBOR", "Address"])
 
     print("Fetching vacant lots (VacantLot_Test Layer 0)...")
     lots = fetch_all(LOTS, ["BLOCKLOT", "FULLADDR", "NO_IMPRV"], page=5000)
@@ -234,7 +241,15 @@ def main():
     ends = [ms_to_date(f["properties"].get("DateEnd")) for f in spells]
     snapshot = max(e for e in ends if e)
     n_snap = sum(1 for e in ends if e == snapshot)
+    bad_interval = sum(
+        1 for f in spells
+        if (ms_to_date(f["properties"].get("DateNotice")) is None
+            or (ms_to_date(f["properties"].get("DateEnd")) is not None
+                and ms_to_date(f["properties"].get("DateNotice")) is not None
+                and ms_to_date(f["properties"].get("DateEnd"))
+                < ms_to_date(f["properties"].get("DateNotice")))))
     print(f"\nSnapshot (sentinel) date: {snapshot}  ({n_snap} still-open intervals)")
+    print(f"  excluded {bad_interval} unusable intervals (null or end-before-start)")
 
     print("Assigning spells to grantee tracts...")
     spell_geoid = assign(spells, geoms, geoids)
@@ -256,7 +271,10 @@ def main():
         p = f["properties"]
         bl = p.get("blocklot")
         start, end = ms_to_date(p.get("DateNotice")), ms_to_date(p.get("DateEnd"))
-        if not start or not end:
+        # 21 source rows have DateEnd < DateNotice and 1 has a null DateNotice.
+        # They cannot describe a real vacancy period; excluded so they do not
+        # appear as phantom resolutions or phantom new notices.
+        if not start or not end or end < start:
             continue
         open_now = end >= snapshot
         if open_now:
@@ -284,14 +302,14 @@ def main():
         p = f["properties"]
         bl = p.get("blocklot")
         start, end = ms_to_date(p.get("DateNotice")), ms_to_date(p.get("DateEnd"))
-        if not start or not end:
+        if not start or not end or end < start:
             continue
-        if window_start <= end < snapshot:      # closed inside the window
+        if window_start < end < snapshot:       # closed inside the window
             iv_resolved += 1
             cw_resolved.add(bl)
             if geoid:
                 gross_resolved[geoid].add(bl)
-        if start >= window_start:                # opened inside the window
+        if start > window_start:                 # opened inside the window
             iv_new += 1
             cw_new.add(bl)
             if geoid:
@@ -311,6 +329,52 @@ def main():
             if geoid:
                 out[geoid].add(bl)
         return out, cw
+
+    # blocklot -> every notice start, to test whether a closure was followed by a
+    # new notice on the same property.
+    starts_by_blocklot = defaultdict(list)
+    for f in spells:
+        pr = f["properties"]
+        st = ms_to_date(pr.get("DateNotice"))
+        en = ms_to_date(pr.get("DateEnd"))
+        if st and en and en >= st:
+            starts_by_blocklot[pr.get("blocklot")].append(st)
+    for k in starts_by_blocklot:
+        starts_by_blocklot[k].sort()
+
+    def was_renoticed(blocklot, close_date):
+        """True if this property picked up another notice on/after this closure."""
+        for st in starts_by_blocklot.get(blocklot, ()):
+            if st >= close_date:
+                return True
+        return False
+
+    # Evidence for calling re-noticing "administrative re-issue" rather than a
+    # property genuinely going vacant again: measure the gap from a closure to the
+    # next notice on the same property. A few days means paperwork; a year or more
+    # would mean real re-vacancy. Audited 2026-09-24: median 5 days, 89.7% inside
+    # 30 days, 0.2% beyond a year.
+    renotice_gaps = []
+    for f in spells:
+        pr = f["properties"]
+        st, en = ms_to_date(pr.get("DateNotice")), ms_to_date(pr.get("DateEnd"))
+        if not (st and en and en >= st) or not (window_start < en < snapshot):
+            continue
+        later = [x for x in starts_by_blocklot.get(pr.get("blocklot"), ()) if x >= en]
+        if later:
+            renotice_gaps.append((later[0] - en).days)
+    gap_bands = {"0-30 days": 0, "31-180 days": 0, "181-365 days": 0, "over 1 year": 0}
+    for g in renotice_gaps:
+        key = ("0-30 days" if g <= 30 else "31-180 days" if g <= 180
+               else "181-365 days" if g <= 365 else "over 1 year")
+        gap_bands[key] += 1
+    renotice_profile = {
+        "closures_followed_by_new_notice": len(renotice_gaps),
+        "median_gap_days": (statistics.median(renotice_gaps) if renotice_gaps else None),
+        "bands": gap_bands,
+        "pct_within_30_days": (round(gap_bands["0-30 days"] / len(renotice_gaps) * 100, 1)
+                               if renotice_gaps else None),
+    }
 
     tract_rehabs, cw_rehabs = date_filtered(rehabs, rehab_geoid, "DateIssue")
     tract_demos, cw_demos = date_filtered(demos, demo_geoid, "DateDemoFinished")
@@ -390,7 +454,7 @@ def main():
         nb = (p.get("NEIGHBOR") or "").strip()
         bl = p.get("blocklot")
         start, end = ms_to_date(p.get("DateNotice")), ms_to_date(p.get("DateEnd"))
-        if not nb or not start or not end:
+        if not nb or not start or not end or end < start:
             continue
         if end >= snapshot:
             nb_cur[nb].add(bl)
@@ -456,10 +520,16 @@ def main():
             "vacant_buildings": now_sum,
             "change_buildings": now_sum - base_sum,
             "pct_change_buildings": round((now_sum - base_sum) / base_sum * 100, 1) if base_sum else None,
+            # True median (averages the middle pair on an even count). An earlier
+            # version took the upper-middle value, which reported the rest-of-city
+            # median as -19.6% instead of -19.8%.
             "median_tract_pct_change": (
-                sorted(r["pct_change"] for r in rows if r["pct_change"] is not None)[
-                    len([r for r in rows if r["pct_change"] is not None]) // 2]
+                round(statistics.median(
+                    [r["pct_change"] for r in rows if r["pct_change"] is not None]), 1)
                 if any(r["pct_change"] is not None for r in rows) else None),
+            # The median is over tracts with a baseline > 0; the share-of-tracts
+            # figure also includes tracts that had none at baseline but do now.
+            "median_basis_tracts": sum(1 for r in rows if r["pct_change"] is not None),
         }
 
     # Share-of-tracts-that-fell is NOT size-neutral: the bigger a tract's stock,
@@ -473,11 +543,11 @@ def main():
         if not grp:
             continue
         fell = [t for t in grp if t["change_buildings"] < 0]
-        pcts = sorted(t["pct_change"] for t in grp if t["pct_change"] is not None)
+        pcts = [t["pct_change"] for t in grp if t["pct_change"] is not None]
         size_bins.append({
             "baseline_band": lab, "tracts": len(grp), "tracts_reduced": len(fell),
             "pct_tracts_reduced": round(len(fell) / len(grp) * 100, 1),
-            "median_pct_change": pcts[len(pcts) // 2] if pcts else None,
+            "median_pct_change": round(statistics.median(pcts), 1) if pcts else None,
             "enough_share": round(sum(1 for t in grp if t["in_enough"]) / len(grp) * 100, 1),
         })
 
@@ -489,23 +559,39 @@ def main():
         "all_city": reduction_rate(geoids),
         "size_bins": size_bins,
     }
-    # Two-proportion z-test on the ENOUGH vs rest-of-city tract shares. Published
-    # so the page can state plainly that the gap is not statistically significant
-    # rather than presenting it as a settled finding.
-    _e, _o = comparison["enough"], comparison["rest_of_city"]
-    a, na = _e["tracts_reduced"], _e["tracts_with_vacancy"]
-    b, nb = _o["tracts_reduced"], _o["tracts_with_vacancy"]
-    if na and nb:
-        p1, p2 = a / na, b / nb
-        pp = (a + b) / (na + nb)
-        se = math.sqrt(pp * (1 - pp) * (1 / na + 1 / nb))
-        z = (p1 - p2) / se if se else 0.0
-        comparison["significance"] = {
-            "gap_pp": round((p1 - p2) * 100, 1),
-            "z": round(z, 2),
-            "p_two_sided": round(math.erfc(abs(z) / math.sqrt(2)), 3),
-            "significant_at_05": bool(math.erfc(abs(z) / math.sqrt(2)) < 0.05),
-        }
+    # ENOUGH tracts are purposively selected (child poverty >= 30%), not sampled,
+    # so there is no randomization to support a p-value and the tracts are not
+    # independent (3 serve two grantees; vacancy is spatially autocorrelated).
+    # Instead: indirect standardization. Apply each size band's citywide reduction
+    # rate to the ENOUGH tracts in that band to get an expected count, and compare
+    # with what actually happened. This removes the starting-stock confound that
+    # makes the raw 88.9%-vs-77.6% comparison unusable.
+    band_of = {}
+    for lo, hi, lab in ((1, 10, "1-10"), (10, 50, "10-49"),
+                        (50, 150, "50-149"), (150, 10 ** 9, "150+")):
+        for t in tract_stats.values():
+            if lo <= t["baseline_buildings"] < hi:
+                band_of[t["GEOID"]] = lab
+    band_rate = {b["baseline_band"].replace("\u2013", "-"): b["pct_tracts_reduced"] / 100
+                 for b in size_bins}
+    exp = obs = n_used = 0
+    for g in enough_list:
+        lab = band_of.get(g)
+        if lab is None or lab not in band_rate:
+            continue
+        n_used += 1
+        exp += band_rate[lab]
+        obs += 1 if tract_stats[g]["change_buildings"] < 0 else 0
+    comparison["standardized"] = {
+        "method": ("indirect standardization on baseline-stock band; "
+                   "no p-value is reported because ENOUGH tracts are purposively "
+                   "selected, not sampled"),
+        "enough_tracts_used": n_used,
+        "observed_reductions": obs,
+        "expected_reductions": round(exp, 1),
+        "ratio_observed_expected": round(obs / exp, 3) if exp else None,
+    }
+
     # Double-count disclosure for the per-grantee ranking.
     comparison["grantee_baseline_sum"] = sum(
         r["baseline_buildings"] for r in grantee_rows)
@@ -535,6 +621,8 @@ def main():
         "grantee_reduction_rates": grantee_reduction,
         "by_city_tract": [tract_stats[g] for g in geoids],
         "snapshot_date": str(snapshot),
+        "excluded_bad_intervals": bad_interval,
+        "renotice_profile": renotice_profile,
         "baseline_label": base_label,
         "baseline_date": str(marks[0][1]),
         "fy_marks": [{"label": l, "date": str(d)} for l, d in marks],
@@ -569,9 +657,11 @@ def main():
             "new_issued": esum(new_issued),
             "rehabs": esum(tract_rehabs),
             "demolitions": esum(tract_demos),
+            # Scoped to ENOUGH tracts. Summing over every city tract made this
+            # larger than gross_resolved and produced a negative durable count.
             "cycled_properties": sum(
                 len(gross_resolved[g] & new_issued[g])
-                for g in set(gross_resolved) | set(new_issued)),
+                for g in (set(gross_resolved) | set(new_issued)) & enough_geoids),
             "communities_with_vacants": len(grantee_rows),
             "shared_tracts": sum(
                 1 for geoid in geoids if len(tract_grantees.get(geoid, [])) > 1),
@@ -585,6 +675,31 @@ def main():
     out["enough_totals"]["change_buildings"] = (
         out["enough_totals"]["vacant_buildings"]
         - out["enough_totals"]["baseline_buildings"])
+
+    # --- invariants: fail loudly rather than publish an impossible figure ------
+    T_, C_ = out["enough_totals"], out["citywide"]
+    problems = []
+    for label, blk in (("enough_totals", T_), ("citywide", C_)):
+        if blk["cycled_properties"] > blk["gross_resolved"]:
+            problems.append(f"{label}: cycled ({blk['cycled_properties']}) > "
+                            f"gross_resolved ({blk['gross_resolved']})")
+        if blk["gross_resolved"] - blk["cycled_properties"] < 0:
+            problems.append(f"{label}: durable count is negative")
+    if T_["vacant_buildings"] > C_["vacant_buildings"]:
+        problems.append("ENOUGH buildings exceed citywide")
+    if T_["baltimore_tracts"] != len(enough_geoids):
+        problems.append(f"baltimore_tracts {T_['baltimore_tracts']} != "
+                        f"{len(enough_geoids)} ENOUGH tracts")
+    rc = out["reduction_comparison"]
+    if (rc["enough"]["tracts_with_vacancy"] + rc["rest_of_city"]["tracts_with_vacancy"]
+            != rc["all_city"]["tracts_with_vacancy"]):
+        problems.append("ENOUGH + rest != all_city tract counts")
+    for r in out["by_grantee"]:
+        if r["gross_resolved"] > r["baseline_buildings"] + r["new_issued"]:
+            problems.append(f"{r['grantee']}: resolved exceeds baseline + new")
+    if problems:
+        raise SystemExit("INVARIANT FAILURES — not writing output:\n  "
+                         + "\n  ".join(problems))
 
     (DATA / "vacants_enough.json").write_text(json.dumps(out, indent=2))
 
@@ -633,7 +748,9 @@ def main():
         pr = f["properties"]
         end = ms_to_date(pr.get("DateEnd"))
         start = ms_to_date(pr.get("DateNotice"))
-        if not end or not (window_start <= end < snapshot):
+        if not end or not start or end < start:
+            continue
+        if not (window_start <= end < snapshot):
             continue
         keep = {
             "blocklot": pr.get("blocklot"),
@@ -641,8 +758,7 @@ def main():
             "neighborhood": pr.get("NEIGHBOR"),
             "date_resolved": pr.get("DateEnd"),
             # A closure is only durable if the property was not re-noticed.
-            "durable": 0 if (geoid and pr.get("blocklot") in new_issued.get(geoid, ()))
-                       or (pr.get("blocklot") in cw_new) else 1,
+            "durable": 0 if was_renoticed(pr.get("blocklot"), end) else 1,
         }
         if start:
             keep["years_vacant"] = round((end - start).days / 365.25, 1)
