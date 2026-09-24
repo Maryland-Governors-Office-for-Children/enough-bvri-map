@@ -13,6 +13,26 @@ layers; an **ENOUGH Crosswalk** page breaking down that overlap program-by-progr
 
 ## Workstream A — Map build & layers
 
+**Done (2026-09-24) — vacancy-reduction layers + citywide tract comparison (Mihir/comms ask).** Two new map
+layers: **Vacancy Reductions** (7,199 VBN closures since FY25 as individual points; solid = property stayed
+off, hollow = re-noticed — only 2,356 citywide / 833 in ENOUGH are durable) and **Vacancy Change by Tract**
+(all 199 Baltimore City tracts, diverging green→red choropleth, ENOUGH tracts outlined). Both canvas-rendered,
+off by default. `fetch_vacants.py` now analyses the whole city (199 tracts: 46 ENOUGH + 153 other) rather than
+only grantee tracts, so ENOUGH can be compared against a control group.
+- **LLM council rejected the obvious headline, and was right.** First draft led on "88.9% of ENOUGH tracts saw
+  vacancy fall vs 77.6% elsewhere". Verified against our own data: that measure tracks **starting stock**, not
+  performance — tracts with 150+ vacants fell **100%** of the time, tracts with 1–10 fell **62.7%**, and ENOUGH
+  holds **0%** of the smallest band vs **40%** of the 150+ band. It is also not significant (z=1.66, p=0.097).
+  The median per-tract change is *better* outside ENOUGH (−19.6% vs −14.3%) for the mirror reason. The original
+  claim that tract-share was "not distorted by starting size" was **backwards**.
+- **Shipped topline instead** (descriptive, gets stronger under scrutiny): 36% of the city's vacant buildings +
+  ~40% of its net reduction + 10.9:1 repair-to-demolition + named leaders (Tendea −26.5%, The Y −25.1%).
+  The 88.9/77.6 pair is still published, in the body, above a size-bin table that shows why it is confounded.
+- Also fixed/disclosed per council: an explicit **non-causal** paragraph (ENOUGH does not fund vacancy work);
+  the ranking's 259-building double-count from 3 shared tracts; 483 citywide VBNs (4.2%) falling outside every
+  tract polygon; 11 tracts excluded as unable to fall; "these are place measures, not grantee scorecards";
+  and a bug where widening the tract universe made the topline read "199 Baltimore tracts" instead of 46.
+
 **Done (2026-09-23) — Analysis #1: gross/net flows + rehab-vs-demolition per grantee.** Extends the vacancy card
 with the flow decomposition behind the net change. Since FY25 start, in ENOUGH tracts: **2,211 VBNs closed,
 1,793 newly issued, 1,062 rehab permits, 97 City demolitions → 10.9:1 rehab:demolition** (citywide 9.9:1), so

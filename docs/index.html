@@ -100,6 +100,8 @@
             <label class="layer-toggle"><input type="checkbox" id="layer-grantee" checked> Show Grantee Tracts</label>
             <label class="layer-toggle"><input type="checkbox" id="layer-vbn"><span class="swatch circle" style="background:#1a202c"></span> Vacant Buildings (VBN) <span style="color:#a0aec0;font-size:0.72rem;">(all Baltimore; solid = in ENOUGH)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-lots"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant Lots <span style="color:#a0aec0;font-size:0.72rem;">(all Baltimore; solid = in ENOUGH)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-red"><span class="swatch circle" style="background:#2f855a"></span> Vacancy Reductions <span style="color:#a0aec0;font-size:0.72rem;">(closures since FY25)</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="layer-change"><span class="swatch" style="background:linear-gradient(90deg,#1b5e3f,#c6f6d5,#fc8181);"></span> Vacancy Change by Tract <span style="color:#a0aec0;font-size:0.72rem;">(all 199 city tracts)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-vacants" checked><span class="swatch circle" style="background:#e53e3e"></span> BVRI Open Bid List <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-invest"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Impact Areas <span style="color:#a0aec0;font-size:0.72rem;">(Baltimore)</span></label>
             <label class="layer-toggle"><input type="checkbox" id="layer-nmtc"><span class="swatch" style="background:#2f855a;border:1px solid #1c4532;"></span> NMTC Eligibility <span style="color:#a0aec0;font-size:0.72rem;">(statewide)</span></label>
@@ -128,6 +130,13 @@
             <div class="legend-item"><span class="swatch circle" style="background:#1a202c;opacity:0.3;width:9px;height:9px;"></span> Vacant building &mdash; elsewhere in the city</div>
             <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;border:1px solid #4a5568;"></span> Vacant lot &mdash; in an ENOUGH tract</div>
             <div class="legend-item"><span class="swatch circle" style="background:#a0aec0;opacity:0.35;width:9px;height:9px;"></span> Vacant lot &mdash; elsewhere in the city</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#2f855a"></span> Vacancy removed &mdash; stayed off</div>
+            <div class="legend-item"><span class="swatch circle" style="background:#fff;border:1px solid #1b4332;"></span> Vacancy removed &mdash; re-noticed later</div>
+            <div class="legend-item" style="margin-top:6px;"><span style="font-size:0.72rem;color:#718096;">Tract change since FY25:</span></div>
+            <div class="legend-item" style="gap:3px;">
+                <span class="swatch" style="background:#1b5e3f"></span><span class="swatch" style="background:#2f855a"></span><span class="swatch" style="background:#68d391"></span><span class="swatch" style="background:#c6f6d5"></span><span class="swatch" style="background:#e2e8f0"></span><span class="swatch" style="background:#fc8181"></span><span class="swatch" style="background:#c53030"></span>
+                <span style="font-size:0.7rem;color:#718096;margin-left:4px;">&minus;25%+ &rarr; flat &rarr; rose</span>
+            </div>
             <div class="legend-item"><span class="swatch circle" style="background:#e53e3e"></span> BVRI open-bid property</div>
             <div class="legend-item"><span class="swatch" style="background:#f6e05e;border:1px solid #b7791f;"></span> DHCD Investment Area</div>
             <div class="legend-item"><span class="swatch" style="background:#1c4532;"></span> NMTC Severe Distress</div>
@@ -226,6 +235,27 @@
     const lgJc      = L.layerGroup();
     const lgVbn     = L.layerGroup();
     const lgLots    = L.layerGroup();
+    const lgRed     = L.layerGroup();
+    const lgChange  = L.layerGroup();
+
+    // Reductions read as green (a vacancy removed). Solid = the property stayed
+    // off the list; hollow = its notice closed but the property was re-noticed,
+    // which is renewal churn rather than a durable fix.
+    const RED_COLOR = { fill: '#2f855a', stroke: '#1b4332' };
+
+    // Diverging scale for per-tract change in vacant buildings: green = fell,
+    // grey = flat, red = rose. Bins are fixed so the map is comparable between
+    // sessions rather than rescaling to whatever today's data happens to span.
+    function changeColor(pct) {
+        if (pct === null || pct === undefined) return '#edf2f7';
+        if (pct <= -25) return '#1b5e3f';
+        if (pct <= -15) return '#2f855a';
+        if (pct <= -5)  return '#68d391';
+        if (pct < 0)    return '#c6f6d5';
+        if (pct === 0)  return '#e2e8f0';
+        if (pct <= 10)  return '#fc8181';
+        return '#c53030';
+    }
 
     // Vacancy inventory: near-black = a standing vacant building, light grey = an
     // empty lot. Deliberately neutral so they don't compete with the categorical
@@ -389,7 +419,9 @@
         fetchJSON('data/vacant_buildings_baltimore.geojson'),
         fetchJSON('data/vacant_lots_baltimore.geojson'),
         fetchJSON('data/vacants_enough.json'),
-    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk, vbn, lots, vacStats]) {
+        fetchJSON('data/vacancy_reductions_baltimore.geojson'),
+        fetchJSON('data/vacancy_change_tracts.geojson'),
+    ]).then(function ([granteeTracts, granteeMeta, vacants, investAreas, nmtc, oz, oz2, ez, jc, crosswalk, vbn, lots, vacStats, reductions, changeTracts]) {
 
         // Assign colors to grantees by index (already sorted by tract count desc)
         granteeMeta.grantees.forEach(function (g, i) {
@@ -562,6 +594,92 @@
         }
         vacancyLayer(vbn, VBN_COLOR, 'Vacant Building (open VBN)', 3).addTo(lgVbn);
         vacancyLayer(lots, LOT_COLOR, 'Vacant Lot', 2.5).addTo(lgLots);
+
+        // Vacancy reductions as individual points: every VBN that closed since
+        // the FY25 baseline, where it happened.
+        L.geoJSON(reductions, {
+            pane: 'pointPane',
+            renderer: vacancyCanvas,
+            pointToLayer: function (feature, latlng) {
+                const p = feature.properties;
+                const durable = p.durable === 1;
+                return L.circleMarker(latlng, {
+                    radius: durable ? 3 : 2.2,
+                    fillColor: durable ? RED_COLOR.fill : '#ffffff',
+                    color: RED_COLOR.stroke,
+                    weight: durable ? 0.5 : 0.7,
+                    fillOpacity: durable ? 0.85 : 0.5,
+                    renderer: vacancyCanvas,
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                let when = '';
+                if (p.date_resolved) {
+                    const d = new Date(p.date_resolved);
+                    if (!isNaN(d)) when = d.toLocaleDateString('en-US', {month:'short', year:'numeric'});
+                }
+                layer.bindPopup(
+                    '<div style="min-width:215px;">' +
+                      '<strong style="color:' + RED_COLOR.stroke + ';">Vacancy removed</strong>' +
+                      '<div style="font-size:0.85em;margin-top:4px;"><strong>' +
+                        (p.address || p.blocklot || '—') + '</strong></div>' +
+                      (p.neighborhood ? '<div style="color:#555;font-size:0.82em;">' + p.neighborhood + '</div>' : '') +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<div style="font-size:0.82em;">' +
+                        (when ? '<div>Notice closed: <strong>' + when + '</strong></div>' : '') +
+                        (p.years_vacant != null ? '<div>Vacant for ' + p.years_vacant + ' years first</div>' : '') +
+                        '<div style="margin-top:4px;">' + (p.durable === 1
+                          ? '<span style="color:#276749;font-weight:600;">Stayed off the vacancy list</span>'
+                          : '<span style="color:#9c4221;font-weight:600;">Re-noticed later</span> &mdash; renewal churn, not a durable fix') +
+                        '</div>' +
+                        ((p.grantees || []).length ? '<div style="margin-top:3px;">ENOUGH: <strong>' + p.grantees.join(', ') + '</strong></div>'
+                          : '<div style="margin-top:3px;color:#718096;">Not in an ENOUGH grantee tract</div>') +
+                      '</div>' +
+                    '</div>'
+                );
+            }
+        }).addTo(lgRed);
+
+        // Per-tract change in vacant buildings, every Baltimore City tract.
+        L.geoJSON(changeTracts, {
+            pane: 'ctxPane',
+            style: function (feature) {
+                const p = feature.properties;
+                return {
+                    fillColor: changeColor(p.pct_change),
+                    fillOpacity: 0.7,
+                    color: p.in_enough ? '#1a365d' : '#a0aec0',
+                    weight: p.in_enough ? 1.6 : 0.4,
+                    dashArray: p.in_enough ? null : '2,2',
+                };
+            },
+            onEachFeature: function (feature, layer) {
+                const p = feature.properties;
+                const pc = p.pct_change == null ? 'n/a' : p.pct_change.toFixed(1) + '%';
+                layer.bindTooltip('Tract ' + p.GEOID + ': ' + pc, { sticky: true });
+                layer.bindPopup(
+                    '<div style="min-width:225px;">' +
+                      '<strong style="color:#1a365d;">Tract ' + p.GEOID + '</strong>' +
+                      (p.in_enough ? '<div style="font-size:0.8em;color:#2b6cb0;font-weight:600;">ENOUGH grantee tract</div>'
+                                   : '<div style="font-size:0.8em;color:#718096;">Not an ENOUGH tract</div>') +
+                      '<hr style="margin:6px 0;border:none;border-top:1px solid #eee;">' +
+                      '<table style="font-size:0.83em;width:100%;">' +
+                        '<tr><td>Vacant buildings, FY25 start:</td><td><strong>' + p.baseline_buildings + '</strong></td></tr>' +
+                        '<tr><td>Vacant buildings now:</td><td><strong>' + p.vacant_buildings + '</strong></td></tr>' +
+                        '<tr><td>Change:</td><td><strong style="color:' +
+                          (p.change_buildings < 0 ? '#276749' : (p.change_buildings > 0 ? '#9b2c2c' : '#4a5568')) + ';">' +
+                          (p.change_buildings > 0 ? '+' : '') + p.change_buildings + ' (' + pc + ')</strong></td></tr>' +
+                        '<tr><td>Notices closed:</td><td>' + p.gross_resolved + '</td></tr>' +
+                        '<tr><td>Rehab permits / demolitions:</td><td>' + p.rehabs + ' / ' + p.demolitions + '</td></tr>' +
+                        (p.child_poverty_pct != null ? '<tr><td>Child poverty:</td><td>' +
+                          parseFloat(p.child_poverty_pct).toFixed(1) + '%</td></tr>' : '') +
+                      '</table>' +
+                      ((p.grantees || []).length ? '<div style="font-size:0.8em;margin-top:5px;">' + p.grantees.join(', ') + '</div>' : '') +
+                    '</div>'
+                );
+            }
+        }).addTo(lgChange);
 
         // DHCD Impact Investment Areas (off by default)
         L.geoJSON(investAreas, {
@@ -787,6 +905,8 @@
         ['layer-jc',      lgJc],
         ['layer-vbn',     lgVbn],
         ['layer-lots',    lgLots],
+        ['layer-red',     lgRed],
+        ['layer-change',  lgChange],
     ].forEach(function ([id, lg]) {
         document.getElementById(id).addEventListener('change', function () {
             this.checked ? map.addLayer(lg) : map.removeLayer(lg);

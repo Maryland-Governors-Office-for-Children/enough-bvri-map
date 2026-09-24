@@ -75,7 +75,7 @@
 <h2>Overview</h2>
 <p>This map overlays six geographic data layers to help the Maryland Governor's Office for Children (GOC) and the Baltimore Vacants Reinvestment Initiative (BVRI) team see where their work intersects. All data is fetched from <strong>publicly available, authoritative sources</strong> &mdash; no proprietary or licensed datasets are required.</p>
 
-<p>The nine layers, with their geographic coverage:</p>
+<p>The ten layers, with their geographic coverage:</p>
 <ul>
     <li><strong>ENOUGH grantee tracts (Maryland GOC)</strong> &mdash; statewide, all 28 active grantees and 111 tracts</li>
     <li><strong>BVRI Vacants to Value (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
@@ -86,6 +86,7 @@
     <li><strong>Maryland Enterprise Zones (MD Dept. of Commerce)</strong> &mdash; statewide</li>
     <li><strong>Just Communities (MD DHCD, Just Communities Act of 2024)</strong> &mdash; statewide</li>
     <li><strong>Vacant buildings (open VBNs) &amp; vacant lots (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
+    <li><strong>Vacancy reductions + per-tract change (Baltimore City DHCD)</strong> &mdash; Baltimore City only</li>
 </ul>
 <p>The default view shows all of Maryland. Use the "Zoom to Baltimore City" button on the map for a closer look at the BVRI overlap.</p>
 
@@ -520,6 +521,40 @@ DateNotice%20%3C=%20DATE%20'2024-07-01'%20AND%20DateEnd%20%3E%20DATE%20'2024-07-
         <li><strong>Rehab permits are permits, not completions.</strong> A permit issued is an intention to rehabilitate; the site does not track whether the work finished. Treat rehab counts as pipeline activity.</li>
         <li><strong>Demolitions are City demolitions only</strong> (<code>Completed City Demo</code>). Privately funded demolitions are not in this dataset, so the rehab:demolition ratio is an upper bound on preservation.</li>
     </ul>
+</div>
+
+<h2>Layer 10 &mdash; Vacancy Reductions &amp; Per-Tract Change</h2>
+
+<div class="source-card">
+    <div class="swatch-row">
+        <span class="swatch" style="background:#2f855a;border-radius:50%;"></span>
+        <span class="swatch" style="background:linear-gradient(90deg,#1b5e3f,#c6f6d5,#fc8181);"></span>
+        <span class="layer-label">Vacancy Reductions &amp; Vacancy Change by Tract</span>
+        <span style="color:#718096;font-size:0.85rem;">&mdash; both off by default; Baltimore City only</span>
+    </div>
+
+    <p><strong>What they show.</strong> The other vacancy layers answer "where is vacancy <em>now</em>." These two answer "where has vacancy actually <em>come down</em>." The first is every vacant-building notice that <strong>closed</strong> since the FY25 baseline, drawn as an individual point at the property. The second shades all <strong>199 Baltimore City census tracts</strong> by their change in vacant buildings over the same window, so ENOUGH tracts can be compared against the rest of the city on one measure.</p>
+
+    <div class="meta"><strong>Durable versus re-noticed.</strong> A closed notice is not automatically a fixed house. Reduction points are drawn <strong>solid</strong> where the property stayed off the vacancy list and <strong>hollow</strong> where it received another notice later &mdash; renewal or re-inspection churn. Citywide, 7,199 closures are mapped but only 2,356 are durable; inside ENOUGH tracts, 833 of 2,211. Reading the solid points only is the honest view of progress.</div>
+
+    <h3>How the tract comparison is computed</h3>
+    <p>A tract "fell" if its count of properties under an open vacant-building notice was lower at the current snapshot than at the FY25 baseline. Every Baltimore City tract is evaluated, then split into ENOUGH grantee tracts and the rest:</p>
+    <table class="field-table">
+        <thead><tr><th>Group</th><th>Tracts with vacancy</th><th>Tracts that fell</th><th>Share</th><th>Stock change</th><th>Median tract change</th></tr></thead>
+        <tbody>
+            <tr><td><strong>ENOUGH grantee tracts</strong></td><td>45</td><td>40</td><td><strong>88.9%</strong></td><td>&minus;14.2%</td><td>&minus;14.3%</td></tr>
+            <tr><td>Rest of Baltimore City</td><td>143</td><td>111</td><td>77.6%</td><td>&minus;12.3%</td><td>&minus;19.6%</td></tr>
+            <tr><td>All city tracts</td><td>188</td><td>151</td><td>80.3%</td><td>&minus;13.0%</td><td>&minus;17.6%</td></tr>
+        </tbody>
+    </table>
+    <p>Tracts with no vacant buildings at either the baseline or the snapshot are <strong>excluded</strong> (11 of the 199). They cannot reduce, and including them would inflate whichever group happens to hold more of them. The same calculation is run per grantee, giving the "tracts that fell" column on the crosswalk page.</p>
+
+    <div class="meta"><strong>Two measures that disagree, and why both are reported.</strong> ENOUGH tracts reduce more <em>often</em> (88.9% vs 77.6%) and their total stock fell further (&minus;14.2% vs &minus;12.3%), but the <em>median per-tract percentage</em> is larger outside ENOUGH (&minus;19.6% vs &minus;14.3%). That is a denominator effect: a tract with 8 vacant buildings that loses 3 posts &minus;37.5%, while a tract with 220 that loses 30 posts &minus;13.6%. ENOUGH tracts carry much larger stocks, so they cannot swing large percentages. The tract-share comparison is the measure least distorted by starting size, which is why it leads; the median is published alongside it rather than omitted.</div>
+
+    <div class="meta"><strong>This is not a causal claim.</strong> Vacancy reduction in Baltimore is driven chiefly by City DHCD and the Baltimore Vacants Reinvestment Council. ENOUGH is a child-poverty program whose grantees operate in many of the same blocks. The site reports that vacancy fell more consistently inside ENOUGH tracts than outside them; it does not claim ENOUGH funding produced that difference, and the data cannot support such a claim.</div>
+
+    <h3>Sources and outputs</h3>
+    <p>Reduction points come from the same vacancy-interval service as Layer 9 (rows whose <code>DateEnd</code> falls inside the window). Tract polygons are the 2020 Census tracts from the statewide file used to build the grantee layer, filtered to <code>JURSCODE == 'BACI'</code>. Built by <code>scripts/fetch_vacants.py</code> into <code>vacancy_reductions_baltimore.geojson</code> and <code>vacancy_change_tracts.geojson</code>; the rollups live in <code>vacants_enough.json</code> under <code>reduction_comparison</code>, <code>grantee_reduction_rates</code> and <code>by_city_tract</code>.</p>
 </div>
 
 <h2>The ENOUGH Crosswalk page</h2>

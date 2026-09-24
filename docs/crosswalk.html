@@ -146,6 +146,33 @@
         details.vac-nb[open] summary::before { content: '▾ '; }
         @media (max-width: 640px) { .vac-table { font-size: 0.76rem; } .vac-table th, .vac-table td { padding: 5px 5px; } }
 
+        /* --- vacancy reduction section --- */
+        .topline { background: linear-gradient(135deg, #22543d, #2f855a); color: #fff; border-radius: 10px; padding: 20px 24px; margin: 26px 0 0; }
+        .topline .kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em; opacity: 0.75; margin-bottom: 7px; }
+        .topline .line { font-size: 1.32rem; font-weight: 700; line-height: 1.32; letter-spacing: -0.01em; }
+        .topline .line b { color: #9ae6b4; }
+        .red-card { background: #fff; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 22px; margin: 0 0 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .red-card > p { font-size: 0.88rem; color: #4a5568; margin-top: 10px; }
+        .vs { display: flex; gap: 18px; flex-wrap: wrap; margin: 16px 0 6px; }
+        .vs .side { flex: 1; min-width: 210px; border-radius: 8px; padding: 14px 16px; }
+        .vs .side.en { background: #f0fff4; border: 1px solid #c6f6d5; }
+        .vs .side.other { background: #f7fafc; border: 1px solid #e2e8f0; }
+        .vs .side .lab { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: #5a6678; }
+        .vs .side .big { font-size: 2rem; font-weight: 800; line-height: 1.1; margin-top: 3px; }
+        .vs .side.en .big { color: #22543d; }
+        .vs .side.other .big { color: #4a5568; }
+        .vs .side .sub { font-size: 0.78rem; color: #5a6678; margin-top: 4px; }
+        .lead-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 12px; }
+        .lead-table th { text-align: right; padding: 7px 10px; background: #f7fafc; color: #5a6678; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #e2e8f0; }
+        .lead-table th:first-child, .lead-table td:first-child { text-align: left; }
+        .lead-table td { padding: 7px 10px; border-bottom: 1px solid #f4f7fa; text-align: right; }
+        .lead-table tbody tr:hover { background: #f7fafc; }
+        .lead-table .rank { color: #a0aec0; width: 22px; }
+        .lead-table .good { color: #276749; font-weight: 700; }
+        .lead-table .bad { color: #9b2c2c; font-weight: 700; }
+        .caution { background: #fffaf0; border: 1px solid #feebc8; border-radius: 6px; padding: 11px 13px; font-size: 0.85rem; color: #744210; margin-top: 14px; line-height: 1.5; }
+        .caution b { color: #7b341e; }
+
         .loading, .error { text-align: center; padding: 60px 20px; color: #5a6678; }
         .error { color: #c53030; }
 
@@ -192,6 +219,8 @@
     <div id="cards"></div>
 
     <div id="vacancy"></div>
+
+    <div id="reduction"></div>
 
     <div id="stacking"></div>
 
@@ -241,7 +270,12 @@
     // so it loads independently — a failure there must not blank the whole page.
     fetch('data/vacants_enough.json')
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-        .then(function (v) { document.getElementById('vacancy').appendChild(buildVacancy(v)); })
+        .then(function (v) {
+            document.getElementById('vacancy').appendChild(buildVacancy(v));
+            buildReduction(v).forEach(function (node) {
+                document.getElementById('reduction').appendChild(node);
+            });
+        })
         .catch(function (err) {
             document.getElementById('vacancy').innerHTML =
                 '<div class="vac-card"><p style="color:#c53030;">Vacancy data unavailable: ' +
@@ -426,6 +460,154 @@
                 '<th>ENOUGH community</th><th class="num">' + tHead + '</th>' + propHead +
             '</tr></thead><tbody>' + rows + '</tbody></table>' +
         '</details>';
+    }
+
+    // Minimum baseline for a community to appear in the "biggest reduction"
+    // ranking. Without a floor a grantee with 28 vacant buildings can top the
+    // table on a 3-property change, which is not a finding.
+    const MIN_BASELINE = 50;
+
+    function buildReduction(v) {
+        const RC = v.reduction_comparison, base = v.baseline_label;
+        const E = RC.enough, O = RC.rest_of_city, T = v.enough_totals, C = v.citywide;
+        const SIG = RC.significance || {};
+        const n = function (x) { return x == null ? '—' : x.toLocaleString(); };
+        const abspc = function (x) { return Math.abs(x) + '%'; };
+
+        const ranked = v.by_grantee
+            .filter(function (r) { return r.baseline_buildings >= MIN_BASELINE
+                                          && r.pct_change_buildings != null; })
+            .sort(function (a, b) { return a.pct_change_buildings - b.pct_change_buildings; });
+        const excluded = v.by_grantee.filter(function (r) { return r.baseline_buildings < MIN_BASELINE; });
+        const leaders = ranked.slice(0, 2).map(function (r) {
+            return '<b>' + r.grantee.replace(/,? (Inc|INC)\.?$/, '') + '</b> (down ' +
+                Math.abs(r.pct_change_buildings).toFixed(1) + '%)';
+        }).join(' and ');
+        const shareStock = pct(T.vacant_buildings, C.vacant_buildings);
+        const shareRed = pct(Math.abs(T.change_buildings), Math.abs(C.change_buildings));
+        const ratio = T.demolitions ? (T.rehabs / T.demolitions).toFixed(1) : null;
+
+        // Topline deliberately leads on concentration, contribution share and the
+        // repair-vs-demolition mix. Those are descriptive, survive scrutiny, and get
+        // *larger* the harder they are checked. An earlier draft led on the share of
+        // tracts where vacancy fell (88.9% vs 77.6%); that was dropped because the
+        // size bins below show the measure tracks starting stock, and the gap is not
+        // statistically significant.
+        const topline = el(
+            '<div class="topline">' +
+              '<div class="kicker">Topline</div>' +
+              '<div class="line">ENOUGH&rsquo;s ' + T.baltimore_tracts +
+              ' Baltimore tracts hold about <b>' + shareStock +
+              '%</b> of the city&rsquo;s vacant buildings &mdash; and account for roughly <b>' +
+              shareRed + '%</b> of its net reduction since July 2024. The work there is overwhelmingly ' +
+              'repair, not demolition: about <b>' + ratio + ' rehab permits for every City demolition</b>. ' +
+              'Steepest declines: ' + leaders + '.</div>' +
+            '</div>'
+        );
+
+        const sizeRows = (RC.size_bins || []).map(function (r) {
+            return '<tr><td>' + r.baseline_band + '</td><td>' + r.tracts + '</td>' +
+                '<td>' + r.pct_tracts_reduced + '%</td>' +
+                '<td>' + (r.median_pct_change == null ? '—' : r.median_pct_change + '%') + '</td>' +
+                '<td>' + r.enough_share + '%</td></tr>';
+        }).join('');
+
+        const full = ranked.map(function (r, i) {
+            const cls = r.pct_change_buildings < 0 ? 'good' : 'bad';
+            const rr = (v.grantee_reduction_rates || []).find(function (x) { return x.grantee === r.grantee; });
+            return '<tr>' +
+                '<td class="rank">' + (i + 1) + '</td><td>' + r.grantee + '</td>' +
+                '<td>' + n(r.baseline_buildings) + '</td><td>' + n(r.vacant_buildings) + '</td>' +
+                '<td class="' + cls + '">' + (r.pct_change_buildings > 0 ? '+' : '') +
+                  r.pct_change_buildings.toFixed(1) + '%</td>' +
+                '<td>' + n(r.change_buildings) + '</td>' +
+                '<td>' + (rr ? rr.tracts_reduced + ' of ' + rr.tracts : '—') + '</td>' +
+            '</tr>';
+        }).join('');
+
+        const card = el(
+            '<div class="red-card">' +
+              '<p>The map now carries every vacancy <em>reduction</em> as its own point &mdash; each ' +
+              'vacant-building notice that closed since <b>July 2024</b> (the start of Maryland fiscal ' +
+              'year 2025), placed at the property &mdash; plus a shaded layer giving the change for all <b>' +
+              v.city_tracts_analyzed + '</b> Baltimore City census tracts. So the same measure can be read ' +
+              'inside ENOUGH tracts and across the rest of the city.</p>' +
+
+              '<p><b>What ENOUGH is, and is not, doing here.</b> ENOUGH funds organizations working on child ' +
+              'poverty; it does not fund vacant-housing work. Baltimore City DHCD and the Baltimore Vacants ' +
+              'Reinvestment Council do that. These figures describe <em>the places</em> ENOUGH grantees serve, ' +
+              'not the performance of the grantees, and nothing here should be read as ENOUGH having caused ' +
+              'the change. The reason to track it is that child poverty and vacant housing sit on the same blocks.</p>' +
+
+              '<div class="vs">' +
+                '<div class="side en"><div class="lab">ENOUGH grantee tracts</div>' +
+                  '<div class="big">' + E.pct_tracts_reduced + '%</div>' +
+                  '<div class="sub">' + E.tracts_reduced + ' of ' + E.tracts_with_vacancy +
+                  ' tracts saw vacant buildings fall<br>Stock down ' + abspc(E.pct_change_buildings) +
+                  ' &middot; median tract ' + abspc(E.median_tract_pct_change) + '</div></div>' +
+                '<div class="side other"><div class="lab">Rest of Baltimore City</div>' +
+                  '<div class="big">' + O.pct_tracts_reduced + '%</div>' +
+                  '<div class="sub">' + O.tracts_reduced + ' of ' + O.tracts_with_vacancy +
+                  ' tracts saw vacant buildings fall<br>Stock down ' + abspc(O.pct_change_buildings) +
+                  ' &middot; median tract ' + abspc(O.median_tract_pct_change) + '</div></div>' +
+              '</div>' +
+
+              '<div class="caution"><b>Do not lean on that ' + E.pct_tracts_reduced + '% figure.</b> ' +
+              'Two things undercut it, and both are in our own data. ' +
+              'First, the gap is <b>not statistically significant</b> &mdash; ' +
+              SIG.gap_pp + ' percentage points, z&nbsp;=&nbsp;' + SIG.z + ', p&nbsp;=&nbsp;' + SIG.p_two_sided +
+              '. Two tracts landing the other way would close most of it. ' +
+              'Second, and more important, <b>the share of tracts that fall is mostly a function of how much ' +
+              'vacancy a tract started with</b>, not of how well anyone performed:</p>' +
+              '<table class="lead-table" style="margin-top:10px;"><thead><tr>' +
+                '<th>Vacant buildings at baseline</th><th>Tracts</th><th>Share that fell</th>' +
+                '<th>Median change</th><th>Share that are ENOUGH</th>' +
+              '</tr></thead><tbody>' + sizeRows + '</tbody></table>' +
+              '<div style="margin-top:9px;">Every tract with 150 or more vacant buildings fell; only about ' +
+              'six in ten of the smallest tracts did. A tract holding 200 properties will almost certainly ' +
+              'lose one; a tract holding three can easily stay flat. ENOUGH tracts are concentrated in the ' +
+              'large-stock bands, so they clear that bar mechanically. The mirror image is the median: the ' +
+              'typical tract outside ENOUGH fell ' + abspc(O.median_tract_pct_change) + ' against ' +
+              abspc(E.median_tract_pct_change) + ' inside, for the same reason in reverse. ' +
+              '<b>Neither number is evidence of relative performance.</b> The defensible claims are the ' +
+              'concentration and contribution figures in the topline.</div></div>' +
+
+              '<div class="section-label" style="margin-top:22px;">By community &mdash; change in vacant buildings</div>' +
+              '<table class="lead-table"><thead><tr>' +
+                '<th class="rank"></th><th>ENOUGH community</th>' +
+                '<th>Baseline</th><th>Now</th><th>% change</th><th>Buildings</th><th>Tracts<br>that fell</th>' +
+              '</tr></thead><tbody>' + full + '</tbody></table>' +
+
+              '<div class="caution"><b>How to read the table.</b> ' +
+              'These are <em>place</em> measures, not grantee scorecards &mdash; no ENOUGH grantee is ' +
+              'contracted to reduce vacancy, and a community can move in either direction for reasons ' +
+              'entirely outside its work. ' +
+              'Percentages are not volumes: ' + ranked[0].grantee.replace(/,? (Inc|INC)\.?$/, '') +
+              ' leads on rate, while Park Heights and Elev8 removed the most buildings outright. ' +
+              'Communities with fewer than ' + MIN_BASELINE + ' vacant buildings at baseline are left out' +
+              (excluded.length ? ' (' + excluded.map(function (r) { return r.grantee; }).join(', ') + ')' : '') +
+              ', since a few properties would otherwise top the chart. And because three Baltimore tracts ' +
+              'are served by two grantees each, the baseline column sums to ' + n(RC.grantee_baseline_sum) +
+              ' rather than the de-duplicated ' + n(T.baseline_buildings) + ' &mdash; about ' +
+              n(RC.grantee_baseline_sum - T.baseline_buildings) + ' buildings appear in two rows.</div>' +
+
+              '<div class="vac-note" style="margin-top:14px;"><b>Method.</b> A tract &ldquo;fell&rdquo; if ' +
+              'its count of properties under an open vacant-building notice was lower at the snapshot (' +
+              v.snapshot_date + ') than at the baseline (' + v.baseline_date + '). Of ' + v.city_tracts_analyzed +
+              ' city tracts, ' + (v.city_tracts_analyzed - E.tracts_with_vacancy - O.tracts_with_vacancy) +
+              ' are excluded for having no vacant buildings at either date &mdash; they cannot fall, and ' +
+              'including them would flatter whichever group holds more of them; that is why the two panels ' +
+              'sum to ' + (E.tracts_with_vacancy + O.tracts_with_vacancy) + ' and not ' + v.city_tracts_analyzed +
+              '. A further ' + n(RC.vbns_outside_any_tract) + ' citywide notices (about ' +
+              pct(RC.vbns_outside_any_tract, C.vacant_buildings) + '%) sit outside every tract polygon under ' +
+              'a strict point-in-polygon test and are absent from the tract figures. ' +
+              '<b>Reduction points are notice closures, not repairs:</b> only ' +
+              n(T.gross_resolved - T.cycled_properties) + ' of ' + n(T.gross_resolved) +
+              ' ENOUGH closures were durable &mdash; the map draws the rest hollow, and the layer name is a ' +
+              'convenience, not a claim about every point. Baltimore City only.</div>' +
+            '</div>'
+        );
+        return [topline, card];
     }
 
     function buildVacancy(v) {

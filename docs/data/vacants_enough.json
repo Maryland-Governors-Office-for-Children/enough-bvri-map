@@ -1,5 +1,3236 @@
 {
   "generated_note": "Built by scripts/fetch_vacants.py \u2014 do not edit by hand.",
+  "city_tracts_analyzed": 199,
+  "reduction_comparison": {
+    "enough": {
+      "tracts_with_vacancy": 45,
+      "tracts_reduced": 40,
+      "tracts_flat": 0,
+      "tracts_increased": 5,
+      "pct_tracts_reduced": 88.9,
+      "baseline_buildings": 4789,
+      "vacant_buildings": 4107,
+      "change_buildings": -682,
+      "pct_change_buildings": -14.2,
+      "median_tract_pct_change": -14.3
+    },
+    "rest_of_city": {
+      "tracts_with_vacancy": 143,
+      "tracts_reduced": 111,
+      "tracts_flat": 12,
+      "tracts_increased": 20,
+      "pct_tracts_reduced": 77.6,
+      "baseline_buildings": 7902,
+      "vacant_buildings": 6933,
+      "change_buildings": -969,
+      "pct_change_buildings": -12.3,
+      "median_tract_pct_change": -19.6
+    },
+    "all_city": {
+      "tracts_with_vacancy": 188,
+      "tracts_reduced": 151,
+      "tracts_flat": 12,
+      "tracts_increased": 25,
+      "pct_tracts_reduced": 80.3,
+      "baseline_buildings": 12691,
+      "vacant_buildings": 11040,
+      "change_buildings": -1651,
+      "pct_change_buildings": -13.0,
+      "median_tract_pct_change": -17.6
+    },
+    "size_bins": [
+      {
+        "baseline_band": "1\u201310",
+        "tracts": 67,
+        "tracts_reduced": 42,
+        "pct_tracts_reduced": 62.7,
+        "median_pct_change": -22.2,
+        "enough_share": 0.0
+      },
+      {
+        "baseline_band": "10\u201349",
+        "tracts": 59,
+        "tracts_reduced": 50,
+        "pct_tracts_reduced": 84.7,
+        "median_pct_change": -21.7,
+        "enough_share": 35.6
+      },
+      {
+        "baseline_band": "50\u2013149",
+        "tracts": 31,
+        "tracts_reduced": 29,
+        "pct_tracts_reduced": 93.5,
+        "median_pct_change": -17.6,
+        "enough_share": 38.7
+      },
+      {
+        "baseline_band": "150+",
+        "tracts": 30,
+        "tracts_reduced": 30,
+        "pct_tracts_reduced": 100.0,
+        "median_pct_change": -9.4,
+        "enough_share": 40.0
+      }
+    ],
+    "significance": {
+      "gap_pp": 11.3,
+      "z": 1.66,
+      "p_two_sided": 0.097,
+      "significant_at_05": false
+    },
+    "grantee_baseline_sum": 5048,
+    "vbns_outside_any_tract": 483
+  },
+  "grantee_reduction_rates": [
+    {
+      "grantee": "The Y in Central Maryland",
+      "tracts": 7,
+      "tracts_reduced": 7,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Child First Authority",
+      "tracts": 6,
+      "tracts_reduced": 6,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Elev8 Baltimore, Inc.",
+      "tracts": 5,
+      "tracts_reduced": 5,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "The Central Baltimore Partnership, Inc.",
+      "tracts": 5,
+      "tracts_reduced": 5,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Cherry Hill Strong",
+      "tracts": 3,
+      "tracts_reduced": 3,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Tendea Family INC.",
+      "tracts": 3,
+      "tracts_reduced": 3,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Leaders Breeders Inc.",
+      "tracts": 1,
+      "tracts_reduced": 1,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "South Baltimore Community Land Trust",
+      "tracts": 1,
+      "tracts_reduced": 1,
+      "pct_tracts_reduced": 100.0
+    },
+    {
+      "grantee": "Greater Mondawmin Coordinating Council",
+      "tracts": 5,
+      "tracts_reduced": 4,
+      "pct_tracts_reduced": 80.0
+    },
+    {
+      "grantee": "Park Heights Renaissance, Inc.",
+      "tracts": 10,
+      "tracts_reduced": 7,
+      "pct_tracts_reduced": 70.0
+    },
+    {
+      "grantee": "Urban Strategies Inc",
+      "tracts": 2,
+      "tracts_reduced": 0,
+      "pct_tracts_reduced": 0.0
+    }
+  ],
+  "by_city_tract": [
+    {
+      "GEOID": "24510271002",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 45,
+      "vacant_buildings": 38,
+      "change_buildings": -7,
+      "pct_change": -15.6,
+      "vacant_lots": 140,
+      "gross_resolved": 30,
+      "new_issued": 25,
+      "rehabs": 18,
+      "demolitions": 1,
+      "child_poverty_pct": 7.4
+    },
+    {
+      "GEOID": "24510151000",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 70,
+      "vacant_buildings": 61,
+      "change_buildings": -9,
+      "pct_change": -12.9,
+      "vacant_lots": 122,
+      "gross_resolved": 37,
+      "new_issued": 34,
+      "rehabs": 28,
+      "demolitions": 0,
+      "child_poverty_pct": 30.7
+    },
+    {
+      "GEOID": "24510020100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 2,
+      "change_buildings": -1,
+      "pct_change": -33.3,
+      "vacant_lots": 4,
+      "gross_resolved": 3,
+      "new_issued": 2,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 6.5
+    },
+    {
+      "GEOID": "24510160600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 320,
+      "vacant_buildings": 294,
+      "change_buildings": -26,
+      "pct_change": -8.1,
+      "vacant_lots": 142,
+      "gross_resolved": 99,
+      "new_issued": 92,
+      "rehabs": 35,
+      "demolitions": 9,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510271200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 4,
+      "change_buildings": -1,
+      "pct_change": -20.0,
+      "vacant_lots": 94,
+      "gross_resolved": 2,
+      "new_issued": 2,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 3.3
+    },
+    {
+      "GEOID": "24510240400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 19,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 6.2
+    },
+    {
+      "GEOID": "24510250600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 136,
+      "gross_resolved": 1,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": null
+    },
+    {
+      "GEOID": "24510270805",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 19,
+      "vacant_buildings": 14,
+      "change_buildings": -5,
+      "pct_change": -26.3,
+      "vacant_lots": 64,
+      "gross_resolved": 16,
+      "new_issued": 13,
+      "rehabs": 10,
+      "demolitions": 0,
+      "child_poverty_pct": 11.7
+    },
+    {
+      "GEOID": "24510060100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 38,
+      "vacant_buildings": 27,
+      "change_buildings": -11,
+      "pct_change": -28.9,
+      "vacant_lots": 5,
+      "gross_resolved": 23,
+      "new_issued": 18,
+      "rehabs": 19,
+      "demolitions": 0,
+      "child_poverty_pct": 24.8
+    },
+    {
+      "GEOID": "24510140100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 2,
+      "change_buildings": -2,
+      "pct_change": -50.0,
+      "vacant_lots": 38,
+      "gross_resolved": 3,
+      "new_issued": 1,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510190300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 324,
+      "vacant_buildings": 302,
+      "change_buildings": -22,
+      "pct_change": -6.8,
+      "vacant_lots": 165,
+      "gross_resolved": 132,
+      "new_issued": 111,
+      "rehabs": 50,
+      "demolitions": 12,
+      "child_poverty_pct": 2.1
+    },
+    {
+      "GEOID": "24510010200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 5,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 0,
+      "gross_resolved": 6,
+      "new_issued": 9,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510280102",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 25,
+      "vacant_buildings": 26,
+      "change_buildings": 1,
+      "pct_change": 4.0,
+      "vacant_lots": 118,
+      "gross_resolved": 14,
+      "new_issued": 16,
+      "rehabs": 9,
+      "demolitions": 0,
+      "child_poverty_pct": 62.2
+    },
+    {
+      "GEOID": "24510020300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 13,
+      "change_buildings": 5,
+      "pct_change": 62.5,
+      "vacant_lots": 32,
+      "gross_resolved": 5,
+      "new_issued": 9,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 11.6
+    },
+    {
+      "GEOID": "24510200800",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 38,
+      "vacant_buildings": 35,
+      "change_buildings": -3,
+      "pct_change": -7.9,
+      "vacant_lots": 52,
+      "gross_resolved": 20,
+      "new_issued": 20,
+      "rehabs": 13,
+      "demolitions": 1,
+      "child_poverty_pct": 46.1
+    },
+    {
+      "GEOID": "24510120600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 10,
+      "change_buildings": 2,
+      "pct_change": 25.0,
+      "vacant_lots": 24,
+      "gross_resolved": 10,
+      "new_issued": 12,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 51.2
+    },
+    {
+      "GEOID": "24510271802",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 217,
+      "vacant_buildings": 176,
+      "change_buildings": -41,
+      "pct_change": -18.9,
+      "vacant_lots": 84,
+      "gross_resolved": 103,
+      "new_issued": 82,
+      "rehabs": 61,
+      "demolitions": 2,
+      "child_poverty_pct": 46.1
+    },
+    {
+      "GEOID": "24510250401",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 81,
+      "vacant_buildings": 61,
+      "change_buildings": -20,
+      "pct_change": -24.7,
+      "vacant_lots": 111,
+      "gross_resolved": 76,
+      "new_issued": 60,
+      "rehabs": 39,
+      "demolitions": 9,
+      "child_poverty_pct": 19.5
+    },
+    {
+      "GEOID": "24510270301",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 4,
+      "change_buildings": -4,
+      "pct_change": -50.0,
+      "vacant_lots": 49,
+      "gross_resolved": 6,
+      "new_issued": 7,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510120500",
+      "in_enough": 1,
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "baseline_buildings": 19,
+      "vacant_buildings": 16,
+      "change_buildings": -3,
+      "pct_change": -15.8,
+      "vacant_lots": 111,
+      "gross_resolved": 19,
+      "new_issued": 14,
+      "rehabs": 9,
+      "demolitions": 0,
+      "child_poverty_pct": 6.6
+    },
+    {
+      "GEOID": "24510130805",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 21,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510200400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 285,
+      "vacant_buildings": 256,
+      "change_buildings": -29,
+      "pct_change": -10.2,
+      "vacant_lots": 241,
+      "gross_resolved": 78,
+      "new_issued": 58,
+      "rehabs": 24,
+      "demolitions": 9,
+      "child_poverty_pct": 35.7
+    },
+    {
+      "GEOID": "24510151200",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 208,
+      "vacant_buildings": 198,
+      "change_buildings": -10,
+      "pct_change": -4.8,
+      "vacant_lots": 153,
+      "gross_resolved": 86,
+      "new_issued": 85,
+      "rehabs": 34,
+      "demolitions": 8,
+      "child_poverty_pct": 4.0
+    },
+    {
+      "GEOID": "24510080700",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 131,
+      "vacant_buildings": 102,
+      "change_buildings": -29,
+      "pct_change": -22.1,
+      "vacant_lots": 503,
+      "gross_resolved": 62,
+      "new_issued": 38,
+      "rehabs": 34,
+      "demolitions": 2,
+      "child_poverty_pct": 65.2
+    },
+    {
+      "GEOID": "24510200300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 344,
+      "vacant_buildings": 341,
+      "change_buildings": -3,
+      "pct_change": -0.9,
+      "vacant_lots": 136,
+      "gross_resolved": 110,
+      "new_issued": 108,
+      "rehabs": 31,
+      "demolitions": 22,
+      "child_poverty_pct": 8.4
+    },
+    {
+      "GEOID": "24510271400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 3,
+      "change_buildings": 2,
+      "pct_change": 200.0,
+      "vacant_lots": 58,
+      "gross_resolved": 0,
+      "new_issued": 2,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.9
+    },
+    {
+      "GEOID": "24510272006",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 18,
+      "gross_resolved": 1,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 17.7
+    },
+    {
+      "GEOID": "24510280404",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 0,
+      "change_buildings": -3,
+      "pct_change": -100.0,
+      "vacant_lots": 135,
+      "gross_resolved": 3,
+      "new_issued": 1,
+      "rehabs": 3,
+      "demolitions": 1,
+      "child_poverty_pct": 40.2
+    },
+    {
+      "GEOID": "24510070100",
+      "in_enough": 1,
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "baseline_buildings": 107,
+      "vacant_buildings": 81,
+      "change_buildings": -26,
+      "pct_change": -24.3,
+      "vacant_lots": 5,
+      "gross_resolved": 57,
+      "new_issued": 43,
+      "rehabs": 34,
+      "demolitions": 1,
+      "child_poverty_pct": 44.0
+    },
+    {
+      "GEOID": "24510270903",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 2,
+      "change_buildings": -5,
+      "pct_change": -71.4,
+      "vacant_lots": 32,
+      "gross_resolved": 5,
+      "new_issued": 1,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 1.6
+    },
+    {
+      "GEOID": "24510260302",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 15,
+      "vacant_buildings": 8,
+      "change_buildings": -7,
+      "pct_change": -46.7,
+      "vacant_lots": 8,
+      "gross_resolved": 12,
+      "new_issued": 6,
+      "rehabs": 11,
+      "demolitions": 0,
+      "child_poverty_pct": 52.6
+    },
+    {
+      "GEOID": "24510260102",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 16,
+      "vacant_buildings": 11,
+      "change_buildings": -5,
+      "pct_change": -31.2,
+      "vacant_lots": 47,
+      "gross_resolved": 9,
+      "new_issued": 3,
+      "rehabs": 8,
+      "demolitions": 0,
+      "child_poverty_pct": 13.5
+    },
+    {
+      "GEOID": "24510020200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 10,
+      "vacant_buildings": 7,
+      "change_buildings": -3,
+      "pct_change": -30.0,
+      "vacant_lots": 9,
+      "gross_resolved": 6,
+      "new_issued": 3,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 44.6
+    },
+    {
+      "GEOID": "24510200500",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 453,
+      "vacant_buildings": 411,
+      "change_buildings": -42,
+      "pct_change": -9.3,
+      "vacant_lots": 102,
+      "gross_resolved": 172,
+      "new_issued": 147,
+      "rehabs": 68,
+      "demolitions": 6,
+      "child_poverty_pct": 49.1
+    },
+    {
+      "GEOID": "24510260202",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 19,
+      "vacant_buildings": 14,
+      "change_buildings": -5,
+      "pct_change": -26.3,
+      "vacant_lots": 23,
+      "gross_resolved": 16,
+      "new_issued": 12,
+      "rehabs": 10,
+      "demolitions": 0,
+      "child_poverty_pct": 45.6
+    },
+    {
+      "GEOID": "24510080101",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 30,
+      "vacant_buildings": 16,
+      "change_buildings": -14,
+      "pct_change": -46.7,
+      "vacant_lots": 54,
+      "gross_resolved": 20,
+      "new_issued": 8,
+      "rehabs": 13,
+      "demolitions": 1,
+      "child_poverty_pct": 2.2
+    },
+    {
+      "GEOID": "24510150400",
+      "in_enough": 1,
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "baseline_buildings": 349,
+      "vacant_buildings": 320,
+      "change_buildings": -29,
+      "pct_change": -8.3,
+      "vacant_lots": 91,
+      "gross_resolved": 146,
+      "new_issued": 130,
+      "rehabs": 46,
+      "demolitions": 1,
+      "child_poverty_pct": 46.5
+    },
+    {
+      "GEOID": "24510120400",
+      "in_enough": 1,
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "baseline_buildings": 41,
+      "vacant_buildings": 28,
+      "change_buildings": -13,
+      "pct_change": -31.7,
+      "vacant_lots": 242,
+      "gross_resolved": 28,
+      "new_issued": 13,
+      "rehabs": 17,
+      "demolitions": 1,
+      "child_poverty_pct": 6.7
+    },
+    {
+      "GEOID": "24510240300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 14,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510250206",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 18,
+      "vacant_buildings": 16,
+      "change_buildings": -2,
+      "pct_change": -11.1,
+      "vacant_lots": 139,
+      "gross_resolved": 9,
+      "new_issued": 9,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 21.9
+    },
+    {
+      "GEOID": "24510040200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 3,
+      "change_buildings": -1,
+      "pct_change": -25.0,
+      "vacant_lots": 18,
+      "gross_resolved": 3,
+      "new_issued": 2,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 43.9
+    },
+    {
+      "GEOID": "24510150300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 138,
+      "vacant_buildings": 114,
+      "change_buildings": -24,
+      "pct_change": -17.4,
+      "vacant_lots": 240,
+      "gross_resolved": 59,
+      "new_issued": 40,
+      "rehabs": 31,
+      "demolitions": 7,
+      "child_poverty_pct": 68.8
+    },
+    {
+      "GEOID": "24510272003",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 2,
+      "change_buildings": -2,
+      "pct_change": -50.0,
+      "vacant_lots": 33,
+      "gross_resolved": 2,
+      "new_issued": 1,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 4.6
+    },
+    {
+      "GEOID": "24510090500",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 21,
+      "vacant_buildings": 14,
+      "change_buildings": -7,
+      "pct_change": -33.3,
+      "vacant_lots": 71,
+      "gross_resolved": 15,
+      "new_issued": 9,
+      "rehabs": 8,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510200600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 112,
+      "vacant_buildings": 99,
+      "change_buildings": -13,
+      "pct_change": -11.6,
+      "vacant_lots": 114,
+      "gross_resolved": 34,
+      "new_issued": 27,
+      "rehabs": 22,
+      "demolitions": 2,
+      "child_poverty_pct": 2.5
+    },
+    {
+      "GEOID": "24510250103",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 3,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 63,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 4.3
+    },
+    {
+      "GEOID": "24510190100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 136,
+      "vacant_buildings": 112,
+      "change_buildings": -24,
+      "pct_change": -17.6,
+      "vacant_lots": 312,
+      "gross_resolved": 59,
+      "new_issued": 46,
+      "rehabs": 31,
+      "demolitions": 1,
+      "child_poverty_pct": 89.3
+    },
+    {
+      "GEOID": "24510130600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 6,
+      "change_buildings": -1,
+      "pct_change": -14.3,
+      "vacant_lots": 81,
+      "gross_resolved": 13,
+      "new_issued": 12,
+      "rehabs": 5,
+      "demolitions": 9,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510090200",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 11,
+      "vacant_buildings": 7,
+      "change_buildings": -4,
+      "pct_change": -36.4,
+      "vacant_lots": 9,
+      "gross_resolved": 8,
+      "new_issued": 5,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 27.4
+    },
+    {
+      "GEOID": "24510261100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 10,
+      "change_buildings": 2,
+      "pct_change": 25.0,
+      "vacant_lots": 5,
+      "gross_resolved": 2,
+      "new_issued": 4,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510210200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 97,
+      "vacant_buildings": 73,
+      "change_buildings": -24,
+      "pct_change": -24.7,
+      "vacant_lots": 71,
+      "gross_resolved": 58,
+      "new_issued": 39,
+      "rehabs": 36,
+      "demolitions": 0,
+      "child_poverty_pct": 3.8
+    },
+    {
+      "GEOID": "24510070300",
+      "in_enough": 1,
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "baseline_buildings": 60,
+      "vacant_buildings": 32,
+      "change_buildings": -28,
+      "pct_change": -46.7,
+      "vacant_lots": 146,
+      "gross_resolved": 41,
+      "new_issued": 23,
+      "rehabs": 32,
+      "demolitions": 0,
+      "child_poverty_pct": 29.3
+    },
+    {
+      "GEOID": "24510250303",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 46,
+      "vacant_buildings": 34,
+      "change_buildings": -12,
+      "pct_change": -26.1,
+      "vacant_lots": 256,
+      "gross_resolved": 24,
+      "new_issued": 15,
+      "rehabs": 15,
+      "demolitions": 2,
+      "child_poverty_pct": 28.6
+    },
+    {
+      "GEOID": "24510220100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 6,
+      "vacant_buildings": 4,
+      "change_buildings": -2,
+      "pct_change": -33.3,
+      "vacant_lots": 62,
+      "gross_resolved": 6,
+      "new_issued": 5,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510130806",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 3,
+      "change_buildings": 1,
+      "pct_change": 50.0,
+      "vacant_lots": 90,
+      "gross_resolved": 4,
+      "new_issued": 4,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510271700",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 112,
+      "vacant_buildings": 96,
+      "change_buildings": -16,
+      "pct_change": -14.3,
+      "vacant_lots": 76,
+      "gross_resolved": 46,
+      "new_issued": 35,
+      "rehabs": 30,
+      "demolitions": 1,
+      "child_poverty_pct": 34.9
+    },
+    {
+      "GEOID": "24510270501",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 10,
+      "vacant_buildings": 4,
+      "change_buildings": -6,
+      "pct_change": -60.0,
+      "vacant_lots": 74,
+      "gross_resolved": 8,
+      "new_issued": 2,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 8.3
+    },
+    {
+      "GEOID": "24510260900",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 5,
+      "change_buildings": -2,
+      "pct_change": -28.6,
+      "vacant_lots": 46,
+      "gross_resolved": 6,
+      "new_issued": 5,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510210100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 24,
+      "vacant_buildings": 19,
+      "change_buildings": -5,
+      "pct_change": -20.8,
+      "vacant_lots": 115,
+      "gross_resolved": 14,
+      "new_issued": 9,
+      "rehabs": 6,
+      "demolitions": 0,
+      "child_poverty_pct": 47.2
+    },
+    {
+      "GEOID": "24510280600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 51,
+      "vacant_buildings": 41,
+      "change_buildings": -10,
+      "pct_change": -19.6,
+      "vacant_lots": 432,
+      "gross_resolved": 20,
+      "new_issued": 11,
+      "rehabs": 12,
+      "demolitions": 1,
+      "child_poverty_pct": 46.8
+    },
+    {
+      "GEOID": "24510271101",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 3,
+      "change_buildings": 1,
+      "pct_change": 50.0,
+      "vacant_lots": 22,
+      "gross_resolved": 1,
+      "new_issued": 2,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 6.3
+    },
+    {
+      "GEOID": "24510151300",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 266,
+      "vacant_buildings": 233,
+      "change_buildings": -33,
+      "pct_change": -12.4,
+      "vacant_lots": 170,
+      "gross_resolved": 108,
+      "new_issued": 91,
+      "rehabs": 45,
+      "demolitions": 3,
+      "child_poverty_pct": 27.5
+    },
+    {
+      "GEOID": "24510170200",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority"
+      ],
+      "baseline_buildings": 44,
+      "vacant_buildings": 38,
+      "change_buildings": -6,
+      "pct_change": -13.6,
+      "vacant_lots": 47,
+      "gross_resolved": 26,
+      "new_issued": 25,
+      "rehabs": 8,
+      "demolitions": 1,
+      "child_poverty_pct": 59.3
+    },
+    {
+      "GEOID": "24510130300",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority",
+        "Elev8 Baltimore, Inc."
+      ],
+      "baseline_buildings": 222,
+      "vacant_buildings": 193,
+      "change_buildings": -29,
+      "pct_change": -13.1,
+      "vacant_lots": 150,
+      "gross_resolved": 93,
+      "new_issued": 79,
+      "rehabs": 31,
+      "demolitions": 22,
+      "child_poverty_pct": 56.2
+    },
+    {
+      "GEOID": "24510160801",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 15,
+      "vacant_buildings": 10,
+      "change_buildings": -5,
+      "pct_change": -33.3,
+      "vacant_lots": 10,
+      "gross_resolved": 10,
+      "new_issued": 4,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 7.6
+    },
+    {
+      "GEOID": "24510271503",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 7,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510270401",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 11,
+      "vacant_buildings": 9,
+      "change_buildings": -2,
+      "pct_change": -18.2,
+      "vacant_lots": 88,
+      "gross_resolved": 8,
+      "new_issued": 6,
+      "rehabs": 6,
+      "demolitions": 0,
+      "child_poverty_pct": 20.4
+    },
+    {
+      "GEOID": "24510260501",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 14,
+      "vacant_buildings": 15,
+      "change_buildings": 1,
+      "pct_change": 7.1,
+      "vacant_lots": 80,
+      "gross_resolved": 8,
+      "new_issued": 9,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 20.9
+    },
+    {
+      "GEOID": "24510260402",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 52,
+      "gross_resolved": 1,
+      "new_issued": 0,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 18.4
+    },
+    {
+      "GEOID": "24510190200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 213,
+      "vacant_buildings": 212,
+      "change_buildings": -1,
+      "pct_change": -0.5,
+      "vacant_lots": 106,
+      "gross_resolved": 82,
+      "new_issued": 94,
+      "rehabs": 36,
+      "demolitions": 5,
+      "child_poverty_pct": 14.2
+    },
+    {
+      "GEOID": "24510090800",
+      "in_enough": 1,
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "baseline_buildings": 374,
+      "vacant_buildings": 317,
+      "change_buildings": -57,
+      "pct_change": -15.2,
+      "vacant_lots": 216,
+      "gross_resolved": 164,
+      "new_issued": 127,
+      "rehabs": 71,
+      "demolitions": 5,
+      "child_poverty_pct": 5.5
+    },
+    {
+      "GEOID": "24510090100",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 25,
+      "vacant_buildings": 17,
+      "change_buildings": -8,
+      "pct_change": -32.0,
+      "vacant_lots": 76,
+      "gross_resolved": 15,
+      "new_issued": 9,
+      "rehabs": 14,
+      "demolitions": 0,
+      "child_poverty_pct": 24.0
+    },
+    {
+      "GEOID": "24510150701",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 21,
+      "vacant_buildings": 16,
+      "change_buildings": -5,
+      "pct_change": -23.8,
+      "vacant_lots": 56,
+      "gross_resolved": 14,
+      "new_issued": 9,
+      "rehabs": 10,
+      "demolitions": 0,
+      "child_poverty_pct": 48.9
+    },
+    {
+      "GEOID": "24510160100",
+      "in_enough": 1,
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "baseline_buildings": 268,
+      "vacant_buildings": 233,
+      "change_buildings": -35,
+      "pct_change": -13.1,
+      "vacant_lots": 234,
+      "gross_resolved": 105,
+      "new_issued": 85,
+      "rehabs": 43,
+      "demolitions": 5,
+      "child_poverty_pct": 26.4
+    },
+    {
+      "GEOID": "24510270702",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 2,
+      "change_buildings": 2,
+      "pct_change": null,
+      "vacant_lots": 17,
+      "gross_resolved": 0,
+      "new_issued": 2,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 10.0
+    },
+    {
+      "GEOID": "24510270803",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 7,
+      "change_buildings": -1,
+      "pct_change": -12.5,
+      "vacant_lots": 19,
+      "gross_resolved": 6,
+      "new_issued": 5,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 14.0
+    },
+    {
+      "GEOID": "24510270902",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 1,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 5,
+      "gross_resolved": 4,
+      "new_issued": 5,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 6.2
+    },
+    {
+      "GEOID": "24510130803",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 121,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510280101",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 17,
+      "vacant_buildings": 12,
+      "change_buildings": -5,
+      "pct_change": -29.4,
+      "vacant_lots": 92,
+      "gross_resolved": 10,
+      "new_issued": 6,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 28.9
+    },
+    {
+      "GEOID": "24510170300",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority"
+      ],
+      "baseline_buildings": 107,
+      "vacant_buildings": 83,
+      "change_buildings": -24,
+      "pct_change": -22.4,
+      "vacant_lots": 256,
+      "gross_resolved": 45,
+      "new_issued": 29,
+      "rehabs": 24,
+      "demolitions": 7,
+      "child_poverty_pct": 35.3
+    },
+    {
+      "GEOID": "24510200200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 340,
+      "vacant_buildings": 304,
+      "change_buildings": -36,
+      "pct_change": -10.6,
+      "vacant_lots": 79,
+      "gross_resolved": 104,
+      "new_issued": 80,
+      "rehabs": 44,
+      "demolitions": 1,
+      "child_poverty_pct": 58.5
+    },
+    {
+      "GEOID": "24510280403",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 8,
+      "change_buildings": 1,
+      "pct_change": 14.3,
+      "vacant_lots": 57,
+      "gross_resolved": 1,
+      "new_issued": 3,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 33.1
+    },
+    {
+      "GEOID": "24510230200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 2,
+      "change_buildings": -2,
+      "pct_change": -50.0,
+      "vacant_lots": 7,
+      "gross_resolved": 2,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510040100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 50,
+      "vacant_buildings": 50,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 54,
+      "gross_resolved": 24,
+      "new_issued": 23,
+      "rehabs": 9,
+      "demolitions": 4,
+      "child_poverty_pct": 91.0
+    },
+    {
+      "GEOID": "24510280301",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 6,
+      "vacant_buildings": 3,
+      "change_buildings": -3,
+      "pct_change": -50.0,
+      "vacant_lots": 218,
+      "gross_resolved": 4,
+      "new_issued": 3,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 6.0
+    },
+    {
+      "GEOID": "24510120700",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 8,
+      "change_buildings": 1,
+      "pct_change": 14.3,
+      "vacant_lots": 50,
+      "gross_resolved": 13,
+      "new_issued": 11,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 11.0
+    },
+    {
+      "GEOID": "24510270901",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 3,
+      "change_buildings": -2,
+      "pct_change": -40.0,
+      "vacant_lots": 4,
+      "gross_resolved": 5,
+      "new_issued": 3,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 35.6
+    },
+    {
+      "GEOID": "24510271501",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 5,
+      "change_buildings": 2,
+      "pct_change": 66.7,
+      "vacant_lots": 166,
+      "gross_resolved": 3,
+      "new_issued": 5,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510120100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 1,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 26,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510150702",
+      "in_enough": 1,
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "baseline_buildings": 42,
+      "vacant_buildings": 34,
+      "change_buildings": -8,
+      "pct_change": -19.0,
+      "vacant_lots": 30,
+      "gross_resolved": 15,
+      "new_issued": 10,
+      "rehabs": 12,
+      "demolitions": 0,
+      "child_poverty_pct": 54.6
+    },
+    {
+      "GEOID": "24510110100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 3,
+      "change_buildings": -1,
+      "pct_change": -25.0,
+      "vacant_lots": 3,
+      "gross_resolved": 3,
+      "new_issued": 2,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510260700",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 6,
+      "change_buildings": -2,
+      "pct_change": -25.0,
+      "vacant_lots": 36,
+      "gross_resolved": 7,
+      "new_issued": 6,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 29.9
+    },
+    {
+      "GEOID": "24510260401",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 9,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 76.7
+    },
+    {
+      "GEOID": "24510170100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 6,
+      "vacant_buildings": 5,
+      "change_buildings": -1,
+      "pct_change": -16.7,
+      "vacant_lots": 91,
+      "gross_resolved": 5,
+      "new_issued": 3,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 29.4
+    },
+    {
+      "GEOID": "24510260301",
+      "in_enough": 1,
+      "grantees": [
+        "Leaders Breeders Inc."
+      ],
+      "baseline_buildings": 28,
+      "vacant_buildings": 25,
+      "change_buildings": -3,
+      "pct_change": -10.7,
+      "vacant_lots": 25,
+      "gross_resolved": 17,
+      "new_issued": 15,
+      "rehabs": 8,
+      "demolitions": 0,
+      "child_poverty_pct": 21.6
+    },
+    {
+      "GEOID": "24510160802",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 60,
+      "vacant_buildings": 44,
+      "change_buildings": -16,
+      "pct_change": -26.7,
+      "vacant_lots": 82,
+      "gross_resolved": 40,
+      "new_issued": 28,
+      "rehabs": 27,
+      "demolitions": 0,
+      "child_poverty_pct": 55.9
+    },
+    {
+      "GEOID": "24510130700",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 19,
+      "vacant_buildings": 12,
+      "change_buildings": -7,
+      "pct_change": -36.8,
+      "vacant_lots": 78,
+      "gross_resolved": 20,
+      "new_issued": 15,
+      "rehabs": 11,
+      "demolitions": 0,
+      "child_poverty_pct": 3.0
+    },
+    {
+      "GEOID": "24510270804",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 1,
+      "change_buildings": -1,
+      "pct_change": -50.0,
+      "vacant_lots": 38,
+      "gross_resolved": 1,
+      "new_issued": 0,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 25.8
+    },
+    {
+      "GEOID": "24510270701",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 0,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 37.3
+    },
+    {
+      "GEOID": "24510120202",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 1,
+      "change_buildings": -1,
+      "pct_change": -50.0,
+      "vacant_lots": 6,
+      "gross_resolved": 2,
+      "new_issued": 1,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": null
+    },
+    {
+      "GEOID": "24510260403",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 1,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 36,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510270802",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 3,
+      "change_buildings": -1,
+      "pct_change": -25.0,
+      "vacant_lots": 4,
+      "gross_resolved": 3,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 4.5
+    },
+    {
+      "GEOID": "24510080302",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 32,
+      "vacant_buildings": 32,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 6,
+      "gross_resolved": 17,
+      "new_issued": 20,
+      "rehabs": 11,
+      "demolitions": 0,
+      "child_poverty_pct": 49.8
+    },
+    {
+      "GEOID": "24510260800",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 27,
+      "vacant_buildings": 19,
+      "change_buildings": -8,
+      "pct_change": -29.6,
+      "vacant_lots": 5,
+      "gross_resolved": 26,
+      "new_issued": 19,
+      "rehabs": 17,
+      "demolitions": 0,
+      "child_poverty_pct": 9.1
+    },
+    {
+      "GEOID": "24510200702",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 62,
+      "vacant_buildings": 49,
+      "change_buildings": -13,
+      "pct_change": -21.0,
+      "vacant_lots": 44,
+      "gross_resolved": 21,
+      "new_issued": 11,
+      "rehabs": 11,
+      "demolitions": 4,
+      "child_poverty_pct": 24.5
+    },
+    {
+      "GEOID": "24510250204",
+      "in_enough": 1,
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "baseline_buildings": 21,
+      "vacant_buildings": 20,
+      "change_buildings": -1,
+      "pct_change": -4.8,
+      "vacant_lots": 7,
+      "gross_resolved": 9,
+      "new_issued": 8,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 49.2
+    },
+    {
+      "GEOID": "24510250101",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 6,
+      "vacant_buildings": 4,
+      "change_buildings": -2,
+      "pct_change": -33.3,
+      "vacant_lots": 51,
+      "gross_resolved": 5,
+      "new_issued": 2,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 6.2
+    },
+    {
+      "GEOID": "24510060400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 7,
+      "change_buildings": -1,
+      "pct_change": -12.5,
+      "vacant_lots": 42,
+      "gross_resolved": 6,
+      "new_issued": 5,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 31.0
+    },
+    {
+      "GEOID": "24510260303",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 45,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 14.0
+    },
+    {
+      "GEOID": "24510271300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 79,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 2.8
+    },
+    {
+      "GEOID": "24510120300",
+      "in_enough": 1,
+      "grantees": [
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "baseline_buildings": 37,
+      "vacant_buildings": 36,
+      "change_buildings": -1,
+      "pct_change": -2.7,
+      "vacant_lots": 33,
+      "gross_resolved": 23,
+      "new_issued": 25,
+      "rehabs": 14,
+      "demolitions": 0,
+      "child_poverty_pct": 36.9
+    },
+    {
+      "GEOID": "24510200100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 196,
+      "vacant_buildings": 174,
+      "change_buildings": -22,
+      "pct_change": -11.2,
+      "vacant_lots": 52,
+      "gross_resolved": 55,
+      "new_issued": 41,
+      "rehabs": 16,
+      "demolitions": 9,
+      "child_poverty_pct": 3.7
+    },
+    {
+      "GEOID": "24510010500",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 2,
+      "change_buildings": -3,
+      "pct_change": -60.0,
+      "vacant_lots": 10,
+      "gross_resolved": 5,
+      "new_issued": 3,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 10.6
+    },
+    {
+      "GEOID": "24510100200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 10,
+      "vacant_buildings": 7,
+      "change_buildings": -3,
+      "pct_change": -30.0,
+      "vacant_lots": 65,
+      "gross_resolved": 6,
+      "new_issued": 5,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 57.4
+    },
+    {
+      "GEOID": "24510120201",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 13,
+      "vacant_buildings": 24,
+      "change_buildings": 11,
+      "pct_change": 84.6,
+      "vacant_lots": 16,
+      "gross_resolved": 11,
+      "new_issued": 19,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 7.6
+    },
+    {
+      "GEOID": "24510150100",
+      "in_enough": 1,
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "baseline_buildings": 145,
+      "vacant_buildings": 125,
+      "change_buildings": -20,
+      "pct_change": -13.8,
+      "vacant_lots": 175,
+      "gross_resolved": 60,
+      "new_issued": 43,
+      "rehabs": 23,
+      "demolitions": 1,
+      "child_poverty_pct": 57.3
+    },
+    {
+      "GEOID": "24510240100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 1,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 65,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510250301",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 150,
+      "vacant_buildings": 142,
+      "change_buildings": -8,
+      "pct_change": -5.3,
+      "vacant_lots": 187,
+      "gross_resolved": 58,
+      "new_issued": 55,
+      "rehabs": 24,
+      "demolitions": 3,
+      "child_poverty_pct": 52.3
+    },
+    {
+      "GEOID": "24510250102",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 8,
+      "change_buildings": 1,
+      "pct_change": 14.3,
+      "vacant_lots": 31,
+      "gross_resolved": 2,
+      "new_issued": 3,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 11.6
+    },
+    {
+      "GEOID": "24510090300",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 24,
+      "vacant_buildings": 16,
+      "change_buildings": -8,
+      "pct_change": -33.3,
+      "vacant_lots": 30,
+      "gross_resolved": 20,
+      "new_issued": 13,
+      "rehabs": 11,
+      "demolitions": 0,
+      "child_poverty_pct": 40.7
+    },
+    {
+      "GEOID": "24510130400",
+      "in_enough": 1,
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "baseline_buildings": 117,
+      "vacant_buildings": 104,
+      "change_buildings": -13,
+      "pct_change": -11.1,
+      "vacant_lots": 21,
+      "gross_resolved": 64,
+      "new_issued": 58,
+      "rehabs": 32,
+      "demolitions": 0,
+      "child_poverty_pct": 31.3
+    },
+    {
+      "GEOID": "24510270200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 4,
+      "change_buildings": -1,
+      "pct_change": -20.0,
+      "vacant_lots": 70,
+      "gross_resolved": 3,
+      "new_issued": 4,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510270703",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 6,
+      "change_buildings": 1,
+      "pct_change": 20.0,
+      "vacant_lots": 37,
+      "gross_resolved": 0,
+      "new_issued": 1,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 3.4
+    },
+    {
+      "GEOID": "24510260404",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 43,
+      "vacant_buildings": 42,
+      "change_buildings": -1,
+      "pct_change": -2.3,
+      "vacant_lots": 98,
+      "gross_resolved": 36,
+      "new_issued": 31,
+      "rehabs": 15,
+      "demolitions": 6,
+      "child_poverty_pct": 44.5
+    },
+    {
+      "GEOID": "24510271801",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 125,
+      "vacant_buildings": 103,
+      "change_buildings": -22,
+      "pct_change": -17.6,
+      "vacant_lots": 61,
+      "gross_resolved": 62,
+      "new_issued": 52,
+      "rehabs": 34,
+      "demolitions": 5,
+      "child_poverty_pct": 20.5
+    },
+    {
+      "GEOID": "24510270302",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 10,
+      "vacant_buildings": 8,
+      "change_buildings": -2,
+      "pct_change": -20.0,
+      "vacant_lots": 26,
+      "gross_resolved": 7,
+      "new_issued": 7,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 5.8
+    },
+    {
+      "GEOID": "24510250402",
+      "in_enough": 1,
+      "grantees": [
+        "South Baltimore Community Land Trust"
+      ],
+      "baseline_buildings": 84,
+      "vacant_buildings": 69,
+      "change_buildings": -15,
+      "pct_change": -17.9,
+      "vacant_lots": 48,
+      "gross_resolved": 69,
+      "new_issued": 57,
+      "rehabs": 34,
+      "demolitions": 0,
+      "child_poverty_pct": 59.9
+    },
+    {
+      "GEOID": "24510140200",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority"
+      ],
+      "baseline_buildings": 116,
+      "vacant_buildings": 109,
+      "change_buildings": -7,
+      "pct_change": -6.0,
+      "vacant_lots": 235,
+      "gross_resolved": 41,
+      "new_issued": 37,
+      "rehabs": 19,
+      "demolitions": 3,
+      "child_poverty_pct": 37.2
+    },
+    {
+      "GEOID": "24510261000",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 57,
+      "vacant_buildings": 46,
+      "change_buildings": -11,
+      "pct_change": -19.3,
+      "vacant_lots": 4,
+      "gross_resolved": 37,
+      "new_issued": 32,
+      "rehabs": 29,
+      "demolitions": 0,
+      "child_poverty_pct": 52.1
+    },
+    {
+      "GEOID": "24510270402",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 6,
+      "change_buildings": -2,
+      "pct_change": -25.0,
+      "vacant_lots": 25,
+      "gross_resolved": 6,
+      "new_issued": 4,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 6.5
+    },
+    {
+      "GEOID": "24510080102",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 68,
+      "vacant_buildings": 43,
+      "change_buildings": -25,
+      "pct_change": -36.8,
+      "vacant_lots": 11,
+      "gross_resolved": 58,
+      "new_issued": 45,
+      "rehabs": 33,
+      "demolitions": 0,
+      "child_poverty_pct": 38.0
+    },
+    {
+      "GEOID": "24510270102",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 13,
+      "vacant_buildings": 7,
+      "change_buildings": -6,
+      "pct_change": -46.2,
+      "vacant_lots": 34,
+      "gross_resolved": 8,
+      "new_issued": 2,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 44.0
+    },
+    {
+      "GEOID": "24510260605",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 15,
+      "vacant_buildings": 11,
+      "change_buildings": -4,
+      "pct_change": -26.7,
+      "vacant_lots": 299,
+      "gross_resolved": 11,
+      "new_issued": 6,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 18.3
+    },
+    {
+      "GEOID": "24510060300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 25,
+      "vacant_buildings": 17,
+      "change_buildings": -8,
+      "pct_change": -32.0,
+      "vacant_lots": 88,
+      "gross_resolved": 17,
+      "new_issued": 11,
+      "rehabs": 15,
+      "demolitions": 0,
+      "child_poverty_pct": 23.3
+    },
+    {
+      "GEOID": "24510030200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 11,
+      "change_buildings": 3,
+      "pct_change": 37.5,
+      "vacant_lots": 73,
+      "gross_resolved": 6,
+      "new_issued": 8,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 4.6
+    },
+    {
+      "GEOID": "24510080600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 375,
+      "vacant_buildings": 333,
+      "change_buildings": -42,
+      "pct_change": -11.2,
+      "vacant_lots": 298,
+      "gross_resolved": 148,
+      "new_issued": 118,
+      "rehabs": 72,
+      "demolitions": 3,
+      "child_poverty_pct": 26.0
+    },
+    {
+      "GEOID": "24510090700",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 206,
+      "vacant_buildings": 159,
+      "change_buildings": -47,
+      "pct_change": -22.8,
+      "vacant_lots": 111,
+      "gross_resolved": 97,
+      "new_issued": 69,
+      "rehabs": 56,
+      "demolitions": 8,
+      "child_poverty_pct": 50.8
+    },
+    {
+      "GEOID": "24510240200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 1,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 55,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510060200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 49,
+      "vacant_buildings": 35,
+      "change_buildings": -14,
+      "pct_change": -28.6,
+      "vacant_lots": 20,
+      "gross_resolved": 36,
+      "new_issued": 31,
+      "rehabs": 30,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510272004",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 4,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 1.6
+    },
+    {
+      "GEOID": "24510080200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 256,
+      "vacant_buildings": 239,
+      "change_buildings": -17,
+      "pct_change": -6.6,
+      "vacant_lots": 381,
+      "gross_resolved": 74,
+      "new_issued": 58,
+      "rehabs": 22,
+      "demolitions": 6,
+      "child_poverty_pct": 56.1
+    },
+    {
+      "GEOID": "24510160200",
+      "in_enough": 1,
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "baseline_buildings": 163,
+      "vacant_buildings": 150,
+      "change_buildings": -13,
+      "pct_change": -8.0,
+      "vacant_lots": 252,
+      "gross_resolved": 44,
+      "new_issued": 37,
+      "rehabs": 16,
+      "demolitions": 4,
+      "child_poverty_pct": 18.9
+    },
+    {
+      "GEOID": "24510230100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 3,
+      "change_buildings": 1,
+      "pct_change": 50.0,
+      "vacant_lots": 56,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 8.1
+    },
+    {
+      "GEOID": "24510090900",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 193,
+      "vacant_buildings": 181,
+      "change_buildings": -12,
+      "pct_change": -6.2,
+      "vacant_lots": 322,
+      "gross_resolved": 64,
+      "new_issued": 58,
+      "rehabs": 29,
+      "demolitions": 2,
+      "child_poverty_pct": 21.9
+    },
+    {
+      "GEOID": "24510280401",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 4,
+      "change_buildings": -1,
+      "pct_change": -20.0,
+      "vacant_lots": 64,
+      "gross_resolved": 2,
+      "new_issued": 2,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 37.6
+    },
+    {
+      "GEOID": "24510271600",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 83,
+      "vacant_buildings": 71,
+      "change_buildings": -12,
+      "pct_change": -14.5,
+      "vacant_lots": 283,
+      "gross_resolved": 42,
+      "new_issued": 28,
+      "rehabs": 25,
+      "demolitions": 0,
+      "child_poverty_pct": 31.1
+    },
+    {
+      "GEOID": "24510140300",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority"
+      ],
+      "baseline_buildings": 206,
+      "vacant_buildings": 167,
+      "change_buildings": -39,
+      "pct_change": -18.9,
+      "vacant_lots": 434,
+      "gross_resolved": 104,
+      "new_issued": 78,
+      "rehabs": 49,
+      "demolitions": 3,
+      "child_poverty_pct": 89.3
+    },
+    {
+      "GEOID": "24510080301",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 208,
+      "vacant_buildings": 184,
+      "change_buildings": -24,
+      "pct_change": -11.5,
+      "vacant_lots": 112,
+      "gross_resolved": 96,
+      "new_issued": 83,
+      "rehabs": 30,
+      "demolitions": 0,
+      "child_poverty_pct": 31.1
+    },
+    {
+      "GEOID": "24510270502",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 5,
+      "vacant_buildings": 5,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 31,
+      "gross_resolved": 8,
+      "new_issued": 8,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 5.9
+    },
+    {
+      "GEOID": "24510150200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 305,
+      "vacant_buildings": 281,
+      "change_buildings": -24,
+      "pct_change": -7.9,
+      "vacant_lots": 238,
+      "gross_resolved": 91,
+      "new_issued": 78,
+      "rehabs": 35,
+      "demolitions": 2,
+      "child_poverty_pct": 31.0
+    },
+    {
+      "GEOID": "24510230300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 1,
+      "vacant_buildings": 0,
+      "change_buildings": -1,
+      "pct_change": -100.0,
+      "vacant_lots": 50,
+      "gross_resolved": 1,
+      "new_issued": 0,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 30.0
+    },
+    {
+      "GEOID": "24510030100",
+      "in_enough": 1,
+      "grantees": [
+        "Urban Strategies Inc"
+      ],
+      "baseline_buildings": 15,
+      "vacant_buildings": 19,
+      "change_buildings": 4,
+      "pct_change": 26.7,
+      "vacant_lots": 118,
+      "gross_resolved": 6,
+      "new_issued": 11,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 94.0
+    },
+    {
+      "GEOID": "24510150600",
+      "in_enough": 1,
+      "grantees": [
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "baseline_buildings": 286,
+      "vacant_buildings": 270,
+      "change_buildings": -16,
+      "pct_change": -5.6,
+      "vacant_lots": 205,
+      "gross_resolved": 124,
+      "new_issued": 112,
+      "rehabs": 32,
+      "demolitions": 9,
+      "child_poverty_pct": 54.0
+    },
+    {
+      "GEOID": "24510271001",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 33,
+      "vacant_buildings": 27,
+      "change_buildings": -6,
+      "pct_change": -18.2,
+      "vacant_lots": 131,
+      "gross_resolved": 19,
+      "new_issued": 15,
+      "rehabs": 13,
+      "demolitions": 0,
+      "child_poverty_pct": 40.1
+    },
+    {
+      "GEOID": "24510130200",
+      "in_enough": 1,
+      "grantees": [
+        "Child First Authority"
+      ],
+      "baseline_buildings": 23,
+      "vacant_buildings": 14,
+      "change_buildings": -9,
+      "pct_change": -39.1,
+      "vacant_lots": 28,
+      "gross_resolved": 17,
+      "new_issued": 9,
+      "rehabs": 11,
+      "demolitions": 0,
+      "child_poverty_pct": 22.5
+    },
+    {
+      "GEOID": "24510010300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 2,
+      "change_buildings": -5,
+      "pct_change": -71.4,
+      "vacant_lots": 6,
+      "gross_resolved": 7,
+      "new_issued": 3,
+      "rehabs": 6,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510110200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 4,
+      "vacant_buildings": 9,
+      "change_buildings": 5,
+      "pct_change": 125.0,
+      "vacant_lots": 13,
+      "gross_resolved": 3,
+      "new_issued": 8,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510150900",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 55,
+      "vacant_buildings": 57,
+      "change_buildings": 2,
+      "pct_change": 3.6,
+      "vacant_lots": 124,
+      "gross_resolved": 23,
+      "new_issued": 27,
+      "rehabs": 13,
+      "demolitions": 1,
+      "child_poverty_pct": 58.9
+    },
+    {
+      "GEOID": "24510260604",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 3,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 27,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 47.8
+    },
+    {
+      "GEOID": "24510100100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 139,
+      "vacant_buildings": 96,
+      "change_buildings": -43,
+      "pct_change": -30.9,
+      "vacant_lots": 387,
+      "gross_resolved": 78,
+      "new_issued": 43,
+      "rehabs": 46,
+      "demolitions": 7,
+      "child_poverty_pct": 21.1
+    },
+    {
+      "GEOID": "24510260201",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 5,
+      "change_buildings": -2,
+      "pct_change": -28.6,
+      "vacant_lots": 51,
+      "gross_resolved": 4,
+      "new_issued": 4,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 25.6
+    },
+    {
+      "GEOID": "24510250203",
+      "in_enough": 1,
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "baseline_buildings": 24,
+      "vacant_buildings": 22,
+      "change_buildings": -2,
+      "pct_change": -8.3,
+      "vacant_lots": 7,
+      "gross_resolved": 9,
+      "new_issued": 9,
+      "rehabs": 6,
+      "demolitions": 0,
+      "child_poverty_pct": 20.5
+    },
+    {
+      "GEOID": "24510130804",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 9,
+      "vacant_buildings": 6,
+      "change_buildings": -3,
+      "pct_change": -33.3,
+      "vacant_lots": 84,
+      "gross_resolved": 8,
+      "new_issued": 5,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 15.1
+    },
+    {
+      "GEOID": "24510270801",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 10,
+      "vacant_buildings": 6,
+      "change_buildings": -4,
+      "pct_change": -40.0,
+      "vacant_lots": 13,
+      "gross_resolved": 9,
+      "new_issued": 7,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 22.5
+    },
+    {
+      "GEOID": "24510180300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 63,
+      "vacant_buildings": 46,
+      "change_buildings": -17,
+      "pct_change": -27.0,
+      "vacant_lots": 173,
+      "gross_resolved": 34,
+      "new_issued": 22,
+      "rehabs": 16,
+      "demolitions": 2,
+      "child_poverty_pct": 52.9
+    },
+    {
+      "GEOID": "24510271102",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 2,
+      "change_buildings": 0,
+      "pct_change": 0.0,
+      "vacant_lots": 20,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510260101",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 7,
+      "vacant_buildings": 6,
+      "change_buildings": -1,
+      "pct_change": -14.3,
+      "vacant_lots": 69,
+      "gross_resolved": 8,
+      "new_issued": 9,
+      "rehabs": 6,
+      "demolitions": 0,
+      "child_poverty_pct": 10.0
+    },
+    {
+      "GEOID": "24510271900",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 13,
+      "vacant_buildings": 8,
+      "change_buildings": -5,
+      "pct_change": -38.5,
+      "vacant_lots": 90,
+      "gross_resolved": 14,
+      "new_issued": 11,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510080400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 193,
+      "vacant_buildings": 150,
+      "change_buildings": -43,
+      "pct_change": -22.3,
+      "vacant_lots": 170,
+      "gross_resolved": 81,
+      "new_issued": 43,
+      "rehabs": 50,
+      "demolitions": 4,
+      "child_poverty_pct": 14.5
+    },
+    {
+      "GEOID": "24510010400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 2,
+      "change_buildings": -1,
+      "pct_change": -33.3,
+      "vacant_lots": 22,
+      "gross_resolved": 4,
+      "new_issued": 2,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510150800",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 68,
+      "vacant_buildings": 58,
+      "change_buildings": -10,
+      "pct_change": -14.7,
+      "vacant_lots": 85,
+      "gross_resolved": 27,
+      "new_issued": 20,
+      "rehabs": 16,
+      "demolitions": 0,
+      "child_poverty_pct": 34.6
+    },
+    {
+      "GEOID": "24510080500",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 163,
+      "vacant_buildings": 147,
+      "change_buildings": -16,
+      "pct_change": -9.8,
+      "vacant_lots": 75,
+      "gross_resolved": 92,
+      "new_issued": 81,
+      "rehabs": 30,
+      "demolitions": 3,
+      "child_poverty_pct": 66.1
+    },
+    {
+      "GEOID": "24510280500",
+      "in_enough": 1,
+      "grantees": [
+        "Urban Strategies Inc"
+      ],
+      "baseline_buildings": 42,
+      "vacant_buildings": 46,
+      "change_buildings": 4,
+      "pct_change": 9.5,
+      "vacant_lots": 45,
+      "gross_resolved": 11,
+      "new_issued": 12,
+      "rehabs": 1,
+      "demolitions": 1,
+      "child_poverty_pct": 91.7
+    },
+    {
+      "GEOID": "24510280200",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 18,
+      "vacant_buildings": 16,
+      "change_buildings": -2,
+      "pct_change": -11.1,
+      "vacant_lots": 66,
+      "gross_resolved": 11,
+      "new_issued": 10,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 16.5
+    },
+    {
+      "GEOID": "24510280302",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 12,
+      "vacant_buildings": 10,
+      "change_buildings": -2,
+      "pct_change": -16.7,
+      "vacant_lots": 42,
+      "gross_resolved": 4,
+      "new_issued": 3,
+      "rehabs": 3,
+      "demolitions": 0,
+      "child_poverty_pct": 2.9
+    },
+    {
+      "GEOID": "24510272007",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 2,
+      "vacant_buildings": 3,
+      "change_buildings": 1,
+      "pct_change": 50.0,
+      "vacant_lots": 8,
+      "gross_resolved": 1,
+      "new_issued": 2,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 26.3
+    },
+    {
+      "GEOID": "24510280402",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 9,
+      "vacant_buildings": 7,
+      "change_buildings": -2,
+      "pct_change": -22.2,
+      "vacant_lots": 42,
+      "gross_resolved": 2,
+      "new_issued": 1,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510151100",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc."
+      ],
+      "baseline_buildings": 17,
+      "vacant_buildings": 20,
+      "change_buildings": 3,
+      "pct_change": 17.6,
+      "vacant_lots": 58,
+      "gross_resolved": 12,
+      "new_issued": 16,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510200701",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 95,
+      "vacant_buildings": 81,
+      "change_buildings": -14,
+      "pct_change": -14.7,
+      "vacant_lots": 113,
+      "gross_resolved": 35,
+      "new_issued": 26,
+      "rehabs": 28,
+      "demolitions": 2,
+      "child_poverty_pct": 5.9
+    },
+    {
+      "GEOID": "24510260203",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 3,
+      "vacant_buildings": 2,
+      "change_buildings": -1,
+      "pct_change": -33.3,
+      "vacant_lots": 35,
+      "gross_resolved": 3,
+      "new_issued": 3,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 39.1
+    },
+    {
+      "GEOID": "24510272005",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 22,
+      "gross_resolved": 1,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 11.2
+    },
+    {
+      "GEOID": "24510150500",
+      "in_enough": 1,
+      "grantees": [
+        "Park Heights Renaissance, Inc.",
+        "Greater Mondawmin Coordinating Council"
+      ],
+      "baseline_buildings": 14,
+      "vacant_buildings": 19,
+      "change_buildings": 5,
+      "pct_change": 35.7,
+      "vacant_lots": 46,
+      "gross_resolved": 10,
+      "new_issued": 16,
+      "rehabs": 2,
+      "demolitions": 0,
+      "child_poverty_pct": 73.3
+    },
+    {
+      "GEOID": "24510160500",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 120,
+      "vacant_buildings": 109,
+      "change_buildings": -11,
+      "pct_change": -9.2,
+      "vacant_lots": 42,
+      "gross_resolved": 45,
+      "new_issued": 37,
+      "rehabs": 21,
+      "demolitions": 0,
+      "child_poverty_pct": 28.7
+    },
+    {
+      "GEOID": "24510090600",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland"
+      ],
+      "baseline_buildings": 104,
+      "vacant_buildings": 75,
+      "change_buildings": -29,
+      "pct_change": -27.9,
+      "vacant_lots": 115,
+      "gross_resolved": 62,
+      "new_issued": 40,
+      "rehabs": 31,
+      "demolitions": 5,
+      "child_poverty_pct": 42.9
+    },
+    {
+      "GEOID": "24510010100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 9,
+      "vacant_buildings": 4,
+      "change_buildings": -5,
+      "pct_change": -55.6,
+      "vacant_lots": 14,
+      "gross_resolved": 8,
+      "new_issued": 4,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 0.0
+    },
+    {
+      "GEOID": "24510250205",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 22,
+      "vacant_buildings": 16,
+      "change_buildings": -6,
+      "pct_change": -27.3,
+      "vacant_lots": 118,
+      "gross_resolved": 7,
+      "new_issued": 1,
+      "rehabs": 5,
+      "demolitions": 0,
+      "child_poverty_pct": 46.1
+    },
+    {
+      "GEOID": "24510070400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 14,
+      "vacant_buildings": 7,
+      "change_buildings": -7,
+      "pct_change": -50.0,
+      "vacant_lots": 71,
+      "gross_resolved": 8,
+      "new_issued": 1,
+      "rehabs": 7,
+      "demolitions": 0,
+      "child_poverty_pct": 37.0
+    },
+    {
+      "GEOID": "24510160300",
+      "in_enough": 1,
+      "grantees": [
+        "Elev8 Baltimore, Inc."
+      ],
+      "baseline_buildings": 137,
+      "vacant_buildings": 123,
+      "change_buildings": -14,
+      "pct_change": -10.2,
+      "vacant_lots": 318,
+      "gross_resolved": 34,
+      "new_issued": 25,
+      "rehabs": 20,
+      "demolitions": 1,
+      "child_poverty_pct": 48.7
+    },
+    {
+      "GEOID": "24510080800",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 17,
+      "vacant_buildings": 16,
+      "change_buildings": -1,
+      "pct_change": -5.9,
+      "vacant_lots": 264,
+      "gross_resolved": 10,
+      "new_issued": 10,
+      "rehabs": 5,
+      "demolitions": 1,
+      "child_poverty_pct": 50.6
+    },
+    {
+      "GEOID": "24510270101",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 12,
+      "vacant_buildings": 10,
+      "change_buildings": -2,
+      "pct_change": -16.7,
+      "vacant_lots": 11,
+      "gross_resolved": 7,
+      "new_issued": 7,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 4.2
+    },
+    {
+      "GEOID": "24510160700",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 278,
+      "vacant_buildings": 252,
+      "change_buildings": -26,
+      "pct_change": -9.4,
+      "vacant_lots": 99,
+      "gross_resolved": 96,
+      "new_issued": 92,
+      "rehabs": 54,
+      "demolitions": 0,
+      "child_poverty_pct": 27.5
+    },
+    {
+      "GEOID": "24510250207",
+      "in_enough": 1,
+      "grantees": [
+        "Cherry Hill Strong"
+      ],
+      "baseline_buildings": 10,
+      "vacant_buildings": 9,
+      "change_buildings": -1,
+      "pct_change": -10.0,
+      "vacant_lots": 21,
+      "gross_resolved": 2,
+      "new_issued": 1,
+      "rehabs": 1,
+      "demolitions": 0,
+      "child_poverty_pct": 25.0
+    },
+    {
+      "GEOID": "24510250500",
+      "in_enough": 1,
+      "grantees": [
+        "South Baltimore Community Land Trust"
+      ],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 44,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": 50.7
+    },
+    {
+      "GEOID": "24510070200",
+      "in_enough": 1,
+      "grantees": [
+        "Tendea Family INC."
+      ],
+      "baseline_buildings": 192,
+      "vacant_buildings": 151,
+      "change_buildings": -41,
+      "pct_change": -21.4,
+      "vacant_lots": 121,
+      "gross_resolved": 104,
+      "new_issued": 85,
+      "rehabs": 66,
+      "demolitions": 0,
+      "child_poverty_pct": 43.7
+    },
+    {
+      "GEOID": "24510130100",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 12,
+      "vacant_buildings": 17,
+      "change_buildings": 5,
+      "pct_change": 41.7,
+      "vacant_lots": 45,
+      "gross_resolved": 8,
+      "new_issued": 12,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 42.4
+    },
+    {
+      "GEOID": "24510090400",
+      "in_enough": 1,
+      "grantees": [
+        "The Y in Central Maryland",
+        "The Central Baltimore Partnership, Inc."
+      ],
+      "baseline_buildings": 23,
+      "vacant_buildings": 18,
+      "change_buildings": -5,
+      "pct_change": -21.7,
+      "vacant_lots": 77,
+      "gross_resolved": 17,
+      "new_issued": 13,
+      "rehabs": 10,
+      "demolitions": 0,
+      "child_poverty_pct": 40.9
+    },
+    {
+      "GEOID": "24510160400",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 548,
+      "vacant_buildings": 498,
+      "change_buildings": -50,
+      "pct_change": -9.1,
+      "vacant_lots": 180,
+      "gross_resolved": 159,
+      "new_issued": 121,
+      "rehabs": 45,
+      "demolitions": 11,
+      "child_poverty_pct": 6.9
+    },
+    {
+      "GEOID": "24510100300",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 0,
+      "vacant_buildings": 0,
+      "change_buildings": 0,
+      "pct_change": null,
+      "vacant_lots": 0,
+      "gross_resolved": 0,
+      "new_issued": 0,
+      "rehabs": 0,
+      "demolitions": 0,
+      "child_poverty_pct": null
+    },
+    {
+      "GEOID": "24510270600",
+      "in_enough": 0,
+      "grantees": [],
+      "baseline_buildings": 8,
+      "vacant_buildings": 6,
+      "change_buildings": -2,
+      "pct_change": -25.0,
+      "vacant_lots": 92,
+      "gross_resolved": 7,
+      "new_issued": 5,
+      "rehabs": 4,
+      "demolitions": 0,
+      "child_poverty_pct": 16.1
+    }
+  ],
   "snapshot_date": "2026-09-01",
   "baseline_label": "FY25 start",
   "baseline_date": "2024-07-01",
@@ -39,18 +3270,18 @@
     "communities_statewide": 28,
     "baltimore_tracts": 46,
     "tracts_with_vacants": 46,
-    "vacant_buildings": 4108,
-    "vacant_lots": 5362,
-    "baseline_buildings": 4793,
-    "gross_resolved": 2211,
-    "new_issued": 1793,
-    "rehabs": 1062,
+    "vacant_buildings": 4107,
+    "vacant_lots": 5355,
+    "baseline_buildings": 4789,
+    "gross_resolved": 2208,
+    "new_issued": 1791,
+    "rehabs": 1059,
     "demolitions": 97,
-    "cycled_properties": 1378,
+    "cycled_properties": 3338,
     "communities_with_vacants": 11,
     "shared_tracts": 3,
-    "total_vacants": 9470,
-    "change_buildings": -685
+    "total_vacants": 9462,
+    "change_buildings": -682
   },
   "by_grantee": [
     {
@@ -121,62 +3352,62 @@
       "vacant_buildings": 747,
       "vacant_lots": 393,
       "total_vacants": 1140,
-      "baseline_buildings": 810,
-      "change_buildings": -63,
-      "pct_change_buildings": -7.8,
-      "gross_resolved": 361,
-      "new_issued": 327,
-      "gross_pct_of_baseline": 44.6,
-      "rehabs": 126,
+      "baseline_buildings": 808,
+      "change_buildings": -61,
+      "pct_change_buildings": -7.5,
+      "gross_resolved": 359,
+      "new_issued": 326,
+      "gross_pct_of_baseline": 44.4,
+      "rehabs": 124,
       "demolitions": 10,
       "grantee_total_tracts": 5,
       "baltimore_tracts": 5,
       "stock_by_mark": {
-        "FY25 start": 810,
-        "FY26 start": 790,
+        "FY25 start": 808,
+        "FY26 start": 789,
         "FY27 start": 744
       }
     },
     {
       "grantee": "The Central Baltimore Partnership, Inc.",
-      "vacant_buildings": 416,
-      "vacant_lots": 686,
-      "total_vacants": 1102,
-      "baseline_buildings": 496,
-      "change_buildings": -80,
-      "pct_change_buildings": -16.1,
-      "gross_resolved": 252,
-      "new_issued": 193,
+      "vacant_buildings": 415,
+      "vacant_lots": 679,
+      "total_vacants": 1094,
+      "baseline_buildings": 494,
+      "change_buildings": -79,
+      "pct_change_buildings": -16.0,
+      "gross_resolved": 251,
+      "new_issued": 192,
       "gross_pct_of_baseline": 50.8,
-      "rehabs": 122,
+      "rehabs": 121,
       "demolitions": 6,
       "grantee_total_tracts": 5,
       "baltimore_tracts": 5,
       "stock_by_mark": {
-        "FY25 start": 496,
-        "FY26 start": 470,
-        "FY27 start": 419
+        "FY25 start": 494,
+        "FY26 start": 469,
+        "FY27 start": 418
       }
     },
     {
       "grantee": "The Y in Central Maryland",
-      "vacant_buildings": 320,
-      "vacant_lots": 556,
-      "total_vacants": 876,
-      "baseline_buildings": 428,
-      "change_buildings": -108,
-      "pct_change_buildings": -25.2,
-      "gross_resolved": 239,
-      "new_issued": 165,
-      "gross_pct_of_baseline": 55.8,
-      "rehabs": 143,
+      "vacant_buildings": 319,
+      "vacant_lots": 549,
+      "total_vacants": 868,
+      "baseline_buildings": 426,
+      "change_buildings": -107,
+      "pct_change_buildings": -25.1,
+      "gross_resolved": 238,
+      "new_issued": 164,
+      "gross_pct_of_baseline": 55.9,
+      "rehabs": 142,
       "demolitions": 13,
       "grantee_total_tracts": 7,
       "baltimore_tracts": 7,
       "stock_by_mark": {
-        "FY25 start": 428,
-        "FY26 start": 371,
-        "FY27 start": 329
+        "FY25 start": 426,
+        "FY26 start": 370,
+        "FY27 start": 328
       }
     },
     {
@@ -397,14 +3628,14 @@
         "The Y in Central Maryland",
         "The Central Baltimore Partnership, Inc."
       ],
-      "vacant_buildings": 19,
-      "vacant_lots": 84,
-      "total_vacants": 103,
-      "baseline_buildings": 25,
-      "change_buildings": -6,
-      "gross_resolved": 18,
-      "new_issued": 14,
-      "rehabs": 11,
+      "vacant_buildings": 18,
+      "vacant_lots": 77,
+      "total_vacants": 95,
+      "baseline_buildings": 23,
+      "change_buildings": -5,
+      "gross_resolved": 17,
+      "new_issued": 13,
+      "rehabs": 10,
       "demolitions": 0
     },
     {
@@ -627,11 +3858,11 @@
       "vacant_buildings": 270,
       "vacant_lots": 205,
       "total_vacants": 475,
-      "baseline_buildings": 288,
-      "change_buildings": -18,
-      "gross_resolved": 126,
-      "new_issued": 113,
-      "rehabs": 34,
+      "baseline_buildings": 286,
+      "change_buildings": -16,
+      "gross_resolved": 124,
+      "new_issued": 112,
+      "rehabs": 32,
       "demolitions": 9
     },
     {
@@ -1087,20 +4318,6 @@
       "pct_change": -30.8
     },
     {
-      "neighborhood": "Middle East",
-      "baseline": 64,
-      "current": 34,
-      "change": -30,
-      "pct_change": -46.9
-    },
-    {
-      "neighborhood": "Coppin Heights/Ash-Co-East",
-      "baseline": 190,
-      "current": 160,
-      "change": -30,
-      "pct_change": -15.8
-    },
-    {
       "neighborhood": "Shipley Hill",
       "baseline": 292,
       "current": 262,
@@ -1113,6 +4330,20 @@
       "current": 319,
       "change": -30,
       "pct_change": -8.6
+    },
+    {
+      "neighborhood": "Coppin Heights/Ash-Co-East",
+      "baseline": 190,
+      "current": 160,
+      "change": -30,
+      "pct_change": -15.8
+    },
+    {
+      "neighborhood": "Middle East",
+      "baseline": 64,
+      "current": 34,
+      "change": -30,
+      "pct_change": -46.9
     },
     {
       "neighborhood": "Mondawmin",
@@ -1150,18 +4381,18 @@
       "pct_change": -6.7
     },
     {
-      "neighborhood": "Biddle Street",
-      "baseline": 93,
-      "current": 70,
-      "change": -23,
-      "pct_change": -24.7
-    },
-    {
       "neighborhood": "Greenspring",
       "baseline": 144,
       "current": 121,
       "change": -23,
       "pct_change": -16.0
+    },
+    {
+      "neighborhood": "Biddle Street",
+      "baseline": 93,
+      "current": 70,
+      "change": -23,
+      "pct_change": -24.7
     },
     {
       "neighborhood": "Four By Four",
@@ -1185,18 +4416,18 @@
       "pct_change": -17.2
     },
     {
-      "neighborhood": "Rosemont",
-      "baseline": 137,
-      "current": 117,
-      "change": -20,
-      "pct_change": -14.6
-    },
-    {
       "neighborhood": "Patterson Park Neighborhood",
       "baseline": 46,
       "current": 26,
       "change": -20,
       "pct_change": -43.5
+    },
+    {
+      "neighborhood": "Rosemont",
+      "baseline": 137,
+      "current": 117,
+      "change": -20,
+      "pct_change": -14.6
     },
     {
       "neighborhood": "Mosher",
@@ -1220,13 +4451,6 @@
       "pct_change": -20.8
     },
     {
-      "neighborhood": "Arlington",
-      "baseline": 110,
-      "current": 95,
-      "change": -15,
-      "pct_change": -13.6
-    },
-    {
       "neighborhood": "Berea",
       "baseline": 148,
       "current": 133,
@@ -1234,11 +4458,11 @@
       "pct_change": -10.1
     },
     {
-      "neighborhood": "Langston Hughes",
-      "baseline": 54,
-      "current": 40,
-      "change": -14,
-      "pct_change": -25.9
+      "neighborhood": "Arlington",
+      "baseline": 110,
+      "current": 95,
+      "change": -15,
+      "pct_change": -13.6
     },
     {
       "neighborhood": "Barclay",
@@ -1248,18 +4472,18 @@
       "pct_change": -26.4
     },
     {
-      "neighborhood": "Northwest Community Action",
-      "baseline": 162,
-      "current": 148,
-      "change": -14,
-      "pct_change": -8.6
-    },
-    {
       "neighborhood": "Edgewood",
       "baseline": 53,
       "current": 39,
       "change": -14,
       "pct_change": -26.4
+    },
+    {
+      "neighborhood": "Langston Hughes",
+      "baseline": 54,
+      "current": 40,
+      "change": -14,
+      "pct_change": -25.9
     },
     {
       "neighborhood": "Better Waverly",
@@ -1274,6 +4498,13 @@
       "current": 107,
       "change": -14,
       "pct_change": -11.6
+    },
+    {
+      "neighborhood": "Northwest Community Action",
+      "baseline": 162,
+      "current": 148,
+      "change": -14,
+      "pct_change": -8.6
     },
     {
       "neighborhood": "Madison-Eastend",
@@ -1304,13 +4535,6 @@
       "pct_change": -37.9
     },
     {
-      "neighborhood": "Woodmere",
-      "baseline": 28,
-      "current": 17,
-      "change": -11,
-      "pct_change": -39.3
-    },
-    {
       "neighborhood": "Allendale",
       "baseline": 81,
       "current": 70,
@@ -1318,32 +4542,18 @@
       "pct_change": -13.6
     },
     {
+      "neighborhood": "Woodmere",
+      "baseline": 28,
+      "current": 17,
+      "change": -11,
+      "pct_change": -39.3
+    },
+    {
       "neighborhood": "South Clifton Park",
       "baseline": 84,
       "current": 74,
       "change": -10,
       "pct_change": -11.9
-    },
-    {
-      "neighborhood": "Carroll-South Hilton",
-      "baseline": 65,
-      "current": 55,
-      "change": -10,
-      "pct_change": -15.4
-    },
-    {
-      "neighborhood": "Hampden",
-      "baseline": 32,
-      "current": 22,
-      "change": -10,
-      "pct_change": -31.2
-    },
-    {
-      "neighborhood": "Poppleton",
-      "baseline": 52,
-      "current": 42,
-      "change": -10,
-      "pct_change": -19.2
     },
     {
       "neighborhood": "Morrell Park",
@@ -1367,6 +4577,27 @@
       "pct_change": -20.0
     },
     {
+      "neighborhood": "Poppleton",
+      "baseline": 52,
+      "current": 42,
+      "change": -10,
+      "pct_change": -19.2
+    },
+    {
+      "neighborhood": "Hampden",
+      "baseline": 32,
+      "current": 22,
+      "change": -10,
+      "pct_change": -31.2
+    },
+    {
+      "neighborhood": "Carroll-South Hilton",
+      "baseline": 65,
+      "current": 55,
+      "change": -10,
+      "pct_change": -15.4
+    },
+    {
       "neighborhood": "Towanda-Grantley",
       "baseline": 70,
       "current": 61,
@@ -1374,11 +4605,11 @@
       "pct_change": -12.9
     },
     {
-      "neighborhood": "CARE",
-      "baseline": 29,
-      "current": 20,
+      "neighborhood": "Frankford",
+      "baseline": 27,
+      "current": 18,
       "change": -9,
-      "pct_change": -31.0
+      "pct_change": -33.3
     },
     {
       "neighborhood": "Canton",
@@ -1395,25 +4626,11 @@
       "pct_change": -7.8
     },
     {
-      "neighborhood": "Frankford",
-      "baseline": 27,
-      "current": 18,
+      "neighborhood": "CARE",
+      "baseline": 29,
+      "current": 20,
       "change": -9,
-      "pct_change": -33.3
-    },
-    {
-      "neighborhood": "Boyd-Booth",
-      "baseline": 136,
-      "current": 128,
-      "change": -8,
-      "pct_change": -5.9
-    },
-    {
-      "neighborhood": "Hanlon-Longwood",
-      "baseline": 34,
-      "current": 26,
-      "change": -8,
-      "pct_change": -23.5
+      "pct_change": -31.0
     },
     {
       "neighborhood": "Wilson Park",
@@ -1430,11 +4647,18 @@
       "pct_change": -6.2
     },
     {
-      "neighborhood": "Waltherson",
-      "baseline": 23,
-      "current": 16,
-      "change": -7,
-      "pct_change": -30.4
+      "neighborhood": "Boyd-Booth",
+      "baseline": 136,
+      "current": 128,
+      "change": -8,
+      "pct_change": -5.9
+    },
+    {
+      "neighborhood": "Hanlon-Longwood",
+      "baseline": 34,
+      "current": 26,
+      "change": -8,
+      "pct_change": -23.5
     },
     {
       "neighborhood": "Edmondson Village",
@@ -1451,11 +4675,11 @@
       "pct_change": -8.5
     },
     {
-      "neighborhood": "Cherry Hill",
-      "baseline": 59,
-      "current": 53,
-      "change": -6,
-      "pct_change": -10.2
+      "neighborhood": "Waltherson",
+      "baseline": 23,
+      "current": 16,
+      "change": -7,
+      "pct_change": -30.4
     },
     {
       "neighborhood": "Baltimore Highlands",
@@ -1472,39 +4696,11 @@
       "pct_change": -27.3
     },
     {
-      "neighborhood": "Evergreen Lawn",
-      "baseline": 13,
-      "current": 8,
-      "change": -5,
-      "pct_change": -38.5
-    },
-    {
-      "neighborhood": "Forest Park",
-      "baseline": 22,
-      "current": 17,
-      "change": -5,
-      "pct_change": -22.7
-    },
-    {
-      "neighborhood": "Greenmount West",
-      "baseline": 9,
-      "current": 4,
-      "change": -5,
-      "pct_change": -55.6
-    },
-    {
-      "neighborhood": "North Harford Road",
-      "baseline": 16,
-      "current": 11,
-      "change": -5,
-      "pct_change": -31.2
-    },
-    {
-      "neighborhood": "Upper Fells Point",
-      "baseline": 14,
-      "current": 9,
-      "change": -5,
-      "pct_change": -35.7
+      "neighborhood": "Cherry Hill",
+      "baseline": 59,
+      "current": 53,
+      "change": -6,
+      "pct_change": -10.2
     },
     {
       "neighborhood": "Parklane",
@@ -1514,60 +4710,39 @@
       "pct_change": -23.8
     },
     {
-      "neighborhood": "Pimlico Good Neighbors",
-      "baseline": 18,
-      "current": 14,
-      "change": -4,
-      "pct_change": -22.2
-    },
-    {
-      "neighborhood": "Woodbourne-McCabe",
-      "baseline": 21,
+      "neighborhood": "Forest Park",
+      "baseline": 22,
       "current": 17,
-      "change": -4,
-      "pct_change": -19.0
+      "change": -5,
+      "pct_change": -22.7
     },
     {
-      "neighborhood": "Mount Winans",
+      "neighborhood": "North Harford Road",
       "baseline": 16,
-      "current": 12,
-      "change": -4,
-      "pct_change": -25.0
+      "current": 11,
+      "change": -5,
+      "pct_change": -31.2
     },
     {
-      "neighborhood": "Hillen",
-      "baseline": 10,
-      "current": 6,
-      "change": -4,
-      "pct_change": -40.0
-    },
-    {
-      "neighborhood": "Hamilton",
-      "baseline": 16,
-      "current": 12,
-      "change": -4,
-      "pct_change": -25.0
-    },
-    {
-      "neighborhood": "Glen",
-      "baseline": 9,
-      "current": 5,
-      "change": -4,
-      "pct_change": -44.4
-    },
-    {
-      "neighborhood": "Franklintown",
-      "baseline": 7,
-      "current": 3,
-      "change": -4,
-      "pct_change": -57.1
-    },
-    {
-      "neighborhood": "Butchers Hill",
-      "baseline": 12,
+      "neighborhood": "Evergreen Lawn",
+      "baseline": 13,
       "current": 8,
-      "change": -4,
-      "pct_change": -33.3
+      "change": -5,
+      "pct_change": -38.5
+    },
+    {
+      "neighborhood": "Greenmount West",
+      "baseline": 9,
+      "current": 4,
+      "change": -5,
+      "pct_change": -55.6
+    },
+    {
+      "neighborhood": "Upper Fells Point",
+      "baseline": 14,
+      "current": 9,
+      "change": -5,
+      "pct_change": -35.7
     },
     {
       "neighborhood": "Lauraville",
@@ -1577,11 +4752,39 @@
       "pct_change": -33.3
     },
     {
-      "neighborhood": "Bridgeview/Greenlawn",
-      "baseline": 24,
-      "current": 20,
+      "neighborhood": "Pimlico Good Neighbors",
+      "baseline": 18,
+      "current": 14,
       "change": -4,
-      "pct_change": -16.7
+      "pct_change": -22.2
+    },
+    {
+      "neighborhood": "Hamilton",
+      "baseline": 16,
+      "current": 12,
+      "change": -4,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Franklintown",
+      "baseline": 7,
+      "current": 3,
+      "change": -4,
+      "pct_change": -57.1
+    },
+    {
+      "neighborhood": "Glen",
+      "baseline": 9,
+      "current": 5,
+      "change": -4,
+      "pct_change": -44.4
+    },
+    {
+      "neighborhood": "Hillen",
+      "baseline": 10,
+      "current": 6,
+      "change": -4,
+      "pct_change": -40.0
     },
     {
       "neighborhood": "South Baltimore",
@@ -1591,6 +4794,13 @@
       "pct_change": -80.0
     },
     {
+      "neighborhood": "Butchers Hill",
+      "baseline": 12,
+      "current": 8,
+      "change": -4,
+      "pct_change": -33.3
+    },
+    {
       "neighborhood": "Winston-Govans",
       "baseline": 15,
       "current": 11,
@@ -1598,46 +4808,32 @@
       "pct_change": -26.7
     },
     {
-      "neighborhood": "New Northwood",
+      "neighborhood": "Mount Winans",
+      "baseline": 16,
+      "current": 12,
+      "change": -4,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Bridgeview/Greenlawn",
+      "baseline": 24,
+      "current": 20,
+      "change": -4,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Woodbourne-McCabe",
+      "baseline": 21,
+      "current": 17,
+      "change": -4,
+      "pct_change": -19.0
+    },
+    {
+      "neighborhood": "Grove Park",
       "baseline": 6,
       "current": 3,
       "change": -3,
       "pct_change": -50.0
-    },
-    {
-      "neighborhood": "Idlewood",
-      "baseline": 6,
-      "current": 3,
-      "change": -3,
-      "pct_change": -50.0
-    },
-    {
-      "neighborhood": "Dorchester",
-      "baseline": 27,
-      "current": 24,
-      "change": -3,
-      "pct_change": -11.1
-    },
-    {
-      "neighborhood": "Wilhelm Park",
-      "baseline": 4,
-      "current": 1,
-      "change": -3,
-      "pct_change": -75.0
-    },
-    {
-      "neighborhood": "Rosemont Homeowners/Tenants",
-      "baseline": 88,
-      "current": 85,
-      "change": -3,
-      "pct_change": -3.4
-    },
-    {
-      "neighborhood": "Lucille Park",
-      "baseline": 36,
-      "current": 33,
-      "change": -3,
-      "pct_change": -8.3
     },
     {
       "neighborhood": "Highlandtown",
@@ -1647,7 +4843,7 @@
       "pct_change": -18.8
     },
     {
-      "neighborhood": "Orangeville",
+      "neighborhood": "New Northwood",
       "baseline": 6,
       "current": 3,
       "change": -3,
@@ -1659,20 +4855,6 @@
       "current": 11,
       "change": -3,
       "pct_change": -21.4
-    },
-    {
-      "neighborhood": "Pen Lucy",
-      "baseline": 27,
-      "current": 24,
-      "change": -3,
-      "pct_change": -11.1
-    },
-    {
-      "neighborhood": "Ednor Gardens-Lakeside",
-      "baseline": 9,
-      "current": 6,
-      "change": -3,
-      "pct_change": -33.3
     },
     {
       "neighborhood": "Franklintown Road",
@@ -1689,11 +4871,25 @@
       "pct_change": -27.3
     },
     {
-      "neighborhood": "Grove Park",
-      "baseline": 6,
-      "current": 3,
+      "neighborhood": "Wilhelm Park",
+      "baseline": 4,
+      "current": 1,
       "change": -3,
-      "pct_change": -50.0
+      "pct_change": -75.0
+    },
+    {
+      "neighborhood": "Pen Lucy",
+      "baseline": 27,
+      "current": 24,
+      "change": -3,
+      "pct_change": -11.1
+    },
+    {
+      "neighborhood": "Dorchester",
+      "baseline": 27,
+      "current": 24,
+      "change": -3,
+      "pct_change": -11.1
     },
     {
       "neighborhood": "Uplands",
@@ -1703,32 +4899,39 @@
       "pct_change": -100.0
     },
     {
-      "neighborhood": "West Arlington",
-      "baseline": 12,
-      "current": 10,
-      "change": -2,
-      "pct_change": -16.7
-    },
-    {
-      "neighborhood": "Ridgely's Delight",
-      "baseline": 5,
+      "neighborhood": "Idlewood",
+      "baseline": 6,
       "current": 3,
-      "change": -2,
-      "pct_change": -40.0
+      "change": -3,
+      "pct_change": -50.0
     },
     {
-      "neighborhood": "Rognel Heights",
-      "baseline": 10,
-      "current": 8,
-      "change": -2,
-      "pct_change": -20.0
+      "neighborhood": "Lucille Park",
+      "baseline": 36,
+      "current": 33,
+      "change": -3,
+      "pct_change": -8.3
     },
     {
-      "neighborhood": "Westport",
-      "baseline": 130,
-      "current": 128,
-      "change": -2,
-      "pct_change": -1.5
+      "neighborhood": "Orangeville",
+      "baseline": 6,
+      "current": 3,
+      "change": -3,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Rosemont Homeowners/Tenants",
+      "baseline": 88,
+      "current": 85,
+      "change": -3,
+      "pct_change": -3.4
+    },
+    {
+      "neighborhood": "Ednor Gardens-Lakeside",
+      "baseline": 9,
+      "current": 6,
+      "change": -3,
+      "pct_change": -33.3
     },
     {
       "neighborhood": "Madison Park",
@@ -1738,14 +4941,7 @@
       "pct_change": -9.5
     },
     {
-      "neighborhood": "Saint Helena",
-      "baseline": 4,
-      "current": 2,
-      "change": -2,
-      "pct_change": -50.0
-    },
-    {
-      "neighborhood": "Cedonia",
+      "neighborhood": "Ridgely's Delight",
       "baseline": 5,
       "current": 3,
       "change": -2,
@@ -1759,53 +4955,11 @@
       "pct_change": -16.7
     },
     {
-      "neighborhood": "Panway/Braddish Avenue",
-      "baseline": 13,
-      "current": 11,
+      "neighborhood": "West Arlington",
+      "baseline": 12,
+      "current": 10,
       "change": -2,
-      "pct_change": -15.4
-    },
-    {
-      "neighborhood": "Callaway-Garrison",
-      "baseline": 17,
-      "current": 15,
-      "change": -2,
-      "pct_change": -11.8
-    },
-    {
-      "neighborhood": "Cameron Village",
-      "baseline": 3,
-      "current": 1,
-      "change": -2,
-      "pct_change": -66.7
-    },
-    {
-      "neighborhood": "Bolton Hill",
-      "baseline": 4,
-      "current": 2,
-      "change": -2,
-      "pct_change": -50.0
-    },
-    {
-      "neighborhood": "Beverly Hills",
-      "baseline": 2,
-      "current": 0,
-      "change": -2,
-      "pct_change": -100.0
-    },
-    {
-      "neighborhood": "Gwynns Falls",
-      "baseline": 40,
-      "current": 38,
-      "change": -2,
-      "pct_change": -5.0
-    },
-    {
-      "neighborhood": "Beechfield",
-      "baseline": 6,
-      "current": 4,
-      "change": -2,
-      "pct_change": -33.3
+      "pct_change": -16.7
     },
     {
       "neighborhood": "Harwood",
@@ -1815,28 +4969,105 @@
       "pct_change": -8.3
     },
     {
-      "neighborhood": "Coldspring",
+      "neighborhood": "Gwynns Falls",
+      "baseline": 40,
+      "current": 38,
+      "change": -2,
+      "pct_change": -5.0
+    },
+    {
+      "neighborhood": "Westport",
+      "baseline": 130,
+      "current": 128,
+      "change": -2,
+      "pct_change": -1.5
+    },
+    {
+      "neighborhood": "Rognel Heights",
+      "baseline": 10,
+      "current": 8,
+      "change": -2,
+      "pct_change": -20.0
+    },
+    {
+      "neighborhood": "Beechfield",
+      "baseline": 6,
+      "current": 4,
+      "change": -2,
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Bolton Hill",
+      "baseline": 4,
+      "current": 2,
+      "change": -2,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Panway/Braddish Avenue",
+      "baseline": 13,
+      "current": 11,
+      "change": -2,
+      "pct_change": -15.4
+    },
+    {
+      "neighborhood": "Cameron Village",
+      "baseline": 3,
+      "current": 1,
+      "change": -2,
+      "pct_change": -66.7
+    },
+    {
+      "neighborhood": "Beverly Hills",
+      "baseline": 2,
+      "current": 0,
+      "change": -2,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Callaway-Garrison",
+      "baseline": 17,
+      "current": 15,
+      "change": -2,
+      "pct_change": -11.8
+    },
+    {
+      "neighborhood": "Cedonia",
+      "baseline": 5,
+      "current": 3,
+      "change": -2,
+      "pct_change": -40.0
+    },
+    {
+      "neighborhood": "Saint Helena",
+      "baseline": 4,
+      "current": 2,
+      "change": -2,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Sabina-Mattfeldt",
       "baseline": 1,
       "current": 0,
       "change": -1,
       "pct_change": -100.0
     },
     {
-      "neighborhood": "Reisterstown Station",
-      "baseline": 2,
-      "current": 1,
+      "neighborhood": "Medfield",
+      "baseline": 1,
+      "current": 0,
       "change": -1,
-      "pct_change": -50.0
+      "pct_change": -100.0
     },
     {
-      "neighborhood": "Moravia-Walther",
-      "baseline": 3,
-      "current": 2,
+      "neighborhood": "Glen Oaks",
+      "baseline": 5,
+      "current": 4,
       "change": -1,
-      "pct_change": -33.3
+      "pct_change": -20.0
     },
     {
-      "neighborhood": "Penn-Fallsway",
+      "neighborhood": "Chinquapin Park",
       "baseline": 1,
       "current": 0,
       "change": -1,
@@ -1850,13 +5081,6 @@
       "pct_change": -33.3
     },
     {
-      "neighborhood": "Chinquapin Park",
-      "baseline": 1,
-      "current": 0,
-      "change": -1,
-      "pct_change": -100.0
-    },
-    {
       "neighborhood": "Fairmount",
       "baseline": 6,
       "current": 5,
@@ -1864,39 +5088,32 @@
       "pct_change": -16.7
     },
     {
-      "neighborhood": "Hunting Ridge",
+      "neighborhood": "Garwyn Oaks",
+      "baseline": 11,
+      "current": 10,
+      "change": -1,
+      "pct_change": -9.1
+    },
+    {
+      "neighborhood": "Brewers Hill",
       "baseline": 3,
       "current": 2,
       "change": -1,
       "pct_change": -33.3
     },
     {
-      "neighborhood": "Glen Oaks",
-      "baseline": 5,
-      "current": 4,
+      "neighborhood": "Irvington",
+      "baseline": 41,
+      "current": 40,
       "change": -1,
-      "pct_change": -20.0
+      "pct_change": -2.4
     },
     {
-      "neighborhood": "Lake Evesham",
-      "baseline": 1,
-      "current": 0,
+      "neighborhood": "Lake Walker",
+      "baseline": 2,
+      "current": 1,
       "change": -1,
-      "pct_change": -100.0
-    },
-    {
-      "neighborhood": "University of Maryland",
-      "baseline": 4,
-      "current": 3,
-      "change": -1,
-      "pct_change": -25.0
-    },
-    {
-      "neighborhood": "Loch Raven",
-      "baseline": 8,
-      "current": 7,
-      "change": -1,
-      "pct_change": -12.5
+      "pct_change": -50.0
     },
     {
       "neighborhood": "Belair-Parkside",
@@ -1906,7 +5123,35 @@
       "pct_change": -33.3
     },
     {
-      "neighborhood": "Sabina-Mattfeldt",
+      "neighborhood": "Kernewood",
+      "baseline": 7,
+      "current": 6,
+      "change": -1,
+      "pct_change": -14.3
+    },
+    {
+      "neighborhood": "Lake Evesham",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Mount Washington",
+      "baseline": 6,
+      "current": 5,
+      "change": -1,
+      "pct_change": -16.7
+    },
+    {
+      "neighborhood": "Roland Park",
+      "baseline": 2,
+      "current": 1,
+      "change": -1,
+      "pct_change": -50.0
+    },
+    {
+      "neighborhood": "Penn-Fallsway",
       "baseline": 1,
       "current": 0,
       "change": -1,
@@ -1918,62 +5163,6 @@
       "current": 3,
       "change": -1,
       "pct_change": -25.0
-    },
-    {
-      "neighborhood": "Yale Heights",
-      "baseline": 4,
-      "current": 3,
-      "change": -1,
-      "pct_change": -25.0
-    },
-    {
-      "neighborhood": "Brewers Hill",
-      "baseline": 3,
-      "current": 2,
-      "change": -1,
-      "pct_change": -33.3
-    },
-    {
-      "neighborhood": "Lake Walker",
-      "baseline": 2,
-      "current": 1,
-      "change": -1,
-      "pct_change": -50.0
-    },
-    {
-      "neighborhood": "Rosemont East",
-      "baseline": 3,
-      "current": 2,
-      "change": -1,
-      "pct_change": -33.3
-    },
-    {
-      "neighborhood": "Hamilton Hills",
-      "baseline": 8,
-      "current": 7,
-      "change": -1,
-      "pct_change": -12.5
-    },
-    {
-      "neighborhood": "Irvington",
-      "baseline": 41,
-      "current": 40,
-      "change": -1,
-      "pct_change": -2.4
-    },
-    {
-      "neighborhood": "Hoes Heights",
-      "baseline": 1,
-      "current": 0,
-      "change": -1,
-      "pct_change": -100.0
-    },
-    {
-      "neighborhood": "Roland Park",
-      "baseline": 2,
-      "current": 1,
-      "change": -1,
-      "pct_change": -50.0
     },
     {
       "neighborhood": "Ramblewood",
@@ -1990,32 +5179,32 @@
       "pct_change": -8.3
     },
     {
-      "neighborhood": "Mount Washington",
-      "baseline": 6,
-      "current": 5,
-      "change": -1,
-      "pct_change": -16.7
-    },
-    {
-      "neighborhood": "Medfield",
+      "neighborhood": "Hoes Heights",
       "baseline": 1,
       "current": 0,
       "change": -1,
       "pct_change": -100.0
     },
     {
-      "neighborhood": "Kernewood",
-      "baseline": 7,
-      "current": 6,
+      "neighborhood": "Loch Raven",
+      "baseline": 8,
+      "current": 7,
       "change": -1,
-      "pct_change": -14.3
+      "pct_change": -12.5
     },
     {
-      "neighborhood": "Garwyn Oaks",
-      "baseline": 11,
-      "current": 10,
+      "neighborhood": "Moravia-Walther",
+      "baseline": 3,
+      "current": 2,
       "change": -1,
-      "pct_change": -9.1
+      "pct_change": -33.3
+    },
+    {
+      "neighborhood": "Rosemont East",
+      "baseline": 3,
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
     },
     {
       "neighborhood": "Fairfield Area",
@@ -2025,100 +5214,58 @@
       "pct_change": -33.3
     },
     {
-      "neighborhood": "West Forest Park",
-      "baseline": 16,
-      "current": 16,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Howard Park",
-      "baseline": 28,
-      "current": 28,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Remington",
-      "baseline": 7,
-      "current": 7,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Little Italy",
-      "baseline": 7,
-      "current": 7,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Woodberry",
+      "neighborhood": "Hunting Ridge",
       "baseline": 3,
-      "current": 3,
-      "change": 0,
-      "pct_change": 0.0
+      "current": 2,
+      "change": -1,
+      "pct_change": -33.3
     },
     {
-      "neighborhood": "Downtown",
-      "baseline": 50,
-      "current": 50,
-      "change": 0,
-      "pct_change": 0.0
+      "neighborhood": "Reisterstown Station",
+      "baseline": 2,
+      "current": 1,
+      "change": -1,
+      "pct_change": -50.0
     },
     {
-      "neighborhood": "Cedmont",
+      "neighborhood": "Yale Heights",
       "baseline": 4,
-      "current": 4,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Guilford",
-      "baseline": 3,
       "current": 3,
+      "change": -1,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "University of Maryland",
+      "baseline": 4,
+      "current": 3,
+      "change": -1,
+      "pct_change": -25.0
+    },
+    {
+      "neighborhood": "Hamilton Hills",
+      "baseline": 8,
+      "current": 7,
+      "change": -1,
+      "pct_change": -12.5
+    },
+    {
+      "neighborhood": "Coldspring",
+      "baseline": 1,
+      "current": 0,
+      "change": -1,
+      "pct_change": -100.0
+    },
+    {
+      "neighborhood": "Homeland",
+      "baseline": 1,
+      "current": 1,
       "change": 0,
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Violetville",
+      "neighborhood": "Carroll - Camden Industrial Area",
       "baseline": 2,
       "current": 2,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Cross Country",
-      "baseline": 1,
-      "current": 1,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "West Hills",
-      "baseline": 1,
-      "current": 1,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Evergreen",
-      "baseline": 1,
-      "current": 1,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Broening Manor",
-      "baseline": 4,
-      "current": 4,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Arcadia",
-      "baseline": 8,
-      "current": 8,
       "change": 0,
       "pct_change": 0.0
     },
@@ -2130,30 +5277,16 @@
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Mount Holly",
-      "baseline": 32,
-      "current": 32,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Liberty Square",
-      "baseline": 9,
-      "current": 9,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Homeland",
+      "neighborhood": "Riverside",
       "baseline": 1,
       "current": 1,
       "change": 0,
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Ten Hills",
-      "baseline": 2,
-      "current": 2,
+      "neighborhood": "Cross Country",
+      "baseline": 1,
+      "current": 1,
       "change": 0,
       "pct_change": 0.0
     },
@@ -2165,44 +5298,9 @@
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Westgate",
-      "baseline": 4,
-      "current": 4,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Rosebank",
-      "baseline": 2,
-      "current": 2,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Cedarcroft",
-      "baseline": 1,
-      "current": 1,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Locust Point",
-      "baseline": 1,
-      "current": 1,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Pleasant View Gardens",
-      "baseline": 2,
-      "current": 2,
-      "change": 0,
-      "pct_change": 0.0
-    },
-    {
-      "neighborhood": "Orangeville Industrial Area",
-      "baseline": 1,
-      "current": 1,
+      "neighborhood": "Guilford",
+      "baseline": 3,
+      "current": 3,
       "change": 0,
       "pct_change": 0.0
     },
@@ -2214,6 +5312,76 @@
       "pct_change": 0.0
     },
     {
+      "neighborhood": "Westgate",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Remington",
+      "baseline": 7,
+      "current": 7,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Federal Hill",
+      "baseline": 3,
+      "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Broening Manor",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Locust Point",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Little Italy",
+      "baseline": 7,
+      "current": 7,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Howard Park",
+      "baseline": 28,
+      "current": 28,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Evergreen",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Mount Holly",
+      "baseline": 32,
+      "current": 32,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cedmont",
+      "baseline": 4,
+      "current": 4,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
       "neighborhood": "Clifton Park",
       "baseline": 2,
       "current": 2,
@@ -2221,9 +5389,16 @@
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Charles Village",
-      "baseline": 8,
-      "current": 8,
+      "neighborhood": "West Hills",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Violetville",
+      "baseline": 2,
+      "current": 2,
       "change": 0,
       "pct_change": 0.0
     },
@@ -2249,23 +5424,79 @@
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Riverside",
+      "neighborhood": "Liberty Square",
+      "baseline": 9,
+      "current": 9,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Cedarcroft",
       "baseline": 1,
       "current": 1,
       "change": 0,
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Carroll - Camden Industrial Area",
+      "neighborhood": "West Forest Park",
+      "baseline": 16,
+      "current": 16,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Downtown",
+      "baseline": 50,
+      "current": 50,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Arcadia",
+      "baseline": 8,
+      "current": 8,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Pleasant View Gardens",
       "baseline": 2,
       "current": 2,
       "change": 0,
       "pct_change": 0.0
     },
     {
-      "neighborhood": "Federal Hill",
+      "neighborhood": "Rosebank",
+      "baseline": 2,
+      "current": 2,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Charles Village",
+      "baseline": 8,
+      "current": 8,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Woodberry",
       "baseline": 3,
       "current": 3,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Orangeville Industrial Area",
+      "baseline": 1,
+      "current": 1,
+      "change": 0,
+      "pct_change": 0.0
+    },
+    {
+      "neighborhood": "Ten Hills",
+      "baseline": 2,
+      "current": 2,
       "change": 0,
       "pct_change": 0.0
     },
@@ -2277,84 +5508,28 @@
       "pct_change": 100.0
     },
     {
-      "neighborhood": "Jones Falls Area",
-      "baseline": 0,
-      "current": 1,
-      "change": 1,
-      "pct_change": null
-    },
-    {
-      "neighborhood": "Dolfield",
-      "baseline": 19,
-      "current": 20,
-      "change": 1,
-      "pct_change": 5.3
-    },
-    {
-      "neighborhood": "Mayfield",
-      "baseline": 0,
-      "current": 1,
-      "change": 1,
-      "pct_change": null
-    },
-    {
-      "neighborhood": "Seton Hill",
+      "neighborhood": "Mount Vernon",
       "baseline": 4,
       "current": 5,
       "change": 1,
       "pct_change": 25.0
     },
     {
-      "neighborhood": "Tremont",
-      "baseline": 1,
-      "current": 2,
+      "neighborhood": "Windsor Hills",
+      "baseline": 14,
+      "current": 15,
       "change": 1,
-      "pct_change": 100.0
+      "pct_change": 7.1
     },
     {
-      "neighborhood": "Concerned Citizens of Forest Park",
-      "baseline": 24,
-      "current": 25,
+      "neighborhood": "Keswick",
+      "baseline": 0,
+      "current": 1,
       "change": 1,
-      "pct_change": 4.2
+      "pct_change": null
     },
     {
-      "neighborhood": "Radnor-Winston",
-      "baseline": 2,
-      "current": 3,
-      "change": 1,
-      "pct_change": 50.0
-    },
-    {
-      "neighborhood": "Sharp-Leadenhall",
-      "baseline": 2,
-      "current": 3,
-      "change": 1,
-      "pct_change": 50.0
-    },
-    {
-      "neighborhood": "Richnor Springs",
-      "baseline": 4,
-      "current": 5,
-      "change": 1,
-      "pct_change": 25.0
-    },
-    {
-      "neighborhood": "Mid-Town Belvedere",
-      "baseline": 6,
-      "current": 7,
-      "change": 1,
-      "pct_change": 16.7
-    },
-    {
-      "neighborhood": "Ashburton",
-      "baseline": 11,
-      "current": 12,
-      "change": 1,
-      "pct_change": 9.1
-    },
-    {
-      "neighborhood": "Levindale",
+      "neighborhood": "Saint Agnes",
       "baseline": 1,
       "current": 2,
       "change": 1,
@@ -2368,32 +5543,18 @@
       "pct_change": 100.0
     },
     {
-      "neighborhood": "Harbor East",
+      "neighborhood": "Jones Falls Area",
       "baseline": 0,
       "current": 1,
       "change": 1,
       "pct_change": null
     },
     {
-      "neighborhood": "Winchester",
-      "baseline": 89,
-      "current": 90,
-      "change": 1,
-      "pct_change": 1.1
-    },
-    {
-      "neighborhood": "Mount Vernon",
+      "neighborhood": "Richnor Springs",
       "baseline": 4,
       "current": 5,
       "change": 1,
       "pct_change": 25.0
-    },
-    {
-      "neighborhood": "Keswick",
-      "baseline": 0,
-      "current": 1,
-      "change": 1,
-      "pct_change": null
     },
     {
       "neighborhood": "Dunbar-Broadway",
@@ -2403,18 +5564,25 @@
       "pct_change": 100.0
     },
     {
-      "neighborhood": "Windsor Hills",
-      "baseline": 14,
-      "current": 15,
+      "neighborhood": "Sharp-Leadenhall",
+      "baseline": 2,
+      "current": 3,
       "change": 1,
-      "pct_change": 7.1
+      "pct_change": 50.0
     },
     {
-      "neighborhood": "Kresson",
-      "baseline": 11,
-      "current": 12,
+      "neighborhood": "Dolfield",
+      "baseline": 19,
+      "current": 20,
       "change": 1,
-      "pct_change": 9.1
+      "pct_change": 5.3
+    },
+    {
+      "neighborhood": "Radnor-Winston",
+      "baseline": 2,
+      "current": 3,
+      "change": 1,
+      "pct_change": 50.0
     },
     {
       "neighborhood": "Kenilworth Park",
@@ -2424,11 +5592,81 @@
       "pct_change": 20.0
     },
     {
-      "neighborhood": "Saint Agnes",
+      "neighborhood": "Harbor East",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Seton Hill",
+      "baseline": 4,
+      "current": 5,
+      "change": 1,
+      "pct_change": 25.0
+    },
+    {
+      "neighborhood": "Kresson",
+      "baseline": 11,
+      "current": 12,
+      "change": 1,
+      "pct_change": 9.1
+    },
+    {
+      "neighborhood": "Ashburton",
+      "baseline": 11,
+      "current": 12,
+      "change": 1,
+      "pct_change": 9.1
+    },
+    {
+      "neighborhood": "Mayfield",
+      "baseline": 0,
+      "current": 1,
+      "change": 1,
+      "pct_change": null
+    },
+    {
+      "neighborhood": "Mid-Town Belvedere",
+      "baseline": 6,
+      "current": 7,
+      "change": 1,
+      "pct_change": 16.7
+    },
+    {
+      "neighborhood": "Concerned Citizens of Forest Park",
+      "baseline": 24,
+      "current": 25,
+      "change": 1,
+      "pct_change": 4.2
+    },
+    {
+      "neighborhood": "Levindale",
       "baseline": 1,
       "current": 2,
       "change": 1,
       "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Tremont",
+      "baseline": 1,
+      "current": 2,
+      "change": 1,
+      "pct_change": 100.0
+    },
+    {
+      "neighborhood": "Winchester",
+      "baseline": 89,
+      "current": 90,
+      "change": 1,
+      "pct_change": 1.1
+    },
+    {
+      "neighborhood": "Washington Hill",
+      "baseline": 14,
+      "current": 16,
+      "change": 2,
+      "pct_change": 14.3
     },
     {
       "neighborhood": "Wyman Park",
@@ -2438,11 +5676,11 @@
       "pct_change": null
     },
     {
-      "neighborhood": "Washington Hill",
-      "baseline": 14,
-      "current": 16,
+      "neighborhood": "Jonestown",
+      "baseline": 15,
+      "current": 17,
       "change": 2,
-      "pct_change": 14.3
+      "pct_change": 13.3
     },
     {
       "neighborhood": "Mount Clare",
@@ -2466,13 +5704,6 @@
       "pct_change": 200.0
     },
     {
-      "neighborhood": "Jonestown",
-      "baseline": 15,
-      "current": 17,
-      "change": 2,
-      "pct_change": 13.3
-    },
-    {
       "neighborhood": "Westfield",
       "baseline": 2,
       "current": 4,
@@ -2487,13 +5718,6 @@
       "pct_change": 30.0
     },
     {
-      "neighborhood": "Bayview",
-      "baseline": 6,
-      "current": 9,
-      "change": 3,
-      "pct_change": 50.0
-    },
-    {
       "neighborhood": "Oldtown",
       "baseline": 31,
       "current": 34,
@@ -2501,11 +5725,11 @@
       "pct_change": 9.7
     },
     {
-      "neighborhood": "Patterson Place",
-      "baseline": 7,
-      "current": 11,
-      "change": 4,
-      "pct_change": 57.1
+      "neighborhood": "Bayview",
+      "baseline": 6,
+      "current": 9,
+      "change": 3,
+      "pct_change": 50.0
     },
     {
       "neighborhood": "Oakenshawe",
@@ -2515,6 +5739,13 @@
       "pct_change": 100.0
     },
     {
+      "neighborhood": "Patterson Place",
+      "baseline": 7,
+      "current": 11,
+      "change": 4,
+      "pct_change": 57.1
+    },
+    {
       "neighborhood": "Parkway",
       "baseline": 5,
       "current": 10,
@@ -2522,18 +5753,18 @@
       "pct_change": 100.0
     },
     {
-      "neighborhood": "Abell",
-      "baseline": 9,
-      "current": 16,
-      "change": 7,
-      "pct_change": 77.8
-    },
-    {
       "neighborhood": "Fells Point",
       "baseline": 11,
       "current": 18,
       "change": 7,
       "pct_change": 63.6
+    },
+    {
+      "neighborhood": "Abell",
+      "baseline": 9,
+      "current": 16,
+      "change": 7,
+      "pct_change": 77.8
     }
   ]
 }

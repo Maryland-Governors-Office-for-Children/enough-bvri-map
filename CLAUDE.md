@@ -33,7 +33,12 @@ docs/                    GitHub Pages site (index.html + data/)
     vacant_buildings_baltimore.geojson  ALL 11,523 open Vacant Building Notices citywide; `in_enough:1` on the
                                         4,108 inside grantee tracts (map fades the rest as context)
     vacant_lots_baltimore.geojson       ALL 18,676 vacant lots citywide; `in_enough:1` on the 5,376 in tracts
-    vacants_enough.json                vacancy rollup: per-grantee/tract/neighborhood counts + reduction trend
+    vacancy_reductions_baltimore.geojson  7,199 VBN closures since FY25 as points; `durable` flags whether the
+                                          property stayed off (2,356 citywide / 833 in ENOUGH did)
+    vacancy_change_tracts.geojson        all 199 Baltimore City tracts w/ baseline/now/change + `in_enough`
+    vacants_enough.json                vacancy rollup: per-grantee/tract/neighborhood counts + reduction trend,
+                                       `reduction_comparison` (ENOUGH vs rest of city, size bins, significance),
+                                       `grantee_reduction_rates`, `by_city_tract` (all 199)
     crosswalk.json                 Precomputed ENOUGH × layer overlap (built by build_crosswalk.py)
 scripts/
   fetch_bvri.py          Refresh BVRI data from Baltimore City DHCD ArcGIS REST
@@ -114,6 +119,16 @@ Push to `main` → GitHub Pages auto-deploys from `docs/`.
   overwhelmingly preservation: **1,062 rehab permits vs 97 City demolitions (10.9:1**, vs citywide 9.9:1).
   Rehab permits ≠ completions; demolitions are City-funded only. Per-grantee ratio varies a lot
   (Park Heights 13.4:1, Elev8 4.0:1).
+  **⚠ Do NOT headline "% of tracts where vacancy fell" (ENOUGH 88.9% vs rest-of-city 77.6%).** The LLM council
+  killed this and the data proves them right: the measure tracks *starting stock*, not performance. Tracts with
+  150+ vacants fell 100% of the time; tracts with 1–10 fell 62.7%. ENOUGH holds **0%** of the smallest band and
+  **40%** of the 150+ band, so it clears a one-building bar mechanically. The gap is also not significant
+  (z=1.66, p=0.097; 2 tracts flipping closes most of it). The median per-tract change is *better* outside
+  ENOUGH (−19.6% vs −14.3%) for the mirror-image reason. **Defensible topline instead:** 36% of the city's
+  vacant buildings + ~40% of its net reduction + 10.9:1 repair-to-demolition. Both measures are published
+  with the size-bin table so the confound is visible.
+  **Never imply ENOUGH caused the reduction** — DHCD and the Vacants Reinvestment Council drive vacancy work;
+  no ENOUGH grantee is contracted on vacancy. These are *place* measures, not grantee scorecards.
   **Do not confuse with the BVRI open-bid list below** — that is ~1,200 properties being marketed, not
   the vacancy stock. Lots have no history, so they are excluded from all trend columns.
 - 1,192 BVRI **open-bid** properties (Baltimore City only; the slice DHCD is marketing for sale — a
